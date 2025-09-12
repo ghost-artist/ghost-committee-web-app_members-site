@@ -10,7 +10,7 @@ export function sendApprovedNewArtistEmail(newArtistEmail){
     window.sendMessageToParent({
       controller: 'gmailController',
       to: [TESTING.approvedNewArtistEmail ? 'william.owen.dev@gmail.com' : newArtistEmail].filter(Boolean).join(','),
-      subject: 'Your application to gig Harbor Open Studio Tour was approved!',
+      subject: 'Your application to Gig Harbor Open Studio Tour was approved!',
       body: `
          <div style="text-align:center; font-family:sans-serif;">
             <h1>Congratulations on behalf of the Gig Harbor Open Studio Tour!</h1>

@@ -342,6 +342,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_custom_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utils/custom-element */ "./utils/custom-element.js");
 /* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style.scss */ "./app/components/application/style.scss");
 /* harmony import */ var _outbound_emails_approvedNewArtist__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../outbound-emails/approvedNewArtist */ "./app/outbound-emails/approvedNewArtist.js");
+/* harmony import */ var _outbound_emails_notApprovedNewArtist_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../outbound-emails/notApprovedNewArtist.js */ "./app/outbound-emails/notApprovedNewArtist.js");
+
 
 
 
@@ -387,6 +389,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var newArtistEmail = applicationComponent.getAttribute("email");
         if (reviewAnswer == true) {
           (0,_outbound_emails_approvedNewArtist__WEBPACK_IMPORTED_MODULE_3__.sendApprovedNewArtistEmail)(newArtistEmail);
+        } else {
+          (0,_outbound_emails_notApprovedNewArtist_js__WEBPACK_IMPORTED_MODULE_4__.sendNotApprovedNewArtistEmail)(newArtistEmail);
         }
       }, 3000);
 
@@ -1196,7 +1200,7 @@ function sendApprovedNewArtistEmail(newArtistEmail) {
   window.sendMessageToParent({
     controller: 'gmailController',
     to: [_sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__.TESTING.approvedNewArtistEmail ? 'william.owen.dev@gmail.com' : newArtistEmail].filter(Boolean).join(','),
-    subject: 'Your application to gig Harbor Open Studio Tour was approved!',
+    subject: 'Your application to Gig Harbor Open Studio Tour was approved!',
     body: "\n         <div style=\"text-align:center; font-family:sans-serif;\">\n            <h1>Congratulations on behalf of the Gig Harbor Open Studio Tour!</h1>\n            <p>Your application to join the tour has been approved!</p>\n            <p>\n                <strong>The next step:</strong> Please fill out our online contract and submit your payment. You are not officially part of the tour until we receive both!\n            </p>\n            <p>\n                For the contract due date, check our website under the \u201CJoin\u201D button and look under FAQ's.<br>\n                Once accepted, you do not need to reapply, but <strong>you must submit an annual contract</strong>.\n            </p>\n            <fieldset style=\"width:fit-content; margin:auto; text-align:left;\">\n                <legend>How to Complete Your Contract & Payment</legend>\n                <ol>\n                    <li>Go to our website, Gig Harbor Open Studio Tour, and click the \"Members\" button.</li>\n                    <li>A password page will open. The password is <strong>openhand</strong> (write this down).</li>\n                    <li>On the login page, click \"Register New Account\" (pink button on the left). Enter your email and a password (save these).</li>\n                    <li>Access your Member page. Click \"My Contract\" on the left and fill out each section, saving as you go. You can exit and return later.</li>\n                    <li>Follow directions for uploading images (correct size and labeling required).</li>\n                    <li>Image saving may take a few minutes depending on your internet speed. Saved images will say \"Saved.\"</li>\n                    <li>Complete the payment section at the end of your contract. Once submitted, you'll receive a confirmation email.</li>\n                </ol>\n            </fieldset>\n            <p>\n                We hold three General Meetings each year: mid-March, mid-August, and early October.<br>\n                You'll receive email notifications (via MailChimp) about meetings and important info. Please check your spam or other folders if you don't see these emails.\n            </p>\n            <p>\n                If you have any questions, call or email me:<br>\n                Phone: 253-514-1865<br>\n                Email: <a href=\"mailto:ghopenstudiotour@gmail.com\">ghopenstudiotour@gmail.com</a>\n            </p>\n            <p>Thank you,<br>Beth Owen, President of GHOST (Gig Harbor Open Studio Tour)</p>\n        </div>\n        "
   });
 }
@@ -1586,6 +1590,35 @@ function _sendNewScholarshipEmail() {
     }, _callee);
   }));
   return _sendNewScholarshipEmail.apply(this, arguments);
+}
+
+/***/ }),
+
+/***/ "./app/outbound-emails/notApprovedNewArtist.js":
+/*!*****************************************************!*\
+  !*** ./app/outbound-emails/notApprovedNewArtist.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   sendNotApprovedNewArtistEmail: () => (/* binding */ sendNotApprovedNewArtistEmail)
+/* harmony export */ });
+/* harmony import */ var _getEmailAddresses_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getEmailAddresses.js */ "./app/outbound-emails/getEmailAddresses.js");
+/* harmony import */ var _sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sendTestEmail.js */ "./app/outbound-emails/sendTestEmail.js");
+
+
+function sendNotApprovedNewArtistEmail(newArtistEmail) {
+  // no TESTING mode needed here
+
+  console.log("Sending 'NotApprovedNewArtistEmail' to " + newArtistEmail);
+  window.sendMessageToParent({
+    controller: 'gmailController',
+    to: [_sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__.TESTING.notApprovedNewArtistEmail ? 'william.owen.dev@gmail.com' : newArtistEmail].filter(Boolean).join(','),
+    subject: 'Sorry, your application to Gig Harbor Open Studio Tour was not approved',
+    body: "\n          <div style=\"text-align:center; font-family:sans-serif;\">\n          <h1>Thank you for your application to the Gig Harbor Open Studio Tour</h1>\n          <p>\n            I am sorry to inform you that, at this time, your application to join the Gig Harbor Open Studio Tour has been declined because it does not meet our artistic standards for professional work.\n          </p>\n          <p>\n            We appreciate your interest and would encourage you to continue to work on your art and to reapply in future years.\n          </p>\n          <p>\n            Thank you,<br>\n            Andrew Van DeGoede,<br>\n            Screening Chair of GHOST (Gig Harbor Open Studio Tour)\n          </p>\n        </div>\n        "
+  });
 }
 
 /***/ }),

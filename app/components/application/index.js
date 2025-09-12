@@ -2,6 +2,7 @@ import applicationTemplate from './index.html.txt';
 import { createCustomElement, evaluateTemplate } from '../../../utils/custom-element';
 import './style.scss';
 import { sendApprovedNewArtistEmail } from "../../outbound-emails/approvedNewArtist"
+import { sendNotApprovedNewArtistEmail } from '../../outbound-emails/notApprovedNewArtist.js';
 const logIf = require("../../../utils/logIf.js");
 
 
@@ -80,6 +81,9 @@ window.updateReview = function (event, reviewAnswer) {
         const newArtistEmail = applicationComponent.getAttribute("email")
         if(reviewAnswer == true){
           sendApprovedNewArtistEmail(newArtistEmail);
+        } else {
+          sendNotApprovedNewArtistEmail(newArtistEmail);
+
         }
       
     }, 3000)
