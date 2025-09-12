@@ -6,7 +6,8 @@ import { sendNewScholarshipEmail } from "./newScholarshipApplicant.js";
 export const TESTING = {
     newApplication: false,
     newScholarship: false,
-    newContract: false
+    newContract: false,
+    approvedNewArtistEmail: true
 };
 
 export async function sendTestEmail() {
