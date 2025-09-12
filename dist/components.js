@@ -360,7 +360,7 @@ var logIf = __webpack_require__(/*! ../../../utils/logIf.js */ "./utils/logIf.js
 document.addEventListener('DOMContentLoaded', function () {
   window.updateReview = function (event, reviewAnswer) {
     // logIf.crud && console.log("updateReview", event)
-    console.log("updateReview (test change code)", event);
+    console.log("updateReview", event);
     // update button to loading
     var button = event.target;
     var btnText = button.innerHTML;

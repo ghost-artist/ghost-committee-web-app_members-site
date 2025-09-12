@@ -23,6 +23,10 @@ This is a project for a local community of artist in Gig Harbor. It is deployed 
 - Gmail and Google Sheets integrations requires minimal setup (see instructions below)
 ---
 
+### Development Note
+
+If you are adding to this project, run `npm run dev` script which compiles the components folder, and host the website locally, and compiles the SCSS files.
+
 ### Project Structure
 
 ```

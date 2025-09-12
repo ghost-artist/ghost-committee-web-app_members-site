@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 window.updateReview = function (event, reviewAnswer) {
   // logIf.crud && console.log("updateReview", event)
-   console.log("updateReview (test change code)", event)
+   console.log("updateReview", event)
     // update button to loading
     const button = event.target;
     const btnText = button.innerHTML
