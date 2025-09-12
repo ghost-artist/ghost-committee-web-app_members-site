@@ -152,8 +152,8 @@ ${howDidYouHearAboutUs}
             value="${websiteSocialMedia}"></textarea-component>
 
             <div style="text-align: center;">
-                <button data-fb-id="${fbId}" onclick="window.updateReview(event,true)">Approve Application</button>
-                <button data-fb-id="${fbId}" onclick="window.updateReview(event,false)">Disapprove</button>
+                <button class="approve-btn" data-fb-id="${fbId}" onclick="window.updateReview(event,true)">Approve Application</button>
+                <button class="reject-btn" data-fb-id="${fbId}" onclick="window.updateReview(event,false)">Disapprove</button>
 
             </div>
     </div>

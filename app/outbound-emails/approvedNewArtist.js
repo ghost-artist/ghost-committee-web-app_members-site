@@ -5,6 +5,8 @@ export function sendApprovedNewArtistEmail(newArtistEmail){
     
     // no TESTING mode needed here
 
+    console.log("Sending 'ApprovedNewArtistEmail' to " + newArtistEmail)
+
     window.sendMessageToParent({
       controller: 'gmailController',
       to: [TESTING.approvedNewArtistEmail ? 'william.owen.dev@gmail.com' : newArtistEmail].filter(Boolean).join(','),

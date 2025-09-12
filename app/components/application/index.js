@@ -48,8 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 window.updateReview = function (event, reviewAnswer) {
   // logIf.crud && console.log("updateReview", event)
-  debugger
-   console.log("updateReview", event)
+   console.log("updateReview (test change code)", event)
     // update button to loading
     const button = event.target;
     const btnText = button.innerHTML
@@ -60,10 +59,9 @@ window.updateReview = function (event, reviewAnswer) {
     const fbId = button.getAttribute('data-fb-id');
 
 
-  CRUD.update('new-applications', fbId, 
+    CRUD.update('new-applications', fbId, 
     {hasBeenReviewed: true, approved: reviewAnswer} )
   .then(() =>{
-    debugger
     // update the button text
     button.innerHTML = 'Review Submitted'
     setTimeout(() => {
@@ -77,11 +75,13 @@ window.updateReview = function (event, reviewAnswer) {
         // update status text
         application.querySelector('.status').innerHTML = reviewAnswer ? 'Approved' : 'Not Approved'
         
-        const applicationComponent = button.closest('artist-application-component')
+          
+        const applicationComponent = button.closest('application-component')
         const newArtistEmail = applicationComponent.getAttribute("email")
         if(reviewAnswer == true){
           sendApprovedNewArtistEmail(newArtistEmail);
         }
+      
     }, 3000)
 
     // move and collapse the application

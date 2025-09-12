@@ -7,7 +7,7 @@ export const TESTING = {
     newApplication: false,
     newScholarship: false,
     newContract: false,
-    approvedNewArtistEmail: true
+    approvedNewArtistEmail: false
 };
 
 export async function sendTestEmail() {
