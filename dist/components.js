@@ -786,7 +786,7 @@ When catching error, use the query the html in the component to display an error
     var rotateImageButton = document.createElement('button');
     var alertButton = document.createElement('i');
     alertButton.classList.add('fas', 'fa-exclamation-triangle', 'alert-icon');
-    rotateImageButton.innerHTML = "<i class=\"fa-solid fa-rotate\"></i>";
+    rotateImageButton.innerHTML = "Click here to replace image";
     rotateImageButton.classList.add('rotate-image-button');
     rotateImageButton.addEventListener('click', function (e) {
       img.remove();
@@ -824,7 +824,7 @@ When catching error, use the query the html in the component to display an error
     var imgContainer = document.createElement('div');
     imgContainer.classList.add('img-container');
     imgContainer.appendChild(img);
-    labelContainer.appendChild(rotateImageButton);
+    parentContainer.appendChild(rotateImageButton);
     labelContainer.appendChild(alertButton);
     imagesContainer.appendChild(imgContainer);
     imagesContainer.classList.add('has-images');
@@ -2562,7 +2562,6 @@ label .images-container.file-input-display.has-images .ifEmpty {
   margin: auto;
 }
 .file-input-component .rotate-image-button {
-  position: absolute;
   top: 0;
   right: 0;
   background-color: red;
@@ -2589,7 +2588,7 @@ label .images-container.file-input-display.has-images .ifEmpty {
   padding: 5px;
   border-radius: 5px;
   color: white;
-  right: 48px;
+  right: 14px;
   top: 3px;
 }
 .file-input-component .alert-icon {
@@ -2624,7 +2623,7 @@ label .images-container.file-input-display.has-images .ifEmpty {
   right: 10px;
   scale: 0.8;
   cursor: pointer;
-}`, "",{"version":3,"sources":["webpack://./app/components/input/style.scss"],"names":[],"mappings":"AAAA;EASI,kBAAA;EACA,kBAAA;EACA,eAAA;EACA,qBAAA;EACA,WAAA;AAPJ;AAFI;EACI,iBAAA;AAIR;AAMI;;EAEI,WAAA;AAJR;AAOI;EACI,kBAAA;EACA,UAAA;EACA,oBAAA;EACA,+BAAA;EACA,iBAAA;EACA,YAAA;AALR;AASQ;EACI,+BAAA;EACA,kBAAA;EACA,iBAAA;AAPZ;AAWI;EACI,kBAAA;AATR;AAYQ;EACI,WAAA;EACA,kBAAA;EACA,SAAA;EACA,qBAAA;EACA,QAAA;EACA,UAAA;EACA,eAAA;EACA,eAAA;AAVZ;AAcI;EACI,kBAAA;EACA,mBAAA;EACA,eAAA;AAZR;AAeI;EACI,kBAAA;EACA,aAAA;EACA,mBAAA;EACA,uBAAA;AAbR;AAeQ;EACI,UAAA;EACA,mBAAA;EACA,0BAAA;EACA,eAAA;AAbZ;AAiBI;;EAGI,kBAAA;EACA,aAAA;EACA,sBAAA;EACA,kBAAA;AAhBR;AAmBI;EACI,gBAAA;EACA,iBAAA;AAjBR;AAoBI;EACI,aAAA;AAlBR;AAqBI;EACI,cAAA;AAnBR;AAuBQ;EACI,cAAA;AArBZ;AAwBQ;EACI,aAAA;AAtBZ;AA0BI;EACI,iBAAA;EACA,iBAAA;EACA,UAAA;EACA,iBAAA;AAxBR;AA2BI;EACI,aAAA;EACA,uBAAA;EACA,eAAA;EACA,kBAAA;AAzBR;AAiCQ;EACI,WAAA;EACA,YAAA;EACA,2BAAA;EACA,mBAAA;AA/BZ;AAoCQ;EAEI,2BAAA;EACA,kBAAA;AAnCZ;AAqCY;EACI,kBAAA;EACA,OAAA;AAnChB;AAuCQ;EACI,YAAA;EACA,aAAA;EAEA,gBAAA;EACA,eAAA;AAtCZ;AAwCY;EACI,uBAAA;AAtChB;AAyCY;EACI,eAAA;EACA,kBAAA;EACA,YAAA;AAvChB;AA2CY;EACI,YAAA;AAzChB;AA6CgB;EACI,aAAA;AA3CpB;;AAoDA;EAKI,YAAA;AArDJ;AAiDI;EACI,uBAAA;AA/CR;AAoDI;EACI,kBAAA;EACA,YAAA;EACA,aAAA;EACA,iBAAA;EACA,YAAA;AAlDR;AAqDI;EACI,kBAAA;EACA,MAAA;EACA,QAAA;EACA,qBAAA;EACA,YAAA;EACA,YAAA;EACA,YAAA;EACA,eAAA;AAnDR;AAsDI;;EAGI,kBAAA;AArDR;AAwDI;EACI,uBAAA;EACA,UAAA;EACA,iBAAA;EACA,eAAA;AAtDR;;AA+DI;EACI,kBAAA;EACA,YAAA;EACA,mBAAA;EACA,YAAA;EACA,kBAAA;EACA,YAAA;EACA,WAAA;EACA,QAAA;AA5DR;AA+DI;EACI,aAAA;AA7DR;AAiEI;EACI,aAAA;AA/DR;AAmEQ;EACI,cAAA;EACA,kBAAA;EACA,QAAA;EACA,SAAA;EACA,gCAAA;AAjEZ;AAoEQ;EACI,aAAA;AAlEZ;AAuEQ;EACI,kBAAA;EACA,UAAA;EACA,WAAA;EACA,eAAA;EACA,cAAA;EACA,cAAA;AArEZ;;AA4EA;EACI,kBAAA;EACA,SAAA;EACA,kBAAA;EACA,WAAA;EACA,UAAA;EACA,eAAA;AAzEJ","sourceRoot":""}]);
+}`, "",{"version":3,"sources":["webpack://./app/components/input/style.scss"],"names":[],"mappings":"AAAA;EASI,kBAAA;EACA,kBAAA;EACA,eAAA;EACA,qBAAA;EACA,WAAA;AAPJ;AAFI;EACI,iBAAA;AAIR;AAMI;;EAEI,WAAA;AAJR;AAOI;EACI,kBAAA;EACA,UAAA;EACA,oBAAA;EACA,+BAAA;EACA,iBAAA;EACA,YAAA;AALR;AASQ;EACI,+BAAA;EACA,kBAAA;EACA,iBAAA;AAPZ;AAWI;EACI,kBAAA;AATR;AAYQ;EACI,WAAA;EACA,kBAAA;EACA,SAAA;EACA,qBAAA;EACA,QAAA;EACA,UAAA;EACA,eAAA;EACA,eAAA;AAVZ;AAcI;EACI,kBAAA;EACA,mBAAA;EACA,eAAA;AAZR;AAeI;EACI,kBAAA;EACA,aAAA;EACA,mBAAA;EACA,uBAAA;AAbR;AAeQ;EACI,UAAA;EACA,mBAAA;EACA,0BAAA;EACA,eAAA;AAbZ;AAiBI;;EAGI,kBAAA;EACA,aAAA;EACA,sBAAA;EACA,kBAAA;AAhBR;AAmBI;EACI,gBAAA;EACA,iBAAA;AAjBR;AAoBI;EACI,aAAA;AAlBR;AAqBI;EACI,cAAA;AAnBR;AAuBQ;EACI,cAAA;AArBZ;AAwBQ;EACI,aAAA;AAtBZ;AA0BI;EACI,iBAAA;EACA,iBAAA;EACA,UAAA;EACA,iBAAA;AAxBR;AA2BI;EACI,aAAA;EACA,uBAAA;EACA,eAAA;EACA,kBAAA;AAzBR;AAiCQ;EACI,WAAA;EACA,YAAA;EACA,2BAAA;EACA,mBAAA;AA/BZ;AAoCQ;EAEI,2BAAA;EACA,kBAAA;AAnCZ;AAqCY;EACI,kBAAA;EACA,OAAA;AAnChB;AAuCQ;EACI,YAAA;EACA,aAAA;EAEA,gBAAA;EACA,eAAA;AAtCZ;AAwCY;EACI,uBAAA;AAtChB;AAyCY;EACI,eAAA;EACA,kBAAA;EACA,YAAA;AAvChB;AA2CY;EACI,YAAA;AAzChB;AA6CgB;EACI,aAAA;AA3CpB;;AAoDA;EAKI,YAAA;AArDJ;AAiDI;EACI,uBAAA;AA/CR;AAoDI;EACI,kBAAA;EACA,YAAA;EACA,aAAA;EACA,iBAAA;EACA,YAAA;AAlDR;AAqDI;EAEI,MAAA;EACA,QAAA;EACA,qBAAA;EACA,YAAA;EACA,YAAA;EACA,YAAA;EACA,eAAA;AApDR;AAuDI;;EAGI,kBAAA;AAtDR;AAyDI;EACI,uBAAA;EACA,UAAA;EACA,iBAAA;EACA,eAAA;AAvDR;;AAgEI;EACI,kBAAA;EACA,YAAA;EACA,mBAAA;EACA,YAAA;EACA,kBAAA;EACA,YAAA;EACA,WAAA;EACA,QAAA;AA7DR;AAgEI;EACI,aAAA;AA9DR;AAkEI;EACI,aAAA;AAhER;AAoEQ;EACI,cAAA;EACA,kBAAA;EACA,QAAA;EACA,SAAA;EACA,gCAAA;AAlEZ;AAqEQ;EACI,aAAA;AAnEZ;AAwEQ;EACI,kBAAA;EACA,UAAA;EACA,WAAA;EACA,eAAA;EACA,cAAA;EACA,cAAA;AAtEZ;;AA6EA;EACI,kBAAA;EACA,SAAA;EACA,kBAAA;EACA,WAAA;EACA,UAAA;EACA,eAAA;AA1EJ","sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

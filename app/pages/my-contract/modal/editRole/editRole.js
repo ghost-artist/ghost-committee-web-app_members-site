@@ -105,10 +105,16 @@ window.setSelect2FieldOptionsForRoleEditors = function () {
     const roleAssignmentSelect = document.querySelectorAll('select.role-assignment-select2')
     roleAssignmentSelect.forEach(select => {
        
-        $(roleAssignmentSelect).select2({
-            data: contracts.filter(c => c.artistDetails).sort(byLastName).map(contract => {
+        let data = contracts.filter(c => c.artistDetails).sort(byLastName).map(contract => {
                 return {id: contract.userId, text: `${contract.artistDetails.firstName} ${contract.artistDetails.lastName}` }
             })
+
+        if(select.closest("#editRoleModal")){
+            data = data.concat([{id: null, text: "Blank"}])
+        }
+
+        $(roleAssignmentSelect).select2({
+            data: data
         })
     })
 
@@ -180,7 +186,9 @@ function setListenerToSaveRoleEdit() {
         const title = document.querySelector('#editRoleModal input#title').value
         const responsibility = document.querySelector('#editRoleModal textarea#responsibility').value
         const committee = document.querySelector('#editRoleModal select.committee-select2').value
-        const roleAssignment = document.querySelector('#editRoleModal select.role-assignment-select2').value
+        let roleAssignment = document.querySelector('#editRoleModal select.role-assignment-select2').value
+        // roleAssignment may be string 'null'
+        if(roleAssignment == "null") roleAssignment = null;
         const tasks = Array.from(document.querySelector('#editRoleModal select.tasks-select2').selectedOptions).map(option => option.value)
         const privileges = Array.from(document.querySelector('#editRoleModal select.privileges-select2').selectedOptions).map(option => option.value)
         const sideBarButtons = Array.from(document.querySelector('#editRoleModal select.sideBarButtons-select2').selectedOptions).map(option => option.value)
@@ -211,10 +219,45 @@ function setListenerToSaveRoleEdit() {
         
             roleEl.querySelector('.tasks').innerHTML = tasks.map(task => `<li>${task}</li>`).join('')
 
-           roleAssignment && await CRUD.read('ghost-contracts', roleAssignment).then(memberData => {
-                roleEl.querySelector('.user-name').innerText = `${memberData.artistDetails.firstName} ${memberData.artistDetails.lastName}`
-                roleEl.querySelector('.user-name').setAttribute('data-user-id', roleAssignment)
-            })
+            if(roleAssignment){
+                const previousRoleAssignment = roleEl.querySelector(".user-name").getAttribute("data-user-id")
+                if(previousRoleAssignment != roleAssignment){
+                    // get the current user assigned and un assign them
+                    const previousUserData = await CRUD.read("ghost-contracts", previousRoleAssignment)
+                    const previousUsersRoles = previousUserData.committeeRoleId
+                    CRUD.update("ghost-contracts", previousRoleAssignment, {
+                        committeeRoleId: previousUsersRoles.filter(role => role != roleId)
+                    })
+                    // add the role to the new user
+
+                    const newUserData = await CRUD.read("ghost-contracts", roleAssignment)
+                    const newUsersRoles = newUserData.committeeRoleId
+                    CRUD.update("ghost-contracts", roleAssignment, {
+                        committeeRoleId: newUsersRoles.concat([roleId])
+                    })
+                }
+
+
+            } else {
+                const previousRoleAssignment = roleEl.querySelector(".user-name").getAttribute("data-user-id")
+                const previousUserData = await CRUD.read("ghost-contracts", previousRoleAssignment)
+                    const previousUsersRoles = previousUserData.committeeRoleId
+                    CRUD.update("ghost-contracts", previousRoleAssignment, {
+                        committeeRoleId: previousUsersRoles.filter(role => role != roleId)
+                    })
+            }
+
+        //    roleAssignment && await CRUD.read('ghost-contracts', roleAssignment).then(memberData => {
+                
+        //     if(memberData && roleAssignment != "null" ){    
+        //         roleEl.querySelector('.user-name').innerText = `${memberData.artistDetails.firstName} ${memberData.artistDetails.lastName}`
+        //         roleEl.querySelector('.user-name').setAttribute('data-user-id', roleAssignment)
+        //     }
+        //     if(roleAssignment == "null"){
+        //         roleEl.querySelector('.user-name').innerText = ""
+        //         roleEl.querySelector('.user-name').removeAttribute('data-user-id')
+        //     }
+        //     })
             // close the modal
             document.querySelector('#editRoleModal').classList.remove('show')
         })

@@ -143,7 +143,7 @@ createCustomElement(
       alertButton.classList.add('fas', 'fa-exclamation-triangle', 'alert-icon')
 
 
-      rotateImageButton.innerHTML = `<i class="fa-solid fa-rotate"></i>`
+      rotateImageButton.innerHTML = `Click here to replace image`
       rotateImageButton.classList.add('rotate-image-button')
       rotateImageButton.addEventListener('click', (e) => {
         img.remove()
@@ -182,7 +182,7 @@ createCustomElement(
       const imgContainer = document.createElement('div')
       imgContainer.classList.add('img-container')
       imgContainer.appendChild(img)
-      labelContainer.appendChild(rotateImageButton)
+      parentContainer.appendChild(rotateImageButton)
 
       labelContainer.appendChild(alertButton)
 
