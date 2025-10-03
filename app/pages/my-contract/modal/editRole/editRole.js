@@ -211,7 +211,6 @@ function setListenerToSaveRoleEdit() {
 
 
         console.log("editing a role",{ roleData, roleId, "role assigned to: ": roleAssignment })
-
         CRUD.update('committee-roles', roleId, roleData).then(async () => {
             console.log("Role updated in db")
             // update UI
@@ -225,11 +224,14 @@ function setListenerToSaveRoleEdit() {
                 const previousRoleAssignment = roleEl.querySelector(".user-name").getAttribute("data-user-id")
                 if(previousRoleAssignment != roleAssignment){
                     // get the current user assigned and un assign them
-                    const previousUserData = await CRUD.read("ghost-contracts", previousRoleAssignment)
-                    const previousUsersRoles = previousUserData.committeeRoleId
-                    CRUD.update("ghost-contracts", previousRoleAssignment, {
-                        committeeRoleId: previousUsersRoles.filter(role => role != roleId)
-                    })
+                    if(previousRoleAssignment){
+
+                        const previousUserData = await CRUD.read("ghost-contracts", previousRoleAssignment)
+                        const previousUsersRoles = previousUserData.committeeRoleId
+                        CRUD.update("ghost-contracts", previousRoleAssignment, {
+                            committeeRoleId: previousUsersRoles.filter(role => role != roleId)
+                        })
+                    }
                     // add the role to the new user
 
                     const newUserData = await CRUD.read("ghost-contracts", roleAssignment)
@@ -238,7 +240,7 @@ function setListenerToSaveRoleEdit() {
                         committeeRoleId: newUsersRoles.concat([roleId])
                     })
 
-                    roleEl.querySelector('.user-name').innerText = `${newUserData.artistDetails.firstName} ${memberData.artistDetails.lastName}`
+                    roleEl.querySelector('.user-name').innerText = `${newUserData.artistDetails.firstName} ${newUserData.artistDetails.lastName}`
                     roleEl.querySelector('.user-name').setAttribute('data-user-id', roleAssignment)
                 }
 
@@ -250,6 +252,9 @@ function setListenerToSaveRoleEdit() {
                     CRUD.update("ghost-contracts", previousRoleAssignment, {
                         committeeRoleId: previousUsersRoles.filter(role => role != roleId)
                     })
+                
+                    roleEl.querySelector('.user-name').innerText = ``
+                    roleEl.querySelector('.user-name').removeAttribute('data-user-id')
             }
 
         //    roleAssignment && await CRUD.read('ghost-contracts', roleAssignment).then(memberData => {
