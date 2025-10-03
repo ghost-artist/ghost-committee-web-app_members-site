@@ -76,7 +76,7 @@ function editRole() {
 
 window.setSelect2FieldOptionsForRoleEditors = function () {
 
-
+   
     // Set the committee-select2 
     const committeeSelect = document.querySelectorAll('select.committee-select2')
 
@@ -101,18 +101,20 @@ window.setSelect2FieldOptionsForRoleEditors = function () {
     })
 
 
-    // set up role-assignment select2
+      // set up role-assignment select2
     const roleAssignmentSelect = document.querySelectorAll('select.role-assignment-select2')
-    roleAssignmentSelect.forEach(select => {
+    let data = contracts.filter(c => c.artistDetails).sort(byLastName).map(contract => {
+            return {id: contract.userId, text: `${contract.artistDetails.firstName} ${contract.artistDetails.lastName}` }
+        })
        
-        let data = contracts.filter(c => c.artistDetails).sort(byLastName).map(contract => {
-                return {id: contract.userId, text: `${contract.artistDetails.firstName} ${contract.artistDetails.lastName}` }
-            })
+    
+    if(!data.some(el => el.id == "null")){
+        data = data.concat([{id: "null", text: "Blank"}])
+    }
 
-        if(select.closest("#editRoleModal")){
-            data = data.concat([{id: null, text: "Blank"}])
-        }
-
+        
+   
+    roleAssignmentSelect.forEach(select => {
         $(roleAssignmentSelect).select2({
             data: data
         })
@@ -235,6 +237,9 @@ function setListenerToSaveRoleEdit() {
                     CRUD.update("ghost-contracts", roleAssignment, {
                         committeeRoleId: newUsersRoles.concat([roleId])
                     })
+
+                    roleEl.querySelector('.user-name').innerText = `${newUserData.artistDetails.firstName} ${memberData.artistDetails.lastName}`
+                    roleEl.querySelector('.user-name').setAttribute('data-user-id', roleAssignment)
                 }
 
 
