@@ -109,7 +109,7 @@ window.setSelect2FieldOptionsForRoleEditors = function () {
        
     
     if(!data.some(el => el.id == "null")){
-        data = data.concat([{id: "null", text: "Blank"}])
+        data.unshift({id: "null", text: "Blank"})
     }
 
         
