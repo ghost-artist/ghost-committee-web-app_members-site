@@ -2588,7 +2588,7 @@ label .images-container.file-input-display.has-images .ifEmpty {
   padding: 5px;
   border-radius: 5px;
   color: white;
-  right: 14px;
+  right: 48px;
   top: 3px;
 }
 .file-input-component .alert-icon {
