@@ -14,14 +14,14 @@
 
 
 const logIf = {
-    server: true,
+    server: false,
     client: false,
     archive: false,
     paypal: false,
     auth: false,
     component: false,
-    crud: true,
-    memberSidePanel: true
+    crud: false,
+    memberSidePanel: false
 };
 
 

@@ -331,7 +331,8 @@ async function handleStudioSharingForm(e) {
             "canopy-no-studio": "",
             studioSigns: "",
             'studioSigns-2': "",
-            "studioSharingPlans-no-studio": ""
+            "studioSharingPlans-no-studio": "",
+            prefersToBeWith3OrMoreArtist: ""
         }
     }
 
@@ -425,6 +426,11 @@ async function handleStudioSharingForm(e) {
         StudioSharingPayload.StudioSharingAnswer += ' \n\t\t' + "I am planning to share my space with " + studioSharingPlans.value.trim();
         StudioSharingPayload.StudioSharingInfo["studioSharingPlans-no-studio"] = studioSharingPlans.value;
 
+        const prefersToBeWith3OrMoreArtist = form.querySelector("input[type=checkbox]#prefersToBeWith3OrMoreArtist")
+        if(prefersToBeWith3OrMoreArtist.checked){
+            StudioSharingPayload.StudioSharingAnswer += " \n\t\t" + "I prefer to be placed at a studio with 3 or more artists"
+        }
+        StudioSharingPayload.StudioSharingInfo.prefersToBeWith3OrMoreArtist = prefersToBeWith3OrMoreArtist.checked
     }
 
     logIf.client && console.log({ StudioSharingPayload })
@@ -832,27 +838,38 @@ function setUpStudioSharingForm(contract) {
 
         // set the inputs
         Object.entries(studioSharingInfo).forEach(([key, value]) => {
-            const input = form.querySelector(`input[name="${key}"][value="${value}"]`)
+
+           
+            const textInput = form.querySelector(`input[name="${key}"][value="${value}"]`)
+            const checkboxInput = form.querySelector(`input[type=checkbox][name="${key}"]`)
             const artistsAccommodated = form.querySelector(`input[name="artistsAccommodated"`)
             const studioSigns = form.querySelector(`input[name="studioSigns"`)
             const studioSigns2 = form.querySelector(`input[name="studioSigns-2"`)
             const willingnessToRelocate = form.querySelector(`input[name="willingnessToRelocate"`)
             const textarea = form.querySelector(`textarea[name="${key}"]`)
-            if (input) {
-                if (input.type === 'text') {
-                    input.value = value
-                } else if (input.type === 'number') {
+            if (textInput) {
+                if (textInput.type === 'text') {
+                    textInput.value = value
+                } else if (textInput.type === 'number') {
                     console.log("Setting number", { value })
-                    input.value = Number(value)
+                    textInput.value = Number(value)
                 }
-                input.checked = true
+                textInput.checked = true // <-- for some reason this is important
                 // trigger change event
                 const event = new Event('change')
-                input.dispatchEvent(event)
-
-            } else {
+                textInput.dispatchEvent(event)
 
             }
+
+            if(checkboxInput && value){
+                checkboxInput.checked = true 
+
+            }
+
+            // if(checkboxInput && value){
+            //     checkboxInput.checked = true
+            // }
+            
             if (textarea) {
                 textarea.value = value
                 const event = new Event('change')

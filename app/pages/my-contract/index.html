@@ -266,8 +266,9 @@
 
           <label for="noRoom" class="level-1">
             <input type="radio" name="studioAvailability" id="noRoom" value="noRoom">
-            I want to stay at my own studio but do not have room for additional artists
+            I want to stay at my own studio but do not have room for additional artists.
           </label>
+          <div style="margin-left: 61px;">(If you live in a gated community, we recommend that you make arrangements with your HOA to leave your gate open on the days of the tour)</div>
           <div class="level-2" visible-if="studioAvailability === 'noRoom'" id="studioSigns-2">
             <input-component moveLabel="true" type="number" width="100%" fieldName="studioSigns-2"
               className="studioSignsQuestion"
@@ -280,6 +281,7 @@
             <input type="radio" name="studioAvailability" id="canShare" value="canShare">
             I want to stay at my own studio and I can share my studio space with more artists and have adequate parking.
           </label>
+          <div style="margin-left: 61px;">(If you live in a gated community, you can only choose this option if you have confirmed with your HOA that the gate can be left open on the days of the tour)</div>
 
           <div class="level-2" id="additionalStudioInfo" visible-if="studioAvailability === 'canShare'"
             style="margin-top: 10px;">
@@ -304,6 +306,7 @@
           <input type="radio" name="studioPreference" id="doesNotHaveStudio" value="doesNotHaveStudio">
           I don't have a studio and I need to show my art at another artist's studio space
         </label>
+
         <div class="level-1" id="canopy-no-studio" visible-if="doesNotHaveStudio">
           <label for="hasCanopy-no-studio" visible-if="willingnessToRelocate">
             <input type="radio" name="canopy-no-studio" id="hasCanopy-no-studio" value="hasCanopy-no-studio">
@@ -315,8 +318,11 @@
             I don't have my own art canopy so would need a covered space (ie, a garage or indoors) to set up
           </label>
            <textarea-component style="width:100%" fieldName="studioSharingPlans-no-studio"
-              alias="If you already have plans to share someone else's studio space, type their name here: (If none, type N/A)"></textarea-component>
-            
+              alias="If you already have confirmed plans to share someone else's studio space, type their name here: (If none, type N/A)"></textarea-component>
+          <label for="prefersToBeWith3OrMoreArtist">
+            <input type="checkbox" name="prefersToBeWith3OrMoreArtist" id="prefersToBeWith3OrMoreArtist">
+            Check this box if you prefer to be placed at a studio with 3 or more artists
+          </label>
         </div>
       </div>
       <button type="submit" id="save-stuido-sharing-details"
