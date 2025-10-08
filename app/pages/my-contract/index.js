@@ -1138,6 +1138,7 @@ function setEditContractEditor(myContract) {
                 console.log("Initializing TinyMCE editor")
 
                 tinymce.init({
+                    license_key: 'gpl',
                     plugins: 'paste',
                     paste_data_images: true,
                     setup: function (editor) {
