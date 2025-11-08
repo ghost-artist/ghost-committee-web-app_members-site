@@ -2,6 +2,7 @@ import { getEmailAddresses } from "./getEmailAddresses.js";
 import { sendNewApplicationEmail } from "./newApplicationReceived.js";
 import { sendNewContractSubmissionBoardEmail, sendNewContractSubmissionEmail } from "./newContractSubmission.js";
 import { sendNewScholarshipEmail } from "./newScholarshipApplicant.js";
+import { sendNotApprovedNewArtistEmail } from "./notApprovedNewArtist.js";
 
 export const TESTING = {
     newApplication: false,
@@ -32,11 +33,13 @@ export async function sendTestEmail() {
         status: 'Completed'
     }
 
-    sendNewContractSubmissionEmail(user, transaction)
-
+    // sendNewContractSubmissionEmail(user, transaction)
+// 
     // // TEST #2: send email to the board members
 
-    sendNewContractSubmissionBoardEmail(user, transaction)
+    // sendNewContractSubmissionBoardEmail(user, transaction)
+
+    sendNotApprovedNewArtistEmail(user.artistDetails.email)
 
 
     // sendNewScholarshipEmail({
