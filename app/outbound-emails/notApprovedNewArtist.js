@@ -14,8 +14,8 @@ export function sendNotApprovedNewArtistEmail(newArtistEmail){
       body: `
           <div style="text-align:center; font-family:sans-serif;">
           <h1>Thank you for your application to the Gig Harbor Open Studio Tour</h1>
-          <p>
-            I am sorry to inform you that, at this time, your application to join the Gig Harbor Open Studio Tour has been declined because it does not meet our artistic standards for professional work. If you would like any feedback about our decision, please contact me at <a href="mailto:degoede@aol.com">degoede@aol.com</a>.
+          <p style="max-width:575px">
+            I am sorry to inform you that, at this time, your application to join the Gig Harbor Open Studio Tour has been declined because it does not meet our artistic standards for professional work. <br> If you would like any feedback about our decision, please contact me at <a href="mailto:degoede@aol.com">degoede@aol.com</a>.
           </p>
           <p>
             We appreciate your interest and would encourage you to continue to work on your art and to reapply in future years.

@@ -1679,12 +1679,10 @@ function _sendTestEmail() {
               currency_code: 'USD'
             },
             status: 'Completed'
-          };
-          (0,_newContractSubmission_js__WEBPACK_IMPORTED_MODULE_2__.sendNewContractSubmissionEmail)(user, transaction);
-
+          }; // sendNewContractSubmissionEmail(user, transaction)
+          // 
           // // TEST #2: send email to the board members
-
-          (0,_newContractSubmission_js__WEBPACK_IMPORTED_MODULE_2__.sendNewContractSubmissionBoardEmail)(user, transaction);
+          // sendNewContractSubmissionBoardEmail(user, transaction)
           (0,_notApprovedNewArtist_js__WEBPACK_IMPORTED_MODULE_4__.sendNotApprovedNewArtistEmail)(user.artistDetails.email);
 
           // sendNewScholarshipEmail({
@@ -1710,7 +1708,7 @@ function _sendTestEmail() {
           //  }).then(emails => emails.join(', ')).then(emails => {
           //     console.log("would send email to: ", emails)
           //  })
-        case 5:
+        case 3:
         case "end":
           return _context.stop();
       }
