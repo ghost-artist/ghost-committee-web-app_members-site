@@ -124,13 +124,12 @@ window.setSelect2FieldOptionsForRoleEditors = function () {
         action: 'readFolder',
         folderId: "185hBrC0MB-R0pzzuGK03RCMa11va65Cp"
     })
+
+    // This is so select2 will still be activated in dev mode, but it really is populated in the message event below
     const docLinkSelectEls = document.querySelectorAll('select.doc-link-select2')
     docLinkSelectEls.forEach(select => {
         $(select).select2({
-            data: [{
-                id: "12343212343randomID",
-                text: "The Drive documents will only be fetched in production env"
-            }]
+            data: []
         })
     })
     
@@ -149,11 +148,6 @@ window.setSelect2FieldOptionsForRoleEditors = function () {
         }))
        
         docLinkSelectEls.forEach(select => {
-            // clear any existing selection/options and destroy Select2 (the dev select2 doesn't have the options - it has a warning placeholder instead)
-            if ($(select).data('select2')) {
-                $(select).val(null).trigger('change');
-                $(select).select2('destroy');
-            }
             $(select).select2({
                 data:fileDataArray
             })
@@ -258,11 +252,11 @@ function setListenerToSaveRoleEdit() {
             roleEl.querySelector('.role-title').innerText = title
             roleEl.querySelector('.responsibility-description').innerText = responsibility
             const link = roleEl.querySelector(".drive-folder-link")
-            if(roleData.driveFolderIdLink){
+            if(roleData.driveFolderId !== "Select a doc link"){
                 link.href = roleData.driveFolderIdLink
                 link.innerHTML = "More&nbsp;info" // More info
             } else {
-                link.href = "#"
+                link.removeAttribute("href")
                 link.innerHTML = ""
             }
         
