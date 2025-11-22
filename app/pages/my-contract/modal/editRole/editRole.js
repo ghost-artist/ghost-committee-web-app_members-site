@@ -147,9 +147,12 @@ window.setSelect2FieldOptionsForRoleEditors = function () {
             text: entry.name,
             id: entry.id
         }))
+       
+        docLinkSelectEls.forEach(select => {
         $(select).select2({
-            data: fileDataArray
+            data:fileDataArray
         })
+    })
     })
 
 
