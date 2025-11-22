@@ -251,8 +251,9 @@ function setListenerToSaveRoleEdit() {
             const roleEl = document.querySelector(`.role[data-role-id="${roleId}"]`)
             roleEl.querySelector('.role-title').innerText = title
             roleEl.querySelector('.responsibility-description').innerText = responsibility
+
             const link = roleEl.querySelector(".drive-folder-link")
-            if(roleData.driveFolderId !== "Select a doc link"){
+            if(driveFolderId !== "Select a doc link"){
                 link.href = roleData.driveFolderIdLink
                 link.innerHTML = "More&nbsp;info" // More info
             } else {
