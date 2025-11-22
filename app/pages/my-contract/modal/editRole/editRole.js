@@ -329,6 +329,7 @@ window.openEditRoleModal = function(e) {
     // update the committee select2
     const committee = roleEl.closest('.committee').getAttribute('data-committee-id')
     const roleAssignment = roleEl.querySelector('.user-name')?.getAttribute('data-user-id')
+
     // Get the role id and role info
     const roleId = roleEl.getAttribute('data-role-id')
     console.log("Edit Role", { roleEl, title, responsibility, roleId, committee, roleAssignment })
@@ -356,6 +357,12 @@ window.openEditRoleModal = function(e) {
     if (responsibility) {
         console.log("setting responsibility text in edit modal", {responsibility})
         document.querySelector('#editRoleModal textarea#responsibility').value = responsibility;
+    }
+
+    if(thisRole.driveFolderIdLink){
+        const id = thisRole.driveFolderIdLink.split("/")[5]
+         const select2 = document.querySelector('#editRoleModal select.doc-link-select2')
+        $(select2).val(id).trigger('change');
     }
 
 
