@@ -637,13 +637,15 @@ function setUpVolunteerResponsibilityForm(contracts) {
         responsibilityContainer.appendChild(responsibility)
         responsibility.classList.add('responsibility-description', 'editor-control')
         responsibility.innerText = thisRole.responsibility.trim()
+        const link = document.createElement('a')
+        link.style.marginLeft = "5px"
+        link.classList.add("drive-folder-link")
+        link.classList.add("editor-control") // <-- This makes it not saved to the template committee roles html
+        responsibilityContainer.appendChild(link)
         if(thisRole.driveFolderIdLink){
-            const link = document.createElement('a')
             link.href = thisRole.driveFolderIdLink
             link.target = "_blank"
             link.innerHTML = "More&nbsp;info" // More info
-            link.style.marginLeft = "5px"
-            responsibilityContainer.appendChild(link)
         }
         return responsibilityContainer
     }
