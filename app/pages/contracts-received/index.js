@@ -40,7 +40,7 @@ function renderContracts(contracts) {
             phone: contract?.artistDetails?.phone || '',
             studioAddress: contract?.artistDetails?.studioAddress || '',
             website: contract?.artistDetails?.website || '',
-            committeeRoles: contract?.committeeRoleId && renderCommitteeRoles(contract.committeeRoleId) || '',
+            committeeRoles: contract?.committeeRoleId && renderCommitteeRoles(contract) || '',
             artistInStudioImage: contract?.images?.artistInStudioImage || '',
             brochureImage: contract?.images?.brochureImage || '',
             digitalImage1: contract?.images?.digitalImage1 || '',
@@ -71,11 +71,12 @@ function renderContracts(contracts) {
     })
 }
 
-function renderCommitteeRoles(committeeRoleId) {
+function renderCommitteeRoles(contract) {
 
+    const committeeRoleId = contract.committeeRoleId
 
     return committeeRoleId.map(role => {
-        console.log({ role, roles })
+        console.log({ role, roles, name: contract.artistDetails.firstName + " " + contract.artistDetails.lastName })
         const title = roles[role].title
 
         return `<li>${title}</li>`

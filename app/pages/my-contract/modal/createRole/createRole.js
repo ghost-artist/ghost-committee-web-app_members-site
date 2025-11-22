@@ -126,6 +126,8 @@ function createRoleSetUp() {
                 const title = createRoleModal.querySelector('#title').value
                 const committeeId = createRoleModal.querySelector('.committee-select2').value
                 const responsibility = createRoleModal.querySelector('#responsibility').value
+                const driveFolderId = document.querySelector('#editRoleModal select.doc-link-select2').value
+                const driveFolderIdLink = `https://drive.google.com/file/d/${driveFolderId}/view`
                 // TODO: Get the other properties: btns, user, privileges, etc 
                 const sidebarButtons = createRoleModal.querySelector('.sideBarButtons-select2 ').value || []
                 const privileges = createRoleModal.querySelector('.privileges-select2 ').value || []
@@ -144,6 +146,7 @@ function createRoleSetUp() {
                     title,
                     committeeId,
                     responsibility,
+                    driveFolderIdLink,
                     sideBarButtons: [],
                     privileges: [],
                     tasks: [],

@@ -112,15 +112,45 @@ window.setSelect2FieldOptionsForRoleEditors = function () {
         data.unshift({id: "null", text: "Blank"})
     }
 
-        
-   
     roleAssignmentSelect.forEach(select => {
         $(roleAssignmentSelect).select2({
             data: data
         })
     })
 
+    // Fetch IDs of files in "185hBrC0MB-R0pzzuGK03RCMa11va65Cp" drive folder
+    window.sendMessageToParent({
+        controller: 'driveController',
+        action: 'readFolder',
+        folderId: "185hBrC0MB-R0pzzuGK03RCMa11va65Cp"
+    })
+    const docLinkSelectEls = document.querySelectorAll('select.doc-link-select2')
+    docLinkSelectEls.forEach(select => {
+        $(select).select2({
+            data: [{
+                id: "12343212343randomID",
+                text: "The Drive documents will only be fetched in production env"
+            }]
+        })
+    })
+    
 
+    window.addEventListener("message", (event) => {
+        if (event.data.dispatch !== 'driveController-response') return
+        if (event.data.error) {
+          console.warn("Error fetching drive folder contents")
+          return
+        }
+        let fileDataArray = event.data.data.data
+        fileDataArray = fileDataArray.map(entry => ({
+            // url: `https://drive.google.com/file/d/${entry.id}/view`,
+            text: entry.name,
+            id: entry.id
+        }))
+        $(select).select2({
+            data: fileDataArray
+        })
+    })
 
 
     // Set the sidebar button options
@@ -187,6 +217,8 @@ function setListenerToSaveRoleEdit() {
         // get the values
         const title = document.querySelector('#editRoleModal input#title').value
         const responsibility = document.querySelector('#editRoleModal textarea#responsibility').value
+        const driveFolderId = document.querySelector('#editRoleModal select.doc-link-select2').value
+        const driveFolderIdLink = `https://drive.google.com/file/d/${driveFolderId}/view`
         const committee = document.querySelector('#editRoleModal select.committee-select2').value
         let roleAssignment = document.querySelector('#editRoleModal select.role-assignment-select2').value
         // roleAssignment may be string 'null'
@@ -202,6 +234,7 @@ function setListenerToSaveRoleEdit() {
         const roleData = {
             title,
             responsibility,
+            driveFolderIdLink,
             committee,
             tasks,
             privileges,
