@@ -962,15 +962,15 @@ function setArtisticDemonstrationForm(contract) {
             const event = new Event('change')
             textarea.dispatchEvent(event)
         }
-        const artistMentor = contract.artistMentor
-        if (artistMentor) {
-            logIf.client && console.log("Setting artistic mentor", { artistMentor })
-            const checkbox = form.querySelector(`input[name="artistMentor"]`)
-            checkbox.checked = true
-            // trigger change
-            const event = new Event('change')
-            checkbox.dispatchEvent(event)
-        }
+        // const artistMentor = contract.artistMentor
+        // if (artistMentor) {
+        //     logIf.client && console.log("Setting artistic mentor", { artistMentor })
+        //     const checkbox = form.querySelector(`input[name="artistMentor"]`)
+        //     checkbox.checked = true
+        //     // trigger change
+        //     const event = new Event('change')
+        //     checkbox.dispatchEvent(event)
+        // }
     }
 }
 
