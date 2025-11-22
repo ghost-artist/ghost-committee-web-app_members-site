@@ -631,19 +631,21 @@ function setUpVolunteerResponsibilityForm(contracts) {
     function createResponsibility(role) {
         const roleId = role.getAttribute('data-role-id')
         const thisRole = roles[roleId]
-        console.log({ thisRole })
-        const responsibility = document.createElement('div')
+        const responsibilityContainer = document.createElement('span')
+        const responsibility = document.createElement('span')
+        responsibilityContainer.classList.add("responsibility-container")
+        responsibilityContainer.appendChild(responsibility)
         responsibility.classList.add('responsibility-description', 'editor-control')
         responsibility.innerText = thisRole.responsibility.trim()
         if(thisRole.driveFolderIdLink){
             const link = document.createElement('a')
             link.href = thisRole.driveFolderIdLink
             link.target = "_blank"
-            link.innerText = "More info"
+            link.innerHTML = "More&nbsp;info" // More info
             link.style.marginLeft = "5px"
-            responsibility.appendChild(link)
+            responsibilityContainer.appendChild(link)
         }
-        return responsibility
+        return responsibilityContainer
     }
 
     function createCheckbox(role) {
