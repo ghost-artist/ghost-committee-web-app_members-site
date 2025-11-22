@@ -631,10 +631,18 @@ function setUpVolunteerResponsibilityForm(contracts) {
     function createResponsibility(role) {
         const roleId = role.getAttribute('data-role-id')
         const thisRole = roles[roleId]
-        // console.log({ thisRole })
+        console.log({ thisRole })
         const responsibility = document.createElement('div')
         responsibility.classList.add('responsibility-description', 'editor-control')
-        responsibility.innerText = thisRole.responsibility
+        responsibility.innerText = thisRole.responsibility.trim()
+        if(thisRole.driveFolderIdLink){
+            const link = document.createElement('a')
+            link.href = thisRole.driveFolderIdLink
+            link.target = "_blank"
+            link.innerText = "More info"
+            link.style.marginLeft = "5px"
+            responsibility.appendChild(link)
+        }
         return responsibility
     }
 

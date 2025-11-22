@@ -149,10 +149,10 @@ window.setSelect2FieldOptionsForRoleEditors = function () {
         }))
        
         docLinkSelectEls.forEach(select => {
-        $(select).select2({
-            data:fileDataArray
+            $(select).select2({
+                data:fileDataArray
+            })
         })
-    })
     })
 
 
