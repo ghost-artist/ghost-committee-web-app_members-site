@@ -149,6 +149,11 @@ window.setSelect2FieldOptionsForRoleEditors = function () {
         }))
        
         docLinkSelectEls.forEach(select => {
+            // clear any existing selection/options and destroy Select2 (the dev select2 doesn't have the options - it has a warning placeholder instead)
+            if ($(select).data('select2')) {
+                $(select).val(null).trigger('change');
+                $(select).select2('destroy');
+            }
             $(select).select2({
                 data:fileDataArray
             })
@@ -237,14 +242,13 @@ function setListenerToSaveRoleEdit() {
         const roleData = {
             title,
             responsibility,
-            driveFolderIdLink,
+            driveFolderIdLink: driveFolderId == "Select a doc link" ? firebase.deleteField() : driveFolderIdLink,
             committee,
             tasks,
             privileges,
             sideBarButtons,
         }
     
-
 
         console.log("editing a role",{ roleData, roleId, "role assigned to: ": roleAssignment })
         CRUD.update('committee-roles', roleId, roleData).then(async () => {
