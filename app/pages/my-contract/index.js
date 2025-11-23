@@ -122,6 +122,24 @@ document.addEventListener('DOMContentLoaded', async function () {
         // Check if contract is complete and enable paypal buttons
         updateMyContract(myContract)
     })
+
+
+    
+    /// Set payment date opening 
+    if(new Date("2026-01-19T01:00:00Z") > new Date()){
+        const paymentElement = document.querySelector("#payment-form")
+        const template = document.createElement('template');
+        template.innerHTML = `
+           <div style="text-align:center; font-size: 40px; margin-bottom: 100px;">
+                Contract submission and payment will be opened on Jan 19th
+           </div>
+        `.trim();
+
+        const waitForOpeningEl = template.content.firstElementChild;
+        paymentElement.replaceWith(waitForOpeningEl)
+
+    }
+    
 })
 
 
