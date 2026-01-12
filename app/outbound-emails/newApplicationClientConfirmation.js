@@ -13,9 +13,11 @@ export async function sendNewApplicationClientConfirmationEmail(newArtist){
         subject: `GHOST New Artist Application Confirmation`,
         body: `
          <div style="text-align:center">
-          <h1>A GHOST New Artist Application has been submitted!</h1>
+          <h1>Your GHOST Artist Application has been submitted!</h1>
             <p>
-           This is confirmation that the Gig Harbor Open Studio Tour has received your New Artist Application.  After our screening committee meets, you will be receiving a follow up email with those results. 
+           This is confirmation that the Gig Harbor Open Studio Tour has received your New Artist Application.
+           <br>
+           After our screening committee meets, you will be receiving a follow up email with those results. 
             </p>
 
 
