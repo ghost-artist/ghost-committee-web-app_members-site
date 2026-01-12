@@ -1,5 +1,6 @@
 import '../../../utils/logIf.js';
 import { sendNewApplicationEmail } from '../../outbound-emails/newApplicationReceived.js';
+import { sendNewApplicationClientConfirmationEmail } from '../../outbound-emails/newApplicationClientConfirmation.js';
 
 // Duplicate of the function in the my-contract.js file
 function setDigitalImagesCommitteeMember(contracts){
@@ -66,8 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
             CRUD.create('new-applications', values).then(async () => {
 
                 sendNewApplicationEmail(values)
-
-    
+                sendNewApplicationClientConfirmationEmail(values)
     
                   window.addEventListener("message", (event) => {
                     // if (event.data.dispatch !== 'gmailController-response') return

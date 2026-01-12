@@ -168,6 +168,6 @@ app.use('/api', (req, res) => {
 
 
 app.listen(port, () => {
-    logIf.server && console.log(`Server is running at http://localhost:${port}`);
+    console.log(`Server is running at http://localhost:${port}`);
 });
 
