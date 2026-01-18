@@ -154,6 +154,7 @@ ${howDidYouHearAboutUs}
             <div style="text-align: center;">
                 <button class="approve-btn" data-fb-id="${fbId}" onclick="window.updateReview(event,true)">Approve Application</button>
                 <button class="reject-btn" data-fb-id="${fbId}" onclick="window.updateReview(event,false)">Disapprove</button>
+                <button class="delete-btn" data-fb-id="${fbId}" onclick="window.deleteApplication(event)">Delete</button>
 
             </div>
     </div>
