@@ -104,9 +104,20 @@ ${howDidYouHearAboutUs}
                     margin: 10px;
                 }
             </style>
-            <img src="${digitalImage1}"></img>
-            <img src="${digitalImage2}"></img>
-            <img src="${digitalImage3}"></img>
+            <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;">
+                <div style="text-align: center;">
+                    <img src="${digitalImage1}"></img>
+                    <p>${digitalImage1Info}</p>
+                </div>
+                <div style="text-align: center;">
+                    <img src="${digitalImage2}"></img>
+                    <p>${digitalImage2Info}</p>
+                </div>
+                <div style="text-align: center;">
+                    <img src="${digitalImage3}"></img>
+                    <p>${digitalImage3Info}</p>
+                </div>
+            </div>
         </div>
 
         <h3>One (1) digital image of your studio (if it is within the studio tour boundaries and you will be showing

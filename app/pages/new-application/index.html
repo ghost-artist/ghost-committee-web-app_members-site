@@ -134,11 +134,18 @@
             </style>
 
             <file-input-component fileName="{{randomNumber}}-digital-image-1" required="true" fieldName="digitalImage1" alias="Digital Image 1"
-                accept=".jpg,.jpeg,.png"></file-input-component>
-            <file-input-component fileName="{{randomNumber}}-digital-image-2" required="true" fieldName="digitalImage2" alias="Digital Image 2"
-                accept=".jpg,.jpeg,.png"></file-input-component>
-            <file-input-component fileName="{{randomNumber}}-digital-image-3" required="true" fieldName="digitalImage3" alias="Digital Image 3"
-                accept=".jpg,.jpeg,.png"></file-input-component>
+                accept=".jpg,.jpeg,.png">
+              <textarea name="digitalImage1Info" placeholder="Describe medium and size of this artwork *" required="true" style="width: 100%; box-sizing: border-box; "></textarea>
+            </file-input-component>
+            
+            <file-input-component fileName="{{randomNumber}}-digital-image-2"  required="true" fieldName="digitalImage2" alias="Digital Image 2"
+                accept=".jpg,.jpeg,.png">
+                 <textarea name="digitalImage2Info" placeholder="Describe medium and size of this artwork *" required="true" style="width: 100%; box-sizing: border-box; "></textarea>
+            </file-input-component>
+            <file-input-component fileName="{{randomNumber}}-digital-image-3"  required="true" fieldName="digitalImage3" alias="Digital Image 3"
+                accept=".jpg,.jpeg,.png">
+                 <textarea name="digitalImage3Info" placeholder="Describe medium and size of this artwork *" required="true" style="width: 100%; box-sizing: border-box; "></textarea>
+            </file-input-component>
         </div>
 
         <h3>One (1) digital image of your studio (if it is within the studio tour boundaries and you will be showing
