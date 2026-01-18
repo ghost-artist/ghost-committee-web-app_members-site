@@ -139,7 +139,7 @@ ${howDidYouHearAboutUs}
             and is represented well in your photo.</p>
 
         <div style="display: flex; justify-content: center; flex-wrap: wrap;">
-            <img src="${digitalImage3}"></img>
+            <img src="${digitalImage4}"></img>
         </div>
 
         <h3>Artist Statement</h3>
