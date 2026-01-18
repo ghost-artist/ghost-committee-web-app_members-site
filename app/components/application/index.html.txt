@@ -54,18 +54,8 @@
         <input-component value="${waStateBusinessLicenseUbiNumber}" disabled="true" required="true"
             fieldName="wa-state-business-license-ubi-number" placeholder="UBI Number"></input-component>
 
-        <h3>Is your studio within the GHOST Tour Boundaries? (That map is available on the Join page) *</h3>
-        <label for="isWithinBoundaries-${randomId}">
-            <input disabled="true" ${isWithinBoundaries == "Yes, my studio falls within the boundary" ? "checked" : ""} type="radio" name="isWithinBoundaries-${randomId}" value="Yes, my studio falls within the boundary"
-                id="isWithinBoundaries-${randomId}"></input>
-            Yes, my studio falls within the boundary
-        </label>
-        <label for="isNotWithinBoundaries-${randomId}">
-            <input  disabled="true" ${isWithinBoundaries == "Yes, my studio falls within the boundary" ? "": "checked"} type="radio" name="isWithinBoundaries-${randomId}"
-                value="No, my studio is outside the boundary and I will need to share studio space with another artist"
-                id="isNotWithinBoundaries-${randomId}"></input>
-            No, my studio is outside the boundary and I will need to share studio space with another artist
-        </label>
+        <h3>Is your studio within the GHOST Tour Boundaries? *</h3>
+        <p style="margin-bottom: 35px;">${isWithinBoundaries}</p>
 
         <h3>Will you need to share a studio?</h3>
         <style>
@@ -90,19 +80,6 @@ ${studioSharingResponse}
         </textarea>
         <!-- <textarea-component description="If sharing a studio, have you made arrangements to do so? If so, please name the Tour Artist who has invited you to share their studio. If not, we will match you with a Tour Artist who will host you in their studio."></textarea-component> -->
 
-
-        <h3>I would like an artist mentor (an experienced artist who can talk to me about preparing for the tour,
-            marketing and answer my questions)</h3>
-        <label for="artistMentor-${randomId}">
-            <input disabled ${artistMentor == "Yes, I would like an artist mentor" ? "checked": ""} required type="radio" name="artistMentor-${randomId}" value="Yes, I would like an artist mentor"
-                id="artistMentor-${randomId}"></input>
-            Yes, I would like an artist mentor
-        </label>
-        <label for="noArtistMentor-${randomId}">
-            <input disabled ${artistMentor == "No, I do not need an artist mentor" ? "checked": ""}  required type="radio" name="artistMentor-${randomId}" value="No, I do not need an artist mentor"
-                id="noArtistMentor-${randomId}"></input>
-            No, I do not need an artist mentor
-        </label>
 
         <h3>How did you hear about the GHOST Tour?</h3>
         <textarea disabled style="width: 100%; box-sizing: border-box; ">

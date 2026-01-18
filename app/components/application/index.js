@@ -58,6 +58,8 @@ window.deleteApplication = function (event){
       const fbId = button.getAttribute('data-fb-id');
 
 
+      // To Do, delete images from storage as well
+
       CRUD.delete('new-applications', fbId )
       .then(() => {
           const application = button.closest('application-component')
