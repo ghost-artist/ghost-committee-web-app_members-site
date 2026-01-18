@@ -89,9 +89,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }).then(() => {
                 const button = document.querySelector('button[type="submit"]')
                 button.innerText = 'Application Submitted!'
-                setTimeout(() => {
-                    location.href = 'https://gigharboropenstudiotour.org/'
-                }, 3000)
+                button.setAttribute("disabled", true)
+                button.insertAdjacentHTML("beforebegin", `
+                <h2 style="background: yellow; padding: 30px;">Your application has been successfully submitted. Please check that you've received email about this. Check spam and unread emails.</h2>
+                    `)
             })
         })
     })

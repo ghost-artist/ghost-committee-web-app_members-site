@@ -66,6 +66,9 @@
         <input-component required="true" fieldName="medium"
             placeholder="Comma separated list of mediums"></input-component>
 
+        <p style="margin: 0;">Describe how you will be demonstrating or educating the public about how your artwork was created *</p>
+        <textarea name="art-demo" required="true" style="width: 100%; box-sizing: border-box; "></textarea>
+
         <h3>WA State Business License (UBI) Number *</h3>
         <p>A Washington State Business License (UBI) Number is required to be in the tour. If you don't have one, apply:
             https://bls.dor.wa.gov/. </p>
@@ -75,9 +78,14 @@
         <h3>Is your studio within the GHOST Tour Boundaries? (That map is available on the Join page) *</h3>
 
         <label for="isWithinBoundaries">
-            <input required type="radio" name="isWithinBoundaries" value="Yes, my studio falls within the boundary"
+            <input required type="radio" name="isWithinBoundaries" value="Yes, my studio falls within the boundary and I plan on showing there"
                 id="isWithinBoundaries"></input>
-            Yes, my studio falls within the boundary
+            Yes, my studio falls within the boundary and I plan on showing there
+        </label>
+         <label for="isWithinBoundaries-2">
+            <input required type="radio" name="isWithinBoundaries" value="Yes, my studio falls within the boundary but I would like to show my work at a different studio space"
+                id="isWithinBoundaries-2"></input>
+            Yes, my studio falls within the boundary but I would like to show my work at a different studio space
         </label>
         <label for="isNotWithinBoundaries">
             <input required type="radio" name="isWithinBoundaries"
@@ -107,18 +115,6 @@
         <textarea name="studioSharingResponse" style="width: 100%; box-sizing: border-box; "></textarea>
         <!-- <textarea-component description="If sharing a studio, have you made arrangements to do so? If so, please name the Tour Artist who has invited you to share their studio. If not, we will match you with a Tour Artist who will host you in their studio."></textarea-component> -->
 
-        <h3>I would like an artist mentor (an experienced artist who can talk to me about preparing for the tour,
-            marketing and answer my questions) *</h3>
-        <label for="artistMentor">
-            <input required type="radio" name="artistMentor" value="Yes, I would like an artist mentor"
-                id="artistMentor"></input>
-            Yes, I would like an artist mentor
-        </label>
-        <label for="noArtistMentor">
-            <input required type="radio" name="artistMentor" value="No, I do not need an artist mentor"
-                id="noArtistMentor"></input>
-            No, I do not need an artist mentor
-        </label>
 
         <h3>How did you hear about the GHOST Tour? *</h3>
         <textarea required name="howDidYouHearAboutUs" style="width: 100%; box-sizing: border-box; "></textarea>
@@ -128,8 +124,7 @@
             art should only be of your art image (no background or frame.) 3D art and jewelry should have a plain background (ex, black
             or white) and have enough lighting to show good detail. Crop the image so that your art fills most of the
             image and make sure the image is crisp and does justice to your art.</p>
-            <p>If you are having trouble figuring out how to submit your digital images, contact <span
-                id="digitalImageCommitteeMember"> the Artist Images Chair. <span id="img-chair-member-details"></span></span></p>
+            <p>If you are having trouble figuring out how to submit your digital images, contact GHOpenStudioTour@gmail.com</p>
         <b style="display:block;text-align:center;">Click on a box below to upload your images.</b>
         <div style="display: flex; justify-content: center; flex-wrap: wrap;">
             <style>
