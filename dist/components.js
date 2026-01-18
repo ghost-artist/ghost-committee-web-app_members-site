@@ -359,17 +359,19 @@ var logIf = __webpack_require__(/*! ../../../utils/logIf.js */ "./utils/logIf.js
 });
 document.addEventListener('DOMContentLoaded', function () {
   window.deleteApplication = function (event) {
-    // update button to loading
-    var button = event.target;
-    button.setAttribute('disabled', 'disabled');
-    button.innerHTML = 'Deleting...';
+    if (confirm("Are you sure you want to delete this application?")) {
+      // update button to loading
+      var button = event.target;
+      button.setAttribute('disabled', 'disabled');
+      button.innerHTML = 'Deleting...';
 
-    // get the fbId
-    var fbId = button.getAttribute('data-fb-id');
-    CRUD["delete"]('new-applications', fbId).then(function () {
-      var application = button.closest('application-component');
-      application.remove();
-    });
+      // get the fbId
+      var fbId = button.getAttribute('data-fb-id');
+      CRUD["delete"]('new-applications', fbId).then(function () {
+        var application = button.closest('application-component');
+        application.remove();
+      });
+    }
   };
   window.updateReview = function (event, reviewAnswer) {
     // logIf.crud && console.log("updateReview", event)

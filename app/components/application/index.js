@@ -47,20 +47,24 @@ createCustomElement('application-component', function () {
 document.addEventListener('DOMContentLoaded', function() {
 
 window.deleteApplication = function (event){
-   // update button to loading
-    const button = event.target;
-    button.setAttribute('disabled', 'disabled')
-    button.innerHTML = 'Deleting...'
 
-    // get the fbId
-    const fbId = button.getAttribute('data-fb-id');
+    if(confirm("Are you sure you want to delete this application?")){
+    // update button to loading
+      const button = event.target;
+      button.setAttribute('disabled', 'disabled')
+      button.innerHTML = 'Deleting...'
+
+      // get the fbId
+      const fbId = button.getAttribute('data-fb-id');
 
 
-    CRUD.delete('new-applications', fbId )
-    .then(() => {
-        const application = button.closest('application-component')
-        application.remove()
-    })
+      CRUD.delete('new-applications', fbId )
+      .then(() => {
+          const application = button.closest('application-component')
+          application.remove()
+      })
+    }
+
 }
 
 window.updateReview = function (event, reviewAnswer) {
