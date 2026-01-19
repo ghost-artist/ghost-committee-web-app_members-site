@@ -19,7 +19,7 @@ export function sendNewContractSubmissionEmail(user, transaction){
         <h1>Congratulations on joining the Gig Harbor Open Studio Tour</h1>
         <p>Here is your invoice for the membership fee. 
         <br> Your contract has been submitted. 
-        <br> You will be able to make changes to the contract up until March 2nd, 2025
+        <br> You will be able to make changes to the contract up until March 2nd, 2026
          </p>
       
         <fieldset style="width:fit-content; margin:auto;">

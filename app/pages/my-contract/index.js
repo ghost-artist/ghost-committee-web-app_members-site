@@ -869,8 +869,12 @@ function setUpStudioSharingForm(contract) {
         // set the inputs
         Object.entries(studioSharingInfo).forEach(([key, value]) => {
 
-           
-            const textInput = form.querySelector(`input[name="${key}"][value="${value}"]`)
+            let textInput;
+            try {
+                textInput = form.querySelector(`input[name="${key}"][value="${value}"]`)
+            } catch (error){
+                console.log("Possible error, but may be ignored", {error})
+            }
             const checkboxInput = form.querySelector(`input[type=checkbox][name="${key}"]`)
             const artistsAccommodated = form.querySelector(`input[name="artistsAccommodated"`)
             const studioSigns = form.querySelector(`input[name="studioSigns"`)
