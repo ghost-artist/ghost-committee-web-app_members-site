@@ -280,7 +280,10 @@ function setListenerToSaveRoleEdit() {
                     const newUserData = await CRUD.read("ghost-contracts", roleAssignment)
                     const newUsersRoles = newUserData.committeeRoleId
                     CRUD.update("ghost-contracts", roleAssignment, {
-                        committeeRoleId: newUsersRoles.concat([roleId])
+                        committeeRoleId: newUsersRoles.concat([roleId]),
+                        artistDetails: {
+                            committeePreAssignment: true
+                        }
                     })
 
                     roleEl.querySelector('.user-name').innerText = `${newUserData.artistDetails.firstName} ${newUserData.artistDetails.lastName}`
@@ -289,6 +292,7 @@ function setListenerToSaveRoleEdit() {
 
 
             } else {
+                // Remove the role from a given user. The select is null.
                 const previousRoleAssignment = roleEl.querySelector(".user-name").getAttribute("data-user-id")
                 const previousUserData = await CRUD.read("ghost-contracts", previousRoleAssignment)
                     const previousUsersRoles = previousUserData.committeeRoleId
