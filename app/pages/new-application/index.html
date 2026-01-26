@@ -10,6 +10,12 @@
     <script src="/dist/CRUD.js"></script>
     <link rel="stylesheet" href="/dist/styles.css" />
     <script src="/new-application/index.js" type="module"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="/dist/inputmask.min.js"></script>
+    <script src="/dist/inputmask.binding.js"></script>
+
     <script>
         window.sendMessageToParent = function (dataObject) {
             window.parent.postMessage(dataObject, '*');
@@ -57,7 +63,7 @@
         <div class="row">
             <input-component style="width: 48%" required="true" type="email" fieldName="email"
                 alias="Email"></input-component>
-            <input-component style="width: 48%" required="true" fieldName="phone" alias="Phone"></input-component>
+            <input-component style="width: 48%" required="true" fieldName="phone" alias="Phone" regexMask="^\(\d{3}\) \d{3}-\d{4}$"></input-component>
         </div>
         <textarea-component required="true" fieldName="studio-address" alias="Studio Address"></textarea-component>
         <textarea-component required="true" fieldName="mailing-address" alias="Mailing Address"></textarea-component>

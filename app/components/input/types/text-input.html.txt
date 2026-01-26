@@ -6,7 +6,7 @@
 
     <label for="${fieldName}" class="${labelClass || ""} ${moveLabel ? "moveLabel": ""}  ${value ? "moveLabel" : ""}" style="${width ? "width:"+ width + ";" : ""}">
         <small class="text" part="labelText">${alias && required ? alias + "*" : alias ? alias : ""} </small>
-        <input data-inputmask-regex="${regexMask}"  ${disabled ? "disabled" : ""} ${value ? `value="${value}"` : ""}  placeholder="${placeholder}" type="${type}" id="${fieldName}" name="${fieldName}" class="${labelClass || ""}" ${required ? "required" :""} ${type === 'number' ? 'min="0"' : ''} ${checked ? 'checked' :''} />
+        <input ${regexMask ? `data-inputmask-regex="${regexMask}"`: ''}  ${disabled ? "disabled" : ""} ${value ? `value="${value}"` : ""}  placeholder="${placeholder}" type="${type}" id="${fieldName}" name="${fieldName}" class="${labelClass || ""}" ${required ? "required" :""} ${type === 'number' ? 'min="0"' : ''} ${checked ? 'checked' :''} />
         <div id="${fieldName}-error" class="error-message"></div>
     ${type == 'password' ? `
     <i class="password-toggle show-password fa fa-solid fa-eye-slash"></i>

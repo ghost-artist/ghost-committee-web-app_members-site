@@ -36,7 +36,7 @@
             <input-component value="${email}" disabled="true" style="width: 48%" required="true" type="email"
                 fieldName="email" alias="Email"></input-component>
             <input-component value="${phone}" disabled="true" style="width: 48%" required="true" fieldName="phone"
-                alias="Phone"></input-component>
+                alias="Phone" regexMask="^\(\d{3}\) \d{3}-\d{4}$"></input-component>
         </div>
         <textarea-component value="${studioAddress}" disabled="true" required="true" fieldName="studio-address"
             alias="Studio Address"></textarea-component>
