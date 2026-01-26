@@ -717,7 +717,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 var logIf = __webpack_require__(/*! ../../../utils/logIf.js */ "./utils/logIf.js");
 var inputAttributes = ['waStateBusinessLicenseUbiNumber', 'subcaption', 'checked', 'placeholder', 'width', 'disabled',
 // Why is this not working on the textarea?
-'alias', 'labelClass', 'id', 'type', 'value', 'moveLabel', 'className', 'fieldName', 'required', 'multiple', 'accept', 'description', 'noTransform', 'fileName', 'instantUpload'];
+'alias', 'labelClass', 'id', 'type', 'value', 'moveLabel', 'className', 'fieldName', 'required', 'multiple', 'accept', 'description', 'noTransform', 'fileName', 'instantUpload', 'regexMask'];
 (0,_utils_custom_element__WEBPACK_IMPORTED_MODULE_3__.createCustomElement)('input-component', function () {
   logIf.component && console.log('input-component loaded');
   // set slot
@@ -3169,7 +3169,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("\r\n\r\n\r\n<span class=\"${className}\" id=\"${id}\">\r\n\r\n\r\n    <label for=\"${fieldName}\" class=\"${labelClass || \"\"} ${moveLabel ? \"moveLabel\": \"\"}  ${value ? \"moveLabel\" : \"\"}\" style=\"${width ? \"width:\"+ width + \";\" : \"\"}\">\r\n        <small class=\"text\" part=\"labelText\">${alias && required ? alias + \"*\" : alias ? alias : \"\"} </small>\r\n        <input  ${disabled ? \"disabled\" : \"\"} ${value ? `value=\"${value}\"` : \"\"}  placeholder=\"${placeholder}\" type=\"${type}\" id=\"${fieldName}\" name=\"${fieldName}\" class=\"${labelClass || \"\"}\" ${required ? \"required\" :\"\"} ${type === 'number' ? 'min=\"0\"' : ''} ${checked ? 'checked' :''} />\r\n        <div id=\"${fieldName}-error\" class=\"error-message\"></div>\r\n    ${type == 'password' ? `\r\n    <i class=\"password-toggle show-password fa fa-solid fa-eye-slash\"></i>\r\n    <i class=\"password-toggle hide-password fa fa-solid fa-eye\"></i>\r\n    ` : ''}\r\n</label>\r\n<small>${subcaption}</small>\r\n</span>\r\n\r\n</span>\r\n\r\n\r\n");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("\r\n\r\n\r\n<span class=\"${className}\" id=\"${id}\">\r\n\r\n\r\n    <label for=\"${fieldName}\" class=\"${labelClass || \"\"} ${moveLabel ? \"moveLabel\": \"\"}  ${value ? \"moveLabel\" : \"\"}\" style=\"${width ? \"width:\"+ width + \";\" : \"\"}\">\r\n        <small class=\"text\" part=\"labelText\">${alias && required ? alias + \"*\" : alias ? alias : \"\"} </small>\r\n        <input data-inputmask-regex=\"${regexMask}\"  ${disabled ? \"disabled\" : \"\"} ${value ? `value=\"${value}\"` : \"\"}  placeholder=\"${placeholder}\" type=\"${type}\" id=\"${fieldName}\" name=\"${fieldName}\" class=\"${labelClass || \"\"}\" ${required ? \"required\" :\"\"} ${type === 'number' ? 'min=\"0\"' : ''} ${checked ? 'checked' :''} />\r\n        <div id=\"${fieldName}-error\" class=\"error-message\"></div>\r\n    ${type == 'password' ? `\r\n    <i class=\"password-toggle show-password fa fa-solid fa-eye-slash\"></i>\r\n    <i class=\"password-toggle hide-password fa fa-solid fa-eye\"></i>\r\n    ` : ''}\r\n</label>\r\n<small>${subcaption}</small>\r\n</span>\r\n\r\n</span>\r\n\r\n\r\n");
 
 /***/ }),
 

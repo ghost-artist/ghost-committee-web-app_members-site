@@ -82,3 +82,29 @@ function renderCommitteeRoles(contract) {
         return `<li>${title}</li>`
     }).join('')
 }
+
+
+// /**
+//  * Users are entering website urls without the https:// or www.
+//  * If the rawUrl is formatted correctly. it doesn't need transformation
+//  * If the rawUrl is incorrect, fix it.
+//  * If the rawUrl is empty or null, return as-is
+//  * Remove trailing whitespace
+//  * 
+//  * @param string rawUrl 
+//  * @returns a processed url formatted correctly
+//  */
+// function enforceHttpsAndWWW(rawUrl) {
+
+// }
+
+// /**
+//  * Url should have https://www.instagram.com/<username> format
+//  * @param {*} rawUrl 
+//  * @returns 
+//  */
+// function enforceInstagramLink(rawUrl){
+//     rawUrl = enforceHttpsAndWWW(rawUrl)
+
+//     return 
+// }

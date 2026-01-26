@@ -29,7 +29,8 @@ const inputAttributes = [
   'description',
   'noTransform',
   'fileName',
-  'instantUpload'
+  'instantUpload',
+  'regexMask'
 ]
 
 createCustomElement(

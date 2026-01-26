@@ -23,6 +23,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.3/dragula.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dom-autoscroller@2.3.4/dist/dom-autoscroller.min.js"></script>
   <script src="/my-contract/dragula-setup.js"></script>
+
+  <script src="/dist/inputmask.min.js"></script>
+  <script src="/dist/inputmask.binding.js"></script>
+
   <script>
     window.sendMessageToParent = function (dataObject) {
       window.parent.postMessage(dataObject, '*');
@@ -113,9 +117,9 @@
           alias="Studio Address"></-component>
       </div>
       <div class="row" style="justify-content: start;">
-        <input-component type="link" fieldName="website" alias="Website"></input-component>
-        <input-component type="link" fieldName="facebook" alias="Facebook"></input-component>
-        <input-component type="link" fieldName="instagram" alias="Instagram"></input-component>
+        <input-component type="link" fieldName="website" alias="Website" regexMask="^https:\/\/.*"  placeholder="https://" moveLabel="false"></input-component>
+        <input-component type="link" fieldName="facebook" alias="Facebook" regexMask="^https:\/\/.*"  placeholder="https://" moveLabel="false"></input-component>
+        <input-component type="link" fieldName="instagram" alias="Instagram" regexMask="^https:\/\/.*" placeholder="https://" moveLabel="false"></input-component>
       </div>
 
       <p><b>WA State UBI</b> (a UBI is required to participate – go here to apply - <a href="https://dor.wa.gov/open-business"
