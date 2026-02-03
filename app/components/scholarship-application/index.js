@@ -1,6 +1,7 @@
 import applicationTemplate from './index.html.txt';
 import { createCustomElement, evaluateTemplate } from '../../../utils/custom-element';
 import './style.scss';
+import { sendApprovedScholarshipEmail } from '../../outbound-emails/approvedScholarship.js';
 const logIf = require("../../../utils/logIf.js");
 
 
@@ -52,6 +53,11 @@ document.addEventListener('DOMContentLoaded', function () {
             scholarshipApplied: reviewAnswer
           }
         }))
+      .then(() => {
+        const scholarshipComponent = button.closest('scholarship-application-component')
+        const scholarshipEmail = scholarshipComponent.getAttribute("email")
+        sendApprovedScholarshipEmail(scholarshipEmail)
+      })
       .then(() => {
 
         // update the button text
