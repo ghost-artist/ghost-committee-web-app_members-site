@@ -21,6 +21,8 @@
     <div><b>Facebook:</b> ${facebook ? facebook : 'N/A'}</div>
     <div><b>Instagram:</b> ${instagram ? instagram : 'N/A'}</div>
     <div><b>Medium:</b> ${medium ? medium : 'N/A'}</div>
+    <div><b>WA State UBI:</b> ${waStateUbi ? waStateUbi : 'N/A'}</div>
+
 
     <div><b>Scholarship Applied:</b> ${scholarshipApplied ? 'True' : 'False'}</div>
     <div><b>Studio Sharing Answer:</b>

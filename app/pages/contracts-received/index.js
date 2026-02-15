@@ -47,7 +47,8 @@ function renderContracts(contracts) {
             digitalImage2: contract?.images?.digitalImage2 || '',
             digitalImage3: contract?.images?.digitalImage3 || '',
             signature: contract?.signature || '',
-            medium: contract?.artistDetails?.medium || ''
+            medium: contract?.artistDetails?.medium || '',
+            waStateUbi: contract?.artistDetails["wa-state-ubi"] || ''
         }
 
         console.log({ contractData, contract })

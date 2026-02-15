@@ -462,7 +462,7 @@ __webpack_require__.r(__webpack_exports__);
     });
   }, 0);
 }, _index_html_txt__WEBPACK_IMPORTED_MODULE_0__["default"], '', {
-  attributes: ['firstName', 'lastName', 'membershipPaid', 'scholarshipApplied', 'studioSharingAnswer', 'artisticDemonstration', 'artistStatement', 'artistTagline', 'businessEmail', 'facebook', 'instagram', 'mailingAddress', 'membershipPaid', 'personalEmail', 'phone', 'studioAddress', 'website', 'committeeRoles', 'artistInStudioImage', 'brochureImage', 'digitalImage1', 'digitalImage2', 'digitalImage3', 'signature', 'medium']
+  attributes: ['firstName', 'lastName', 'membershipPaid', 'scholarshipApplied', 'studioSharingAnswer', 'artisticDemonstration', 'artistStatement', 'artistTagline', 'businessEmail', 'facebook', 'instagram', 'mailingAddress', 'membershipPaid', 'personalEmail', 'phone', 'studioAddress', 'website', 'committeeRoles', 'artistInStudioImage', 'brochureImage', 'digitalImage1', 'digitalImage2', 'digitalImage3', 'signature', 'medium', 'waStateUbi']
 });
 
 /***/ }),
@@ -1140,6 +1140,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _index_html_txt__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.html.txt */ "./app/components/scholarship-application/index.html.txt");
 /* harmony import */ var _utils_custom_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utils/custom-element */ "./utils/custom-element.js");
 /* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style.scss */ "./app/components/scholarship-application/style.scss");
+/* harmony import */ var _outbound_emails_approvedScholarship_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../outbound-emails/approvedScholarship.js */ "./app/outbound-emails/approvedScholarship.js");
+
 
 
 
@@ -1172,6 +1174,10 @@ document.addEventListener('DOMContentLoaded', function () {
           scholarshipApplied: reviewAnswer
         }
       });
+    }).then(function () {
+      var scholarshipComponent = button.closest('scholarship-application-component');
+      var scholarshipEmail = scholarshipComponent.getAttribute("email");
+      (0,_outbound_emails_approvedScholarship_js__WEBPACK_IMPORTED_MODULE_3__.sendApprovedScholarshipEmail)(scholarshipEmail);
     }).then(function () {
       // update the button text
       button.innerHTML = 'Review Submitted';
@@ -1220,6 +1226,35 @@ function sendApprovedNewArtistEmail(newArtistEmail) {
     to: [_sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__.TESTING.approvedNewArtistEmail ? 'william.owen.dev@gmail.com' : newArtistEmail].filter(Boolean).join(','),
     subject: 'Your application to Gig Harbor Open Studio Tour was approved!',
     body: "\n         <div style=\"text-align:center; font-family:sans-serif;\">\n            <h1>Congratulations on behalf of the Gig Harbor Open Studio Tour!</h1>\n            <p>Your application to join the tour has been approved!</p>\n            <p>\n                <strong>The next step:</strong> Please fill out our online contract and submit your payment. You are not officially part of the tour until we receive both!\n            </p>\n            <p>\n                For the contract due date, check our website under the \u201CJoin\u201D button and look under FAQ's.<br>\n                Once accepted, you do not need to reapply, but <strong>you must submit an annual contract</strong>.\n            </p>\n            <fieldset style=\"width:fit-content; margin:auto; text-align:left;\">\n                <legend>How to Complete Your Contract & Payment</legend>\n                <ol>\n                    <li>Go to our website, Gig Harbor Open Studio Tour, and click the \"Members\" button.</li>\n                    <li>A password page will open. The password is <strong>openhand</strong> (write this down).</li>\n                    <li>On the login page, click \"Register New Account\" (pink button on the left). Enter your email and a password (save these).</li>\n                    <li>Access your Member page. Click \"My Contract\" on the left and fill out each section, saving as you go. You can exit and return later.</li>\n                    <li>Follow directions for uploading images (correct size and labeling required).</li>\n                    <li>Image saving may take a few minutes depending on your internet speed. Saved images will say \"Saved.\"</li>\n                    <li>Complete the payment section at the end of your contract. Once submitted, you'll receive a confirmation email.</li>\n                </ol>\n            </fieldset>\n            <p>\n                We hold three General Meetings each year: mid-March, mid-August, and early October.<br>\n                You'll receive email notifications (via MailChimp) about meetings and important info. Please check your spam or other folders if you don't see these emails.\n            </p>\n            <p>\n                If you have any questions, call or email me:<br>\n                Phone: 253-514-1865<br>\n                Email: <a href=\"mailto:ghopenstudiotour@gmail.com\">ghopenstudiotour@gmail.com</a>\n            </p>\n            <p>Thank you,<br>Beth Owen, President of GHOST (Gig Harbor Open Studio Tour)</p>\n        </div>\n        "
+  });
+}
+
+/***/ }),
+
+/***/ "./app/outbound-emails/approvedScholarship.js":
+/*!****************************************************!*\
+  !*** ./app/outbound-emails/approvedScholarship.js ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   sendApprovedScholarshipEmail: () => (/* binding */ sendApprovedScholarshipEmail)
+/* harmony export */ });
+/* harmony import */ var _getEmailAddresses_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getEmailAddresses.js */ "./app/outbound-emails/getEmailAddresses.js");
+/* harmony import */ var _sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sendTestEmail.js */ "./app/outbound-emails/sendTestEmail.js");
+
+
+function sendApprovedScholarshipEmail(ScholarshipEmail) {
+  // no TESTING mode needed here
+
+  console.log("Sending 'ApprovedScholarshipEmail' to " + ScholarshipEmail);
+  window.sendMessageToParent({
+    controller: 'gmailController',
+    to: [_sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__.TESTING.approvedScholarshipEmail ? 'william.owen.dev@gmail.com' : ScholarshipEmail].filter(Boolean).join(','),
+    subject: 'Ghost Artist Scholarship was approved!',
+    body: "\n         <div style=\"text-align:center; font-family:sans-serif;\">\n            <h1>Congratulations on behalf of the Gig Harbor Open Studio Tour!</h1>\n            <p>Your application for a $100 scholarship towards the fee for the tour has been approved!</p>\n            <p>\n                When you log on to our website, the scholarship should be automatically applied to your fee.\n            </p>\n            <p>\n                Let us know if you have any problems with this. You can email ghopenstudiotour@gmail.com\n            </p>\n            <p>\n                Remember that this scholarship is a one time use only.\n            </p>\n        </div>\n        "
   });
 }
 
@@ -3094,7 +3129,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<div class=\"contract-received \">\r\n  <div class=\"preview\">\r\n\r\n    <div>\r\n\r\n      <h2 class=\"user-name\" style=\"margin-bottom: 0\">\r\n        ${firstName}\r\n        ${lastName}\r\n      </h2>\r\n      <b><ul style=\"margin: 0; padding: 0; list-style: none;\">${committeeRoles}</ul></b>\r\n    </div>\r\n    <button onclick=\"event.target.closest('.contract-received').classList.toggle('reveal')\">View Details</button>\r\n  </div>\r\n  <div class=\"content \">\r\n    <div><b>Personal Email:</b> ${personalEmail ? personalEmail : 'N/A'}</div>\r\n    <div><b>Business Email:</b> ${businessEmail ? businessEmail : 'N/A'} </div>\r\n    <div><b>Phone:</b> ${phone ? phone : 'N/A'}</div>\r\n    <div><b>Mailing Address:</b> ${mailingAddress ? mailingAddress : 'N/A'}</div>\r\n    <div><b>Studio Address:</b> ${studioAddress ? studioAddress : 'N/A'}</div>\r\n    <div><b>Website:</b> ${website ? website : 'N/A'}</div>\r\n    <div><b>Facebook:</b> ${facebook ? facebook : 'N/A'}</div>\r\n    <div><b>Instagram:</b> ${instagram ? instagram : 'N/A'}</div>\r\n    <div><b>Medium:</b> ${medium ? medium : 'N/A'}</div>\r\n\r\n    <div><b>Scholarship Applied:</b> ${scholarshipApplied ? 'True' : 'False'}</div>\r\n    <div><b>Studio Sharing Answer:</b>\r\n      <div class=\"level-1\">${studioSharingAnswer ? studioSharingAnswer : 'N/A'}</div>\r\n    </div>\r\n    <div><b>Artistic Demonstration:</b> ${artisticDemonstration ? artisticDemonstration : 'N/A'}</div>\r\n    <div><b>Artist Statement:</b> \r\n    <div class=\"level-1\" style=\"translate: 0px -10px\">${artistStatement ? artistStatement : 'N/A' }</div></div>\r\n    <div><b>Artist Tagline:</b> ${artistTagline ? artistTagline : 'N/A'}</div>\r\n  \r\n    <div style=\"display: flex; justify-content: center; flex-wrap: wrap; align-items: end;\">\r\n      <style>\r\n        img {\r\n          width: 200px;\r\n          height: 200px;\r\n          object-fit: cover;\r\n          margin: 10px;\r\n        }\r\n      </style>\r\n      <div><b>Digital Image 1:</b>\r\n        <img src=\"${digitalImage1}\"></img>\r\n      </div>\r\n      <div><b>Digital Image 2:</b>\r\n        <img src=\"${digitalImage2}\"></img>\r\n      </div>\r\n      <div><b>Digital Image 3:</b>\r\n        <img src=\"${digitalImage3}\"></img>\r\n      </div>\r\n    </div>\r\n\r\n\r\n\r\n    <div style=\"display: flex; justify-content: center; flex-wrap: wrap;\">\r\n      <div><b>Brochure Image:</b>\r\n        <img src=\"${brochureImage}\"></img>\r\n      </div>\r\n    </div>\r\n    <div style=\"display: flex; justify-content: center; flex-wrap: wrap;\">\r\n      <div><b>Artist in Studio Image:</b>\r\n        <img src=\"${artistInStudioImage}\"></img>\r\n      </div>\r\n    </div>\r\n\r\n  </div>\r\n\r\n</div>");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<div class=\"contract-received \">\r\n  <div class=\"preview\">\r\n\r\n    <div>\r\n\r\n      <h2 class=\"user-name\" style=\"margin-bottom: 0\">\r\n        ${firstName}\r\n        ${lastName}\r\n      </h2>\r\n      <b><ul style=\"margin: 0; padding: 0; list-style: none;\">${committeeRoles}</ul></b>\r\n    </div>\r\n    <button onclick=\"event.target.closest('.contract-received').classList.toggle('reveal')\">View Details</button>\r\n  </div>\r\n  <div class=\"content \">\r\n    <div><b>Personal Email:</b> ${personalEmail ? personalEmail : 'N/A'}</div>\r\n    <div><b>Business Email:</b> ${businessEmail ? businessEmail : 'N/A'} </div>\r\n    <div><b>Phone:</b> ${phone ? phone : 'N/A'}</div>\r\n    <div><b>Mailing Address:</b> ${mailingAddress ? mailingAddress : 'N/A'}</div>\r\n    <div><b>Studio Address:</b> ${studioAddress ? studioAddress : 'N/A'}</div>\r\n    <div><b>Website:</b> ${website ? website : 'N/A'}</div>\r\n    <div><b>Facebook:</b> ${facebook ? facebook : 'N/A'}</div>\r\n    <div><b>Instagram:</b> ${instagram ? instagram : 'N/A'}</div>\r\n    <div><b>Medium:</b> ${medium ? medium : 'N/A'}</div>\r\n    <div><b>WA State UBI:</b> ${waStateUbi ? waStateUbi : 'N/A'}</div>\r\n\r\n\r\n    <div><b>Scholarship Applied:</b> ${scholarshipApplied ? 'True' : 'False'}</div>\r\n    <div><b>Studio Sharing Answer:</b>\r\n      <div class=\"level-1\">${studioSharingAnswer ? studioSharingAnswer : 'N/A'}</div>\r\n    </div>\r\n    <div><b>Artistic Demonstration:</b> ${artisticDemonstration ? artisticDemonstration : 'N/A'}</div>\r\n    <div><b>Artist Statement:</b> \r\n    <div class=\"level-1\" style=\"translate: 0px -10px\">${artistStatement ? artistStatement : 'N/A' }</div></div>\r\n    <div><b>Artist Tagline:</b> ${artistTagline ? artistTagline : 'N/A'}</div>\r\n  \r\n    <div style=\"display: flex; justify-content: center; flex-wrap: wrap; align-items: end;\">\r\n      <style>\r\n        img {\r\n          width: 200px;\r\n          height: 200px;\r\n          object-fit: cover;\r\n          margin: 10px;\r\n        }\r\n      </style>\r\n      <div><b>Digital Image 1:</b>\r\n        <img src=\"${digitalImage1}\"></img>\r\n      </div>\r\n      <div><b>Digital Image 2:</b>\r\n        <img src=\"${digitalImage2}\"></img>\r\n      </div>\r\n      <div><b>Digital Image 3:</b>\r\n        <img src=\"${digitalImage3}\"></img>\r\n      </div>\r\n    </div>\r\n\r\n\r\n\r\n    <div style=\"display: flex; justify-content: center; flex-wrap: wrap;\">\r\n      <div><b>Brochure Image:</b>\r\n        <img src=\"${brochureImage}\"></img>\r\n      </div>\r\n    </div>\r\n    <div style=\"display: flex; justify-content: center; flex-wrap: wrap;\">\r\n      <div><b>Artist in Studio Image:</b>\r\n        <img src=\"${artistInStudioImage}\"></img>\r\n      </div>\r\n    </div>\r\n\r\n  </div>\r\n\r\n</div>");
 
 /***/ }),
 
