@@ -1141,6 +1141,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_custom_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utils/custom-element */ "./utils/custom-element.js");
 /* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style.scss */ "./app/components/scholarship-application/style.scss");
 /* harmony import */ var _outbound_emails_approvedScholarship_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../outbound-emails/approvedScholarship.js */ "./app/outbound-emails/approvedScholarship.js");
+/* harmony import */ var _outbound_emails_notApprovedScholarship_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../outbound-emails/notApprovedScholarship.js */ "./app/outbound-emails/notApprovedScholarship.js");
+
 
 
 
@@ -1156,7 +1158,9 @@ var logIf = __webpack_require__(/*! ../../../utils/logIf.js */ "./utils/logIf.js
 });
 document.addEventListener('DOMContentLoaded', function () {
   window.updateScholarship = function (event, reviewAnswer) {
-    logIf.component && console.log("updateScholarship", event);
+    console.log("updateScholarship", event, {
+      reviewAnswer: reviewAnswer
+    });
     // update button to loading
     var button = event.target;
     var btnText = button.innerHTML;
@@ -1177,7 +1181,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }).then(function () {
       var scholarshipComponent = button.closest('scholarship-application-component');
       var scholarshipEmail = scholarshipComponent.getAttribute("email");
-      (0,_outbound_emails_approvedScholarship_js__WEBPACK_IMPORTED_MODULE_3__.sendApprovedScholarshipEmail)(scholarshipEmail);
+      if (reviewAnswer == true) {
+        (0,_outbound_emails_approvedScholarship_js__WEBPACK_IMPORTED_MODULE_3__.sendApprovedScholarshipEmail)(scholarshipEmail);
+      } else {
+        (0,_outbound_emails_notApprovedScholarship_js__WEBPACK_IMPORTED_MODULE_4__.sendNotApprovedScholarshipEmail)(scholarshipEmail);
+      }
     }).then(function () {
       // update the button text
       button.innerHTML = 'Review Submitted';
@@ -1671,6 +1679,35 @@ function sendNotApprovedNewArtistEmail(newArtistEmail) {
     to: [_sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__.TESTING.notApprovedNewArtistEmail ? 'william.owen.dev@gmail.com' : newArtistEmail].filter(Boolean).join(','),
     subject: 'Sorry, your application to Gig Harbor Open Studio Tour was not approved',
     body: "\n          <div style=\"text-align:center; font-family:sans-serif;\">\n          <h1>Thank you for your application to the Gig Harbor Open Studio Tour</h1>\n          <p style=\"max-width:575px; margin:auto\">\n            I am sorry to inform you that, at this time, your application to join the Gig Harbor Open Studio Tour has been declined because it does not meet our artistic standards for professional work. <br> If you would like any feedback about our decision, please contact me at <a href=\"mailto:degoede@aol.com\">degoede@aol.com</a>.\n          </p>\n          <p>\n            We appreciate your interest and would encourage you to continue to work on your art and to reapply in future years.\n          </p>\n          <p>\n            Thank you,<br>\n            Andrew Van DeGoede,<br>\n            Screening Chair of GHOST (Gig Harbor Open Studio Tour)\n          </p>\n        </div>\n        "
+  });
+}
+
+/***/ }),
+
+/***/ "./app/outbound-emails/notApprovedScholarship.js":
+/*!*******************************************************!*\
+  !*** ./app/outbound-emails/notApprovedScholarship.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   sendNotApprovedScholarshipEmail: () => (/* binding */ sendNotApprovedScholarshipEmail)
+/* harmony export */ });
+/* harmony import */ var _getEmailAddresses_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getEmailAddresses.js */ "./app/outbound-emails/getEmailAddresses.js");
+/* harmony import */ var _sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sendTestEmail.js */ "./app/outbound-emails/sendTestEmail.js");
+
+
+function sendNotApprovedScholarshipEmail(ScholarshipEmail) {
+  // no TESTING mode needed here
+
+  console.log("Sending 'NotApprovedScholarshipEmail' to " + ScholarshipEmail);
+  window.sendMessageToParent({
+    controller: 'gmailController',
+    to: [_sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__.TESTING.approvedScholarshipEmail ? 'william.owen.dev@gmail.com' : ScholarshipEmail].filter(Boolean).join(','),
+    subject: 'Sorry, your application for a scholarship from Gig Harbor Open Studio Tour was not approved',
+    body: "\n         <div style=\"text-align:center; font-family:sans-serif;\">\n            <h1>Scholarship Application for Gig Harbor Open Studio Tour</h1>\n            <p>Your scholarship application for the Gig Harbor Open Studio Tour has been declined.</p>\n            <p>\n                Your application did not meet our requirements for financial need.\n            </p>\n            <p>\n                We wish you the best of luck in your art business.\n            </p>\n            <p>\n                Thank you,<br>\n                Gig Harbor Open Studio Tour board\n            </p>\n        </div>\n        "
   });
 }
 

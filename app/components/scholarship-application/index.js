@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   window.updateScholarship = function (event, reviewAnswer) {
-    logIf.component && console.log("updateScholarship", event)
+    console.log("updateScholarship", event, {reviewAnswer})
     // update button to loading
     const button = event.target;
     const btnText = button.innerHTML
