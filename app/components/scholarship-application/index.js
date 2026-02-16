@@ -2,6 +2,7 @@ import applicationTemplate from './index.html.txt';
 import { createCustomElement, evaluateTemplate } from '../../../utils/custom-element';
 import './style.scss';
 import { sendApprovedScholarshipEmail } from '../../outbound-emails/approvedScholarship.js';
+import { sendNotApprovedScholarshipEmail } from '../../outbound-emails/notApprovedScholarship.js';
 const logIf = require("../../../utils/logIf.js");
 
 
@@ -56,7 +57,11 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(() => {
         const scholarshipComponent = button.closest('scholarship-application-component')
         const scholarshipEmail = scholarshipComponent.getAttribute("email")
-        sendApprovedScholarshipEmail(scholarshipEmail)
+        if(reviewAnswer == true) {
+          sendApprovedScholarshipEmail(scholarshipEmail)
+        } else {
+          sendNotApprovedScholarshipEmail(scholarshipEmail)
+        }
       })
       .then(() => {
 
