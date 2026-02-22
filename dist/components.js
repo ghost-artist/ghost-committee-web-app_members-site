@@ -519,6 +519,7 @@ function setUXEventListeners() {
   });
   document.querySelector('.close-modal').addEventListener('click', function () {
     document.getElementById('reset-password-modal').style.display = 'none';
+    document.getElementById('reset-password-modal-feedback').innerHTML = '';
   });
 
   // Handle reset password
@@ -535,14 +536,7 @@ function setUXEventListeners() {
         });
 
         // Update test to show success message
-        feedback.innerHTML = "\n                    <div class=\"alert alert-success\" role=\"alert\">\n                        Password reset email sent\n                    </div>\n                    ";
-
-        // Hide the modal after 3 seconds
-        setTimeout(function () {
-          document.getElementById('reset-password-modal').style.display = 'none';
-          // remove the success message after 3 seconds
-          document.getElementById('reset-password-modal-feedback').innerHTML = '';
-        }, 3000);
+        feedback.innerHTML = "\n                    <div class=\"alert alert-success\" role=\"alert\" style=\"text-align: center\">\n                        Password reset email sent <br>\n                        (Check your spam folder if you don't see it in your inbox)\n                    </div>\n                    ";
       })["catch"](function () {
         alert('There was an error sending the password reset email');
       });

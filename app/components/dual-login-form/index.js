@@ -48,6 +48,7 @@ function setUXEventListeners() {
 
     document.querySelector('.close-modal').addEventListener('click', () => {
         document.getElementById('reset-password-modal').style.display = 'none';
+        document.getElementById('reset-password-modal-feedback').innerHTML = '';
     });
 
 
@@ -64,18 +65,14 @@ function setUXEventListeners() {
 
                     // Update test to show success message
                     feedback.innerHTML = `
-                    <div class="alert alert-success" role="alert">
-                        Password reset email sent
+                    <div class="alert alert-success" role="alert" style="text-align: center">
+                        Password reset email sent <br>
+                        (Check your spam folder if you don't see it in your inbox)
                     </div>
                     `;
 
 
-                    // Hide the modal after 3 seconds
-                    setTimeout(() => {
-                        document.getElementById('reset-password-modal').style.display = 'none';
-                           // remove the success message after 3 seconds
-                    document.getElementById('reset-password-modal-feedback').innerHTML = '';
-                    }, 3000);
+                  
 
                  
 
