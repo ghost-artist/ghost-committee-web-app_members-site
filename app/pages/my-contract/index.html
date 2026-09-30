@@ -286,7 +286,8 @@
 
           <label for="canShare" class="level-1">
             <input type="radio" name="studioAvailability" id="canShare" value="canShare">
-            I want to stay at my own studio and I can share my studio space with more artists and have adequate parking.
+            I want to stay at my own studio and I can share my studio space with more artists and have adequate parking. 
+            Each outdoor spot must be big enough for a 10x10 ft canopy and be on level ground that is either grass or cement. No hills or uneven surfaces allowed.
           </label>
           <div style="margin-left: 61px;">(If you live in a gated community, you can only choose this option if you have confirmed with your HOA that the gate can be left open on the days of the tour)</div>
 
@@ -302,11 +303,16 @@
             <textarea-component style="width:100%" fieldName="studioSharingPlans"
               alias="If you already have plans for someone to share your studio space, list them here: (If none, type N/A)"></textarea-component>
               <br>
+           <input-component moveLabel="true" style="width:100%" type="checkbox" fieldName="verificationOfCommunicationWithGuestArtists" alias="I verify that I have talked to all of my guests artists about any additional charges that might be associated with sharing my studio space, including event insurance and additional port-a-potty fees (If applicable)"></input-component>
+              <br>
            <input-component moveLabel="true" style="width:100%" type="checkbox" fieldName="isFlexible" alias="If there aren't enough extra available artists that can share my studio space, I would like to be placed at another studio so that I am with other artists"></input-component>
-           <textarea-component moveLabel="true" fieldName="outdoorOrIndoorFlexibility"
+           <br>
+           <div class="level-3" visible-if="isFlexible == true" id="artistIsFlexible">
+              <textarea-component moveLabel="true" fieldName="outdoorOrIndoorFlexibility"
               alias="In that case, do you have a canopy for outdoor space or will you need an indoor space?"></textarea-component>
-           <textarea-component moveLabel="true" fieldName="locationPreferenceForFlexibility"
+              <textarea-component moveLabel="true" fieldName="locationPreferenceForFlexibility"
               alias="Indicate here if you have a studio location preference"></textarea-component>
+            </div>
            <input-component moveLabel="true" type="number" width="100%" fieldName="studioSigns"
               className="studioSignsQuestion" subcaption="If you will be at your own studio, how many directional artist studio signs do you need?  Be sure to include a street sign by your studio driveway as well at the major intersections near your studio.  If other artists will be sharing your studio,  include extra signs that can be placed on your property to point the way to where they are located.
               If you are sharing someone else's studio, write 0."
@@ -636,6 +642,10 @@
       document.querySelectorAll('input[name="studioAvailability"]').forEach(function (radio) {
         radio.addEventListener('change', handleStudioAvailabilityChange);
       });
+
+      var isFlexible = document.querySelector("input[name=isFlexible")
+      isFlexible.addEventListener("change", handleIsFlexible)
+
       // handleWillingnessToRelocate();
       // document.querySelectorAll('input[name="willingnessToRelocate"]').forEach(function (checkbox) {
       //   checkbox.addEventListener('change', handleWillingnessToRelocate);
@@ -670,6 +680,11 @@
         document.querySelector('#canopy-studio').style.display = 'block';
       }
 
+      var isFlexible = document.querySelector("input[name=isFlexible]:checked")?.value || "";
+      if(isFlexible) {
+        document.querySelector("#artistIsFlexible").style.display = "block"
+      }
+
     }
 
     function handleWillingnessToRelocate() {
@@ -682,6 +697,11 @@
       var doesNotHaveStudio = document.querySelector('input[id="doesNotHaveStudio"]:checked')?.value || "";
       var canopy = document.getElementById('canopy-no-studio');
       canopy.style.display = doesNotHaveStudio ? 'block' : 'none';
+    }
+
+    function handleIsFlexible() {
+      var isFlexible = document.querySelector("input[name=isFlexible]:checked")?.value || "";
+      document.querySelector("#artistIsFlexible").style.display = isFlexible ? "block" : "none"
     }
   </script>
 </body>

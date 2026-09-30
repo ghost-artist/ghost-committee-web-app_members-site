@@ -105,6 +105,12 @@ label {
                 font-size: 0.75rem;
                 font-weight: bold;
             }
+
+            &:has(input[type=checkbox]){
+                .text {
+                    transform: translate(22px, 9px);
+                }
+            }
         }
 
         .password-container {

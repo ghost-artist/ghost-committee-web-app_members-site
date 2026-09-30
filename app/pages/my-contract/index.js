@@ -353,7 +353,8 @@ async function handleStudioSharingForm(e) {
             prefersToBeWith3OrMoreArtist: "",
             isFlexible: "",
             outdoorOrIndoorFlexibility: "",
-            locationPreferenceForFlexibility: ""
+            locationPreferenceForFlexibility: "",
+            verificationOfCommunicationWithGuestArtists: ""
         }
     }
 
@@ -426,19 +427,28 @@ async function handleStudioSharingForm(e) {
 
             // Yes or No: isFlexible (checkbox)
             const isFlexible = form.querySelector('input[name="isFlexible"]')
-            StudioSharingPayload.StudioSharingAnswer += ' \n\t\t' + isFlexible.closest("label").innerText
+            StudioSharingPayload.StudioSharingAnswer += '\n\t\t' + isFlexible.closest("label").innerText
             StudioSharingPayload.StudioSharingInfo.isFlexible = isFlexible.checked
 
-            // Shows if is flexible
-            const outdoorOrIndoorFlexibility = form.querySelector('textarea[name=outdoorOrIndoorFlexibility]')
-            if (!outdoorOrIndoorFlexibility.value) return formAlert("Please provide info about indoor / outdoor flexibility")
-            StudioSharingPayload.StudioSharingAnswer += "\n\t\tInfo about my flexibility: " + outdoorOrIndoorFlexibility.value.trim();
-            StudioSharingPayload.StudioSharingInfo.outdoorOrIndoorFlexibility = outdoorOrIndoorFlexibility.value
-            
-            // shows if is flexible
-            const locationPreferenceForFlexibility = form.querySelector('textarea[name="locationPreferenceForFlexibility"]')
-            StudioSharingPayload.StudioSharingAnswer += "\n\t\tInfo about my location flexibility: " + locationPreferenceForFlexibility.value.trim() || "N/A"
-            StudioSharingPayload.StudioSharingInfo.locationPreferenceForFlexibility = locationPreferenceForFlexibility.value
+            if(isFlexible){
+
+                // verificationOfCommunicationWithGuestArtists
+                const verificationOfCommunicationWithGuestArtists = form.querySelector('input[name=verificationOfCommunicationWithGuestArtists]')
+                if(!verificationOfCommunicationWithGuestArtists.checked) return formAlert("Verification of communication with guests is required");
+                StudioSharingPayload.StudioSharingAnswer += '\n\t\t' + verificationOfCommunicationWithGuestArtists.closest("label").innerText
+                StudioSharingPayload.StudioSharingInfo.verificationOfCommunicationWithGuestArtists = verificationOfCommunicationWithGuestArtists.checked
+                
+                // Shows if is flexible
+                const outdoorOrIndoorFlexibility = form.querySelector('textarea[name=outdoorOrIndoorFlexibility]')
+                if (!outdoorOrIndoorFlexibility.value) return formAlert("Please provide info about indoor / outdoor flexibility")
+                StudioSharingPayload.StudioSharingAnswer += "\n\t\tInfo about my flexibility: " + outdoorOrIndoorFlexibility.value.trim();
+                StudioSharingPayload.StudioSharingInfo.outdoorOrIndoorFlexibility = outdoorOrIndoorFlexibility.value
+                
+                // shows if is flexible
+                const locationPreferenceForFlexibility = form.querySelector('textarea[name="locationPreferenceForFlexibility"]')
+                StudioSharingPayload.StudioSharingAnswer += "\n\t\tInfo about my location flexibility: " + locationPreferenceForFlexibility.value.trim() || "N/A"
+                StudioSharingPayload.StudioSharingInfo.locationPreferenceForFlexibility = locationPreferenceForFlexibility.value
+            }
 
             // Studio number of signs
             const studioSigns = form.querySelector('input[name="studioSigns"]')
