@@ -350,7 +350,10 @@ async function handleStudioSharingForm(e) {
             studioSigns: "",
             'studioSigns-2': "",
             "studioSharingPlans-no-studio": "",
-            prefersToBeWith3OrMoreArtist: ""
+            prefersToBeWith3OrMoreArtist: "",
+            isFlexible: "",
+            outdoorOrIndoorFlexibility: "",
+            locationPreferenceForFlexibility: ""
         }
     }
 
@@ -419,6 +422,23 @@ async function handleStudioSharingForm(e) {
             // StudioSharingAnswer += ' \n\t\t' + studioSharingPlans.value.trim();
             StudioSharingPayload.StudioSharingAnswer += ' \n\t\t' + "I am planning to share my space with " + studioSharingPlans.value.trim();
             StudioSharingPayload.StudioSharingInfo.studioSharingPlans = studioSharingPlans.value;
+
+
+            // Yes or No: isFlexible (checkbox)
+            const isFlexible = form.querySelector('input[name="isFlexible"]')
+            StudioSharingPayload.StudioSharingAnswer += ' \n\t\t' + isFlexible.closest("label").innerText
+            StudioSharingPayload.StudioSharingInfo.isFlexible = isFlexible.checked
+
+            // Shows if is flexible
+            const outdoorOrIndoorFlexibility = form.querySelector('textarea[name=outdoorOrIndoorFlexibility]')
+            if (!outdoorOrIndoorFlexibility.value) return formAlert("Please provide info about indoor / outdoor flexibility")
+            StudioSharingPayload.StudioSharingAnswer += "\n\t\tInfo about my flexibility: " + outdoorOrIndoorFlexibility.value.trim();
+            StudioSharingPayload.StudioSharingInfo.outdoorOrIndoorFlexibility = outdoorOrIndoorFlexibility.value
+            
+            // shows if is flexible
+            const locationPreferenceForFlexibility = form.querySelector('textarea[name="locationPreferenceForFlexibility"]')
+            StudioSharingPayload.StudioSharingAnswer += "\n\t\tInfo about my location flexibility: " + locationPreferenceForFlexibility.value.trim() || "N/A"
+            StudioSharingPayload.StudioSharingInfo.locationPreferenceForFlexibility = locationPreferenceForFlexibility.value
 
             // Studio number of signs
             const studioSigns = form.querySelector('input[name="studioSigns"]')
@@ -930,6 +950,7 @@ function setUpStudioSharingForm(contract) {
                 const event = new Event('change')
                 willingnessToRelocate.dispatchEvent(event)
             }
+    
         })
 
     }
