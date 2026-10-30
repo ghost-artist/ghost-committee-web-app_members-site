@@ -1,7 +1,10 @@
+import { suppressApplicationEmails } from './local-email-settings.js';
 import { getEmailAddresses } from './getEmailAddresses.js';
 import { TESTING } from './sendTestEmail.js'
 
 export async function sendNewApplicationEmail(newArtist){
+    if (suppressApplicationEmails()) return;
+
 
     // get all board members
     // plus new artist applications chair

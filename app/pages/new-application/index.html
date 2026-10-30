@@ -68,13 +68,6 @@
         <textarea-component required="true" fieldName="studio-address" alias="Studio Address"></textarea-component>
         <textarea-component required="true" fieldName="mailing-address" alias="Mailing Address"></textarea-component>
 
-        <h3>Medium(s) *</h3>
-        <input-component required="true" fieldName="medium"
-            placeholder="Comma separated list of mediums"></input-component>
-
-        <p style="margin: 0;">Describe how you will be demonstrating or educating the public about how your artwork was created *</p>
-        <textarea name="art-demo" required="true" style="width: 100%; box-sizing: border-box; "></textarea>
-
         <h3>WA State Business License (UBI) Number *</h3>
         <p>A Washington State Business License (UBI) Number is required to be in the tour. If you don't have one, apply:
             https://bls.dor.wa.gov/. </p>
@@ -125,34 +118,9 @@
         <h3>How did you hear about the GHOST Tour? *</h3>
         <textarea required name="howDidYouHearAboutUs" style="width: 100%; box-sizing: border-box; "></textarea>
         
-        <h3>Three (3) digital images of your art *</h3>
-        <p>Make sure that your images look professional and are jpgs that are a minimum of 150 KB (No thumbnails). 2D
-            art should only be of your art image (no background or frame.) 3D art and jewelry should have a plain background (ex, black
-            or white) and have enough lighting to show good detail. Crop the image so that your art fills most of the
-            image and make sure the image is crisp and does justice to your art.</p>
-            <p>If you are having trouble figuring out how to submit your digital images, contact GHOpenStudioTour@gmail.com</p>
-        <b style="display:block;text-align:center;">Click on a box below to upload your images.</b>
-        <div style="display: flex; justify-content: center; flex-wrap: wrap;">
-            <style>
-                file-input-component {
-                    margin: 10px;
-                }
-            </style>
-
-            <file-input-component fileName="{{randomNumber}}-digital-image-1" required="true" fieldName="digitalImage1" alias="Digital Image 1"
-                accept=".jpg,.jpeg,.png">
-              <textarea name="digitalImage1Info" placeholder="Describe medium and size of this artwork *" required="true" style="width: 100%; box-sizing: border-box; "></textarea>
-            </file-input-component>
-            
-            <file-input-component fileName="{{randomNumber}}-digital-image-2"  required="true" fieldName="digitalImage2" alias="Digital Image 2"
-                accept=".jpg,.jpeg,.png">
-                 <textarea name="digitalImage2Info" placeholder="Describe medium and size of this artwork *" required="true" style="width: 100%; box-sizing: border-box; "></textarea>
-            </file-input-component>
-            <file-input-component fileName="{{randomNumber}}-digital-image-3"  required="true" fieldName="digitalImage3" alias="Digital Image 3"
-                accept=".jpg,.jpeg,.png">
-                 <textarea name="digitalImage3Info" placeholder="Describe medium and size of this artwork *" required="true" style="width: 100%; box-sizing: border-box; "></textarea>
-            </file-input-component>
-        </div>
+        <div id="application-mediums"></div>
+        <button type="button" id="add-medium">+ Add another medium</button>
+        <p id="application-error" role="alert" style="color: #b00020;"></p>
 
         <h3>One (1) digital image of your studio (if it is within the studio tour boundaries and you will be showing
             there) or your booth (if you will be showing at another artist's studio)</h3>

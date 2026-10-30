@@ -1,6 +1,9 @@
+import { suppressApplicationEmails } from './local-email-settings.js';
 import { TESTING } from './sendTestEmail.js'
 
 export async function sendNewApplicationClientConfirmationEmail(newArtist){
+    if (suppressApplicationEmails()) return;
+
 
     const emailAddresses = newArtist.email
 

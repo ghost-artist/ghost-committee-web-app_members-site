@@ -1,3 +1,4 @@
+import { addMediumGroup, collectMediums, uploadMediums } from '../../../utils/application-mediums.mjs';
 import '../../../utils/logIf.js';
 import { sendNewApplicationClientConfirmationEmail } from '../../outbound-emails/newApplicationClientConfirmation.js';
 
@@ -18,82 +19,47 @@ document.addEventListener('DOMContentLoaded', function() {
     CRUD.readAll('ghost-contracts').then(setDigitalImagesCommitteeMember)
 
 
-    form.addEventListener('submit', function(e) {
+    const mediumsContainer = document.querySelector('#application-mediums');
+    addMediumGroup(mediumsContainer);
+    document.querySelector('#add-medium').addEventListener('click', () => {
+        addMediumGroup(mediumsContainer).querySelector('input').focus();
+    });
+
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
-
-        const { values, form } = getFormValues('form#new-application-form')
-        logIf.client || true && console.log({ values, form })
-       
-
-        values.hasBeenReviewed = false
-
-        // Process images
-        // Get urls
-        // Update data to have urls instead of files
-        // Save data to firebase
-
-        const promises = Object.entries(values).map(([key, value]) => {
-            if (value instanceof File) {
-
-                let newFileName = value.nameTemplate
-
-                newFileName = newFileName.replace("{{randomNumber}}", Math.random() * 100000)
-
-                // const name = values.name
-                // for each file, create a new file with correct name
-                value = new File([value], newFileName, { type: value.type })
-
-
-                return new Promise((resolve, reject) => {
-                    CRUD.saveImage(value, 'new-applications').then(url => {
-                        values[key] = url
-                    }).then(() => {
-                        resolve()
-                    }).catch((err) => {
-                        reject(err)
-                    })
-                })
+        const button = form.querySelector('button[type="submit"]');
+        if (button.disabled) return;
+        const error = document.querySelector('#application-error');
+        error.textContent = '';
+        const mediums = collectMediums(mediumsContainer);
+        const { values } = getFormValues('form#new-application-form');
+        try {
+            // Group controls have no names: they are serialized as nested data explicitly.
+            values.mediums = await uploadMediums(mediums, CRUD.saveImage);
+            values.schemaVersion = 2;
+            values.hasBeenReviewed = false;
+            // The studio/booth image remains application-wide.
+            for (const [key, value] of Object.entries(values)) {
+                if (!(value instanceof File)) continue;
+                const file = new File([value], `${crypto.randomUUID()}-studio-image`, { type: value.type });
+                values[key] = await CRUD.saveImage(file, 'new-applications');
             }
-        })
-        
-        /**
-         * Potential enhancements... Don't redirect.
-         * after save, record the id.. If applicant re-save, just update the record
-         */
-
-
-        Promise.all(promises).then(() => {  
-            CRUD.create('new-applications', values).then(async () => {
-
-                sendNewApplicationClientConfirmationEmail(values)
-    
-                  window.addEventListener("message", (event) => {
-                    // if (event.data.dispatch !== 'gmailController-response') return
-    
-                    // if (event.data.error) {
-                    //   document.querySelector('.processPayment').innerText = "<div style='color:red; font-weight: bold'>Payment successful but error sending email</div>"
-                    //   return
-                    // }
-    
-                    // // You can add additional logic here to handle the message
-                    // // show success message
-    
-                    // document.querySelector('.processPayment').innerText = "Payment Successful - Email Sent"
-    
-                    // setTimeout(() => {
-                    //   // redirect to the dashboard
-                    //   window.location.href = '/members'
-                    // }, 3000)
-                  });
-
-            }).then(() => {
-                const button = document.querySelector('button[type="submit"]')
-                button.innerText = 'Application Submitted!'
-                button.setAttribute("disabled", true)
-                button.insertAdjacentHTML("beforebegin", `
-                <h2 style="background: yellow; padding: 30px;">Your application has been successfully submitted. Please check that you've received email about this. Check spam and unread emails.</h2>
-                    `)
-            })
-        })
-    })
-})
+            await CRUD.create('new-applications', values);
+            button.innerText = 'Application Submitted!';
+            form.querySelectorAll('input, textarea, button').forEach(input => input.disabled = true);
+            button.insertAdjacentHTML('beforebegin', '<h2 style="background: yellow; padding: 30px;">Your application has been successfully submitted. Please check that you have received an email, including spam and unread emails.</h2>');
+            // Email failure must not invite resubmission of an already saved application.
+            try {
+                await sendNewApplicationClientConfirmationEmail(values);
+            } catch (emailError) {
+                console.error(emailError);
+                error.textContent = 'Your application was saved, but the confirmation email could not be sent. Please contact GHOpenStudioTour@gmail.com.';
+            }
+        } catch (err) {
+            console.error(err);
+            button.disabled = false;
+            button.innerText = 'Submit Application';
+            error.textContent = 'Your application could not be submitted. Your entries are still here. Please try again.';
+        }
+    });
+});

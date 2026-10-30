@@ -57,7 +57,7 @@
                     
                     const randomId = "app" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
                     // Create component element
-                    document.querySelector(`#applications #${divId}`).innerHTML += `
+                    document.querySelector(`#applications #${divId}`).insertAdjacentHTML('beforeend', `
                     <application-component id="${randomId}"
                     mailingAddress="${application["mailing-address"]}"
                     waStateBusinessLicenseUbiNumber="${application["wa-state-business-license-ubi-number"]}"
@@ -85,7 +85,8 @@
                     approved="${application["approved"]}"
                     websiteSocialMedia="${application["website-social-media"]}"
                     status="${application.approved == true ? "Approved" : application.hasBeenReviewed == true ? "Not Approved" : "Has not been reviewed"}"
-                    ></application-component> <hr>`;
+                    ></application-component> <hr>`);
+                    window.populateApplicationMediums(document.getElementById(randomId), application);
 
                 });
             });

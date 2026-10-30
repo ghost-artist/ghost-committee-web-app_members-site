@@ -1,7 +1,10 @@
+import { suppressApplicationEmails } from './local-email-settings.js';
 import { getEmailAddresses } from './getEmailAddresses.js'
 import { TESTING } from './sendTestEmail.js'
 
 export function sendApprovedNewArtistEmail(newArtistEmail){
+    if (suppressApplicationEmails()) return;
+
     
     // no TESTING mode needed here
 

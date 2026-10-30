@@ -338,23 +338,33 @@ function _claimRolesForMember() {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _index_html_txt__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.html.txt */ "./app/components/application/index.html.txt");
-/* harmony import */ var _utils_custom_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../utils/custom-element */ "./utils/custom-element.js");
-/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style.scss */ "./app/components/application/style.scss");
-/* harmony import */ var _outbound_emails_approvedNewArtist__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../outbound-emails/approvedNewArtist */ "./app/outbound-emails/approvedNewArtist.js");
-/* harmony import */ var _outbound_emails_notApprovedNewArtist_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../outbound-emails/notApprovedNewArtist.js */ "./app/outbound-emails/notApprovedNewArtist.js");
+/* harmony import */ var _utils_application_mediums_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../utils/application-mediums.mjs */ "./utils/application-mediums.mjs");
+/* harmony import */ var _index_html_txt__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./index.html.txt */ "./app/components/application/index.html.txt");
+/* harmony import */ var _utils_custom_element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../utils/custom-element */ "./utils/custom-element.js");
+/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./style.scss */ "./app/components/application/style.scss");
+/* harmony import */ var _outbound_emails_approvedNewArtist__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../outbound-emails/approvedNewArtist */ "./app/outbound-emails/approvedNewArtist.js");
+/* harmony import */ var _outbound_emails_notApprovedNewArtist_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../outbound-emails/notApprovedNewArtist.js */ "./app/outbound-emails/notApprovedNewArtist.js");
+
+
+// Called after the review component has been connected and its template rendered.
+window.populateApplicationMediums = function (component, application) {
+  (0,_utils_application_mediums_mjs__WEBPACK_IMPORTED_MODULE_0__.renderApplicationMediums)(component.querySelector('.application-mediums'), application);
+  component.querySelector('.app-preview h3').textContent = "".concat(application.firstName || '', " ").concat(application.lastName || '', ": ").concat((0,_utils_application_mediums_mjs__WEBPACK_IMPORTED_MODULE_0__.getApplicationMediums)(application).map(function (item) {
+    return item.medium;
+  }).join(', '));
+};
 
 
 
 
 
 var logIf = __webpack_require__(/*! ../../../utils/logIf.js */ "./utils/logIf.js");
-(0,_utils_custom_element__WEBPACK_IMPORTED_MODULE_1__.createCustomElement)('application-component', function () {
+(0,_utils_custom_element__WEBPACK_IMPORTED_MODULE_2__.createCustomElement)('application-component', function () {
 
   // Fot some reason whe nthe component is loaded via javascript, this call back doesnt fire.
 
   // events must be inline
-}, _index_html_txt__WEBPACK_IMPORTED_MODULE_0__["default"], '', {
+}, _index_html_txt__WEBPACK_IMPORTED_MODULE_1__["default"], '', {
   attributes: ['firstName', 'lastName', 'medium', 'createdAt', 'approved', 'hasBeenReviewed', 'email', 'phone', 'website', 'studioAddress', 'mailingAddress', 'isWithinBoundaries', 'randomId', 'waStateBusinessLicenseUbiNumber', 'studioSharingResponse', 'artistMentor', 'howDidYouHearAboutUs', 'digitalImage1', 'digitalImage1Info', 'digitalImage2', 'digitalImage2Info', 'digitalImage3', 'digitalImage3Info', 'digitalImage4', 'artistStatement', 'websiteSocialMedia', 'fbId', 'status']
 });
 document.addEventListener('DOMContentLoaded', function () {
@@ -406,9 +416,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var applicationComponent = button.closest('application-component');
         var newArtistEmail = applicationComponent.getAttribute("email");
         if (reviewAnswer == true) {
-          (0,_outbound_emails_approvedNewArtist__WEBPACK_IMPORTED_MODULE_3__.sendApprovedNewArtistEmail)(newArtistEmail);
+          (0,_outbound_emails_approvedNewArtist__WEBPACK_IMPORTED_MODULE_4__.sendApprovedNewArtistEmail)(newArtistEmail);
         } else {
-          (0,_outbound_emails_notApprovedNewArtist_js__WEBPACK_IMPORTED_MODULE_4__.sendNotApprovedNewArtistEmail)(newArtistEmail);
+          (0,_outbound_emails_notApprovedNewArtist_js__WEBPACK_IMPORTED_MODULE_5__.sendNotApprovedNewArtistEmail)(newArtistEmail);
         }
       }, 3000);
 
@@ -1215,17 +1225,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   sendApprovedNewArtistEmail: () => (/* binding */ sendApprovedNewArtistEmail)
 /* harmony export */ });
-/* harmony import */ var _getEmailAddresses_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getEmailAddresses.js */ "./app/outbound-emails/getEmailAddresses.js");
-/* harmony import */ var _sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sendTestEmail.js */ "./app/outbound-emails/sendTestEmail.js");
+/* harmony import */ var _local_email_settings_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./local-email-settings.js */ "./app/outbound-emails/local-email-settings.js");
+/* harmony import */ var _getEmailAddresses_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getEmailAddresses.js */ "./app/outbound-emails/getEmailAddresses.js");
+/* harmony import */ var _sendTestEmail_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sendTestEmail.js */ "./app/outbound-emails/sendTestEmail.js");
+
 
 
 function sendApprovedNewArtistEmail(newArtistEmail) {
+  if ((0,_local_email_settings_js__WEBPACK_IMPORTED_MODULE_0__.suppressApplicationEmails)()) return;
+
   // no TESTING mode needed here
 
   console.log("Sending 'ApprovedNewArtistEmail' to " + newArtistEmail);
   window.sendMessageToParent({
     controller: 'gmailController',
-    to: [_sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__.TESTING.approvedNewArtistEmail ? 'william.owen.dev@gmail.com' : newArtistEmail].filter(Boolean).join(','),
+    to: [_sendTestEmail_js__WEBPACK_IMPORTED_MODULE_2__.TESTING.approvedNewArtistEmail ? 'william.owen.dev@gmail.com' : newArtistEmail].filter(Boolean).join(','),
     subject: 'Your application to Gig Harbor Open Studio Tour was approved!',
     body: "\n         <div style=\"text-align:center; font-family:sans-serif;\">\n            <h1>Congratulations on behalf of the Gig Harbor Open Studio Tour!</h1>\n            <p>Your application to join the tour has been approved!</p>\n            <p>\n                <strong>The next step:</strong> Please fill out our online contract and submit your payment. You are not officially part of the tour until we receive both!\n            </p>\n            <p>\n                For the contract due date, check our website under the \u201CJoin\u201D button and look under FAQ's.<br>\n                Once accepted, you do not need to reapply, but <strong>you must submit an annual contract</strong>.\n            </p>\n            <fieldset style=\"width:fit-content; margin:auto; text-align:left;\">\n                <legend>How to Complete Your Contract & Payment</legend>\n                <ol>\n                    <li>Go to our website, Gig Harbor Open Studio Tour, and click the \"Members\" button.</li>\n                    <li>A password page will open. The password is <strong>openhand</strong> (write this down).</li>\n                    <li>On the login page, click \"Register New Account\" (pink button on the left). Enter your email and a password (save these).</li>\n                    <li>Access your Member page. Click \"My Contract\" on the left and fill out each section, saving as you go. You can exit and return later.</li>\n                    <li>Follow directions for uploading images (correct size and labeling required).</li>\n                    <li>Image saving may take a few minutes depending on your internet speed. Saved images will say \"Saved.\"</li>\n                    <li>Complete the payment section at the end of your contract. Once submitted, you'll receive a confirmation email.</li>\n                </ol>\n            </fieldset>\n            <p>\n                We hold three General Meetings each year: mid-March, mid-August, and early October.<br>\n                You'll receive email notifications (via MailChimp) about meetings and important info. Please check your spam or other folders if you don't see these emails.\n            </p>\n            <p>\n                If you have any questions, call or email me:<br>\n                Phone: 253-514-1865<br>\n                Email: <a href=\"mailto:ghopenstudiotour@gmail.com\">ghopenstudiotour@gmail.com</a>\n            </p>\n            <p>Thank you,<br>Beth Owen, President of GHOST (Gig Harbor Open Studio Tour)</p>\n        </div>\n        "
   });
@@ -1384,6 +1398,26 @@ function _getEmailAddresses() {
 
 /***/ }),
 
+/***/ "./app/outbound-emails/local-email-settings.js":
+/*!*****************************************************!*\
+  !*** ./app/outbound-emails/local-email-settings.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   suppressApplicationEmails: () => (/* binding */ suppressApplicationEmails)
+/* harmony export */ });
+// Browser-local switch shared by the application and committee review pages.
+// It is deliberately ignored on deployed hosts.
+function suppressApplicationEmails() {
+  var isLocal = ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname);
+  return isLocal && window.localStorage.getItem('ghost.suppressApplicationEmails') === 'true';
+}
+
+/***/ }),
+
 /***/ "./app/outbound-emails/newApplicationReceived.js":
 /*!*******************************************************!*\
   !*** ./app/outbound-emails/newApplicationReceived.js ***!
@@ -1395,8 +1429,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   sendNewApplicationEmail: () => (/* binding */ sendNewApplicationEmail)
 /* harmony export */ });
-/* harmony import */ var _getEmailAddresses_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getEmailAddresses.js */ "./app/outbound-emails/getEmailAddresses.js");
-/* harmony import */ var _sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sendTestEmail.js */ "./app/outbound-emails/sendTestEmail.js");
+/* harmony import */ var _local_email_settings_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./local-email-settings.js */ "./app/outbound-emails/local-email-settings.js");
+/* harmony import */ var _getEmailAddresses_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getEmailAddresses.js */ "./app/outbound-emails/getEmailAddresses.js");
+/* harmony import */ var _sendTestEmail_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sendTestEmail.js */ "./app/outbound-emails/sendTestEmail.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
@@ -1409,6 +1444,7 @@ function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
 
+
 function sendNewApplicationEmail(_x) {
   return _sendNewApplicationEmail.apply(this, arguments);
 }
@@ -1418,13 +1454,19 @@ function _sendNewApplicationEmail() {
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
+          if (!(0,_local_email_settings_js__WEBPACK_IMPORTED_MODULE_0__.suppressApplicationEmails)()) {
+            _context.next = 2;
+            break;
+          }
+          return _context.abrupt("return");
+        case 2:
           // get all board members
           // plus new artist applications chair
           // new artist recruitment chair
           newApplicationEventId = '1Iig2hZFN7MgyFUpjG0q'; // A timeline event id for some date in the future
-          _context.next = 3;
+          _context.next = 5;
           return CRUD.read('ghost-timeline', newApplicationEventId);
-        case 3:
+        case 5:
           specialTimelineEvent = _context.sent;
           if (typeof specialTimelineEvent.date === 'string') {
             _specialTimelineEvent = specialTimelineEvent.date.split('-'), _specialTimelineEvent2 = _slicedToArray(_specialTimelineEvent, 3), year = _specialTimelineEvent2[0], month = _specialTimelineEvent2[1], day = _specialTimelineEvent2[2];
@@ -1439,25 +1481,25 @@ function _sendNewApplicationEmail() {
               day: 'numeric'
             });
           }
-          _context.next = 7;
-          return (0,_getEmailAddresses_js__WEBPACK_IMPORTED_MODULE_0__.getEmailAddresses)({
+          _context.next = 9;
+          return (0,_getEmailAddresses_js__WEBPACK_IMPORTED_MODULE_1__.getEmailAddresses)({
             roles: ["17", "15"],
             // artist applications chair, new artist recruitment chair
             committees: ['Board']
           }).then(function (emails) {
             return emails.join(',') + ',' + newArtist.email;
           });
-        case 7:
+        case 9:
           emailAddresses = _context.sent;
-          if (_sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__.TESTING.newApplication) console.log("Would send email to", emailAddresses);
+          if (_sendTestEmail_js__WEBPACK_IMPORTED_MODULE_2__.TESTING.newApplication) console.log("Would send email to", emailAddresses);
           window.sendMessageToParent({
             controller: 'gmailController',
             // every one on board, new artist applications chair, new artist recruitment chair and the person who applied
-            to: _sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__.TESTING.newApplication ? 'william.owen.dev@gmail.com' : emailAddresses,
+            to: _sendTestEmail_js__WEBPACK_IMPORTED_MODULE_2__.TESTING.newApplication ? 'william.owen.dev@gmail.com' : emailAddresses,
             subject: "GHOST New Artist Application sent from ".concat(newArtist.firstName, " ").concat(newArtist.lastName),
             body: "\n         <div style=\"text-align:center\">\n          <h1>A GHOST New Artist Application has been submitted!</h1>\n            <p>\n            The committee will be reviewing the application from <b>".concat(newArtist.firstName, " ").concat(newArtist.lastName, "</b>.<br>\n            The new artist applicant will receive a notification once the application has been reviewed. \n            </p>\n            <p>Application must be received no later than ").concat(date, ".\n            </p>\n\n\n            <p>Thank you for your membership.</p>\n            <p>Best Regards, <br>Gig Harbor Open Studio Tour</p>\n\n\n\n        </div>\n          ")
           });
-        case 10:
+        case 12:
         case "end":
           return _context.stop();
       }
@@ -1660,17 +1702,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   sendNotApprovedNewArtistEmail: () => (/* binding */ sendNotApprovedNewArtistEmail)
 /* harmony export */ });
-/* harmony import */ var _getEmailAddresses_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getEmailAddresses.js */ "./app/outbound-emails/getEmailAddresses.js");
-/* harmony import */ var _sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sendTestEmail.js */ "./app/outbound-emails/sendTestEmail.js");
+/* harmony import */ var _local_email_settings_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./local-email-settings.js */ "./app/outbound-emails/local-email-settings.js");
+/* harmony import */ var _getEmailAddresses_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getEmailAddresses.js */ "./app/outbound-emails/getEmailAddresses.js");
+/* harmony import */ var _sendTestEmail_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./sendTestEmail.js */ "./app/outbound-emails/sendTestEmail.js");
+
 
 
 function sendNotApprovedNewArtistEmail(newArtistEmail) {
+  if ((0,_local_email_settings_js__WEBPACK_IMPORTED_MODULE_0__.suppressApplicationEmails)()) return;
+
   // no TESTING mode needed here
 
   console.log("Sending 'NotApprovedNewArtistEmail' to " + newArtistEmail);
   window.sendMessageToParent({
     controller: 'gmailController',
-    to: [_sendTestEmail_js__WEBPACK_IMPORTED_MODULE_1__.TESTING.notApprovedNewArtistEmail ? 'william.owen.dev@gmail.com' : newArtistEmail].filter(Boolean).join(','),
+    to: [_sendTestEmail_js__WEBPACK_IMPORTED_MODULE_2__.TESTING.notApprovedNewArtistEmail ? 'william.owen.dev@gmail.com' : newArtistEmail].filter(Boolean).join(','),
     subject: 'Sorry, your application to Gig Harbor Open Studio Tour was not approved',
     body: "\n          <div style=\"text-align:center; font-family:sans-serif;\">\n          <h1>Thank you for your application to the Gig Harbor Open Studio Tour</h1>\n          <p style=\"max-width:575px; margin:auto\">\n            I am sorry to inform you that, at this time, your application to join the Gig Harbor Open Studio Tour has been declined because it does not meet our artistic standards for professional work. <br> If you would like any feedback about our decision, please contact me at <a href=\"mailto:degoede@aol.com\">degoede@aol.com</a>.\n          </p>\n          <p>\n            We appreciate your interest and would encourage you to continue to work on your art and to reapply in future years.\n          </p>\n          <p>\n            Thank you,<br>\n            Andrew Van DeGoede,<br>\n            Screening Chair of GHOST (Gig Harbor Open Studio Tour)\n          </p>\n        </div>\n        "
   });
@@ -3139,7 +3185,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("\r\n\r\n<div class=\"payPalContainer\" style=\"width:fit-content; margin: auto \"></div>");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("\n\n<div class=\"payPalContainer\" style=\"width:fit-content; margin: auto \"></div>");
 
 /***/ }),
 
@@ -3154,7 +3200,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("\r\n<div class=\"artist-application-review\" >\r\n\r\n    <div class=\"app-preview\">\r\n        <div>\r\n\r\n           <h3> ${firstName} ${lastName}: ${medium}</h3>\r\n           \r\n            <p>Submitted on: ${createdAt}</p>\r\n        </div>\r\n        <div>\r\n           \r\n            <h4>Status: </h4>\r\n            <span class=\"status\">\r\n                <span>${status}</span>\r\n            </span>\r\n        </div>\r\n        <button class=\"expandApplication show\" onclick=\"event.target.closest('.artist-application-review').classList.toggle('expanded')\"\r\n        >${hasBeenReviewed =='true' ? \"Review Old Application\" : \"Review\"}</button>\r\n        <button class=\"expandApplication hide\" onclick=\"event.target.closest('.artist-application-review').classList.toggle('expanded')\"\r\n        >Minimize Application</button>\r\n        \r\n    </div>\r\n    <div class=\"app-contents\">\r\n\r\n\r\n        <h3>Artist Name</h3>\r\n        <div class=\"row\">\r\n            <input-component value=\"${firstName}\" disabled=\"true\" style=\"width: 48%\" required=\"true\"\r\n                fieldName=\"firstName\" alias=\"First Name\"></input-component>\r\n            <input-component value=\"${lastName}\" disabled=\"true\" style=\"width: 48%\" required=\"true\" fieldName=\"lastName\"\r\n                alias=\"Last Name\"></input-component>\r\n        </div>\r\n        <h3>Contact Info</h3>\r\n        <div class=\"row\">\r\n            <input-component value=\"${email}\" disabled=\"true\" style=\"width: 48%\" required=\"true\" type=\"email\"\r\n                fieldName=\"email\" alias=\"Email\"></input-component>\r\n            <input-component value=\"${phone}\" disabled=\"true\" style=\"width: 48%\" required=\"true\" fieldName=\"phone\"\r\n                alias=\"Phone\" regexMask=\"^\\(\\d{3}\\) \\d{3}-\\d{4}$\"></input-component>\r\n        </div>\r\n        <textarea-component value=\"${studioAddress}\" disabled=\"true\" required=\"true\" fieldName=\"studio-address\"\r\n            alias=\"Studio Address\"></textarea-component>\r\n        <textarea-component value=\"${mailingAddress}\" disabled=\"true\" required=\"true\" fieldName=\"mailing-address\"\r\n            alias=\"Mailing Address\"></textarea-component>\r\n\r\n\r\n        <h3>Medium(s)</h3>\r\n        <input-component value=\"${medium}\" disabled=\"true\" required=\"true\" fieldName=\"medium\"\r\n            placeholder=\"Comma separated list of mediums\"></input-component>\r\n\r\n        <h3>WA State Business License (UBI) Number *</h3>\r\n        <p>A Washington State Business License (UBI) Number is required to be in the tour. If you don't have one, apply:\r\n            https://bls.dor.wa.gov/. </p>\r\n        <input-component value=\"${waStateBusinessLicenseUbiNumber}\" disabled=\"true\" required=\"true\"\r\n            fieldName=\"wa-state-business-license-ubi-number\" placeholder=\"UBI Number\"></input-component>\r\n\r\n        <h3>Is your studio within the GHOST Tour Boundaries? *</h3>\r\n        <p style=\"margin-bottom: 35px;\">${isWithinBoundaries}</p>\r\n\r\n        <h3>Will you need to share a studio?</h3>\r\n        <style>\r\n            input,\r\n            textarea {\r\n                margin: 10px 0 0 0;\r\n                padding: 10px;\r\n                border: 1px solid #ccc;\r\n                border-radius: 5px;\r\n            }\r\n\r\n            textarea {\r\n                resize: vertical;\r\n                min-height: 100px;\r\n            }\r\n        </style>\r\n        <p style=\"margin: 0;\">If sharing a studio, have you made arrangements to do so? If so, please name the Tour\r\n            Artist who has invited you to share their studio. If not, we will match you with a Tour Artist who will host\r\n            you in their studio.</p>\r\n        <textarea disabled=\"true\" style=\"width: 100%; box-sizing: border-box; \">\r\n${studioSharingResponse}\r\n        </textarea>\r\n        <!-- <textarea-component description=\"If sharing a studio, have you made arrangements to do so? If so, please name the Tour Artist who has invited you to share their studio. If not, we will match you with a Tour Artist who will host you in their studio.\"></textarea-component> -->\r\n\r\n\r\n        <h3>How did you hear about the GHOST Tour?</h3>\r\n        <textarea disabled style=\"width: 100%; box-sizing: border-box; \">\r\n${howDidYouHearAboutUs}\r\n        </textarea>\r\n\r\n        <h3>Three (3) digital images of your art</h3>\r\n        <p>Make sure that your images look professional and are jpgs that are a minimum of 150 KB (No thumbnails). 2D\r\n            art should only\r\n            be of your art image (no background or frame.) 3D art and jewelry should have a plain background (ex, black\r\n            or white) and have enough lighting to show good detail. Crop the image so that your art fills most of the\r\n            image and make sure the image is crisp and does justice to your art.</p>\r\n        <div style=\"display: flex; justify-content: center; flex-wrap: wrap;\">\r\n            <style>\r\n                file-input-component {\r\n                    margin: 10px;\r\n                }\r\n                img {\r\n                    width: 200px;\r\n                    height: 200px;\r\n                    object-fit: cover;\r\n                    margin: 10px;\r\n                }\r\n            </style>\r\n            <div style=\"display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;\">\r\n                <div style=\"text-align: center;\">\r\n                    <img src=\"${digitalImage1}\"></img>\r\n                    <p>${digitalImage1Info}</p>\r\n                </div>\r\n                <div style=\"text-align: center;\">\r\n                    <img src=\"${digitalImage2}\"></img>\r\n                    <p>${digitalImage2Info}</p>\r\n                </div>\r\n                <div style=\"text-align: center;\">\r\n                    <img src=\"${digitalImage3}\"></img>\r\n                    <p>${digitalImage3Info}</p>\r\n                </div>\r\n            </div>\r\n        </div>\r\n\r\n        <h3>One (1) digital image of your studio (if it is within the studio tour boundaries and you will be showing\r\n            there) or your booth (if you will be showing at another artist's studio)</h3>\r\n        <p>This should be a jpg image that is a minimum of 150 KB (No thumbnails). Make sure your display space looks\r\n            professional, has good lighting\r\n            and is represented well in your photo.</p>\r\n\r\n        <div style=\"display: flex; justify-content: center; flex-wrap: wrap;\">\r\n            <img src=\"${digitalImage4}\"></img>\r\n        </div>\r\n\r\n        <h3>Artist Statement</h3>\r\n        <textarea-component  disabled=\"true\" fieldName=\"artistStatement-${randomId}\" placeholder=\"Artist Statement\" required\r\n            description=\"This  is a short statement that describes what art you make, how you make it and why you make it.  (Limit 200 words)\"\r\n            value=\"${artistStatement}\"></textarea-component>\r\n        <h3>Your art website or social media sites</h3>\r\n        <textarea-component disabled=\"true\" placeholder=\"Website & Social media presence \" fieldName=\"website-social-media-${randomId}\" required\r\n            description=\"If you have an art website and/or social media sites, list them here.  If you don't have any of those, type in NONE\"\r\n            value=\"${websiteSocialMedia}\"></textarea-component>\r\n\r\n            <div style=\"text-align: center;\">\r\n                <button class=\"approve-btn\" data-fb-id=\"${fbId}\" onclick=\"window.updateReview(event,true)\">Approve Application</button>\r\n                <button class=\"reject-btn\" data-fb-id=\"${fbId}\" onclick=\"window.updateReview(event,false)\">Disapprove</button>\r\n                <button class=\"delete-btn\" data-fb-id=\"${fbId}\" onclick=\"window.deleteApplication(event)\">Delete</button>\r\n\r\n            </div>\r\n    </div>\r\n\r\n</div>");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("\n<div class=\"artist-application-review\" >\n\n    <div class=\"app-preview\">\n        <div>\n\n           <h3> ${firstName} ${lastName}: ${medium}</h3>\n           \n            <p>Submitted on: ${createdAt}</p>\n        </div>\n        <div>\n           \n            <h4>Status: </h4>\n            <span class=\"status\">\n                <span>${status}</span>\n            </span>\n        </div>\n        <button class=\"expandApplication show\" onclick=\"event.target.closest('.artist-application-review').classList.toggle('expanded')\"\n        >${hasBeenReviewed =='true' ? \"Review Old Application\" : \"Review\"}</button>\n        <button class=\"expandApplication hide\" onclick=\"event.target.closest('.artist-application-review').classList.toggle('expanded')\"\n        >Minimize Application</button>\n        \n    </div>\n    <div class=\"app-contents\">\n\n\n        <h3>Artist Name</h3>\n        <div class=\"row\">\n            <input-component value=\"${firstName}\" disabled=\"true\" style=\"width: 48%\" required=\"true\"\n                fieldName=\"firstName\" alias=\"First Name\"></input-component>\n            <input-component value=\"${lastName}\" disabled=\"true\" style=\"width: 48%\" required=\"true\" fieldName=\"lastName\"\n                alias=\"Last Name\"></input-component>\n        </div>\n        <h3>Contact Info</h3>\n        <div class=\"row\">\n            <input-component value=\"${email}\" disabled=\"true\" style=\"width: 48%\" required=\"true\" type=\"email\"\n                fieldName=\"email\" alias=\"Email\"></input-component>\n            <input-component value=\"${phone}\" disabled=\"true\" style=\"width: 48%\" required=\"true\" fieldName=\"phone\"\n                alias=\"Phone\" regexMask=\"^\\(\\d{3}\\) \\d{3}-\\d{4}$\"></input-component>\n        </div>\n        <textarea-component value=\"${studioAddress}\" disabled=\"true\" required=\"true\" fieldName=\"studio-address\"\n            alias=\"Studio Address\"></textarea-component>\n        <textarea-component value=\"${mailingAddress}\" disabled=\"true\" required=\"true\" fieldName=\"mailing-address\"\n            alias=\"Mailing Address\"></textarea-component>\n\n\n        <h3>WA State Business License (UBI) Number *</h3>\n        <p>A Washington State Business License (UBI) Number is required to be in the tour. If you don't have one, apply:\n            https://bls.dor.wa.gov/. </p>\n        <input-component value=\"${waStateBusinessLicenseUbiNumber}\" disabled=\"true\" required=\"true\"\n            fieldName=\"wa-state-business-license-ubi-number\" placeholder=\"UBI Number\"></input-component>\n\n        <h3>Is your studio within the GHOST Tour Boundaries? *</h3>\n        <p style=\"margin-bottom: 35px;\">${isWithinBoundaries}</p>\n\n        <h3>Will you need to share a studio?</h3>\n        <style>\n            input,\n            textarea {\n                margin: 10px 0 0 0;\n                padding: 10px;\n                border: 1px solid #ccc;\n                border-radius: 5px;\n            }\n\n            textarea {\n                resize: vertical;\n                min-height: 100px;\n            }\n        </style>\n        <p style=\"margin: 0;\">If sharing a studio, have you made arrangements to do so? If so, please name the Tour\n            Artist who has invited you to share their studio. If not, we will match you with a Tour Artist who will host\n            you in their studio.</p>\n        <textarea disabled=\"true\" style=\"width: 100%; box-sizing: border-box; \">\n${studioSharingResponse}\n        </textarea>\n        <!-- <textarea-component description=\"If sharing a studio, have you made arrangements to do so? If so, please name the Tour Artist who has invited you to share their studio. If not, we will match you with a Tour Artist who will host you in their studio.\"></textarea-component> -->\n\n\n        <h3>How did you hear about the GHOST Tour?</h3>\n        <textarea disabled style=\"width: 100%; box-sizing: border-box; \">\n${howDidYouHearAboutUs}\n        </textarea>\n\n        <div class=\"application-mediums\"></div>\n\n        <h3>One (1) digital image of your studio (if it is within the studio tour boundaries and you will be showing\n            there) or your booth (if you will be showing at another artist's studio)</h3>\n        <p>This should be a jpg image that is a minimum of 150 KB (No thumbnails). Make sure your display space looks\n            professional, has good lighting\n            and is represented well in your photo.</p>\n\n        <div style=\"display: flex; justify-content: center; flex-wrap: wrap;\">\n            <img src=\"${digitalImage4}\" alt=\"Artist studio or booth\" style=\"max-width: 100%; width: 400px; height: auto; object-fit: contain;\"></img>\n        </div>\n\n        <h3>Artist Statement</h3>\n        <textarea-component  disabled=\"true\" fieldName=\"artistStatement-${randomId}\" placeholder=\"Artist Statement\" required\n            description=\"This  is a short statement that describes what art you make, how you make it and why you make it.  (Limit 200 words)\"\n            value=\"${artistStatement}\"></textarea-component>\n        <h3>Your art website or social media sites</h3>\n        <textarea-component disabled=\"true\" placeholder=\"Website & Social media presence \" fieldName=\"website-social-media-${randomId}\" required\n            description=\"If you have an art website and/or social media sites, list them here.  If you don't have any of those, type in NONE\"\n            value=\"${websiteSocialMedia}\"></textarea-component>\n\n            <div style=\"text-align: center;\">\n                <button class=\"approve-btn\" data-fb-id=\"${fbId}\" onclick=\"window.updateReview(event,true)\">Approve Application</button>\n                <button class=\"reject-btn\" data-fb-id=\"${fbId}\" onclick=\"window.updateReview(event,false)\">Disapprove</button>\n                <button class=\"delete-btn\" data-fb-id=\"${fbId}\" onclick=\"window.deleteApplication(event)\">Delete</button>\n\n            </div>\n    </div>\n\n</div>");
 
 /***/ }),
 
@@ -3169,7 +3215,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<div class=\"contract-received \">\r\n  <div class=\"preview\">\r\n\r\n    <div>\r\n\r\n      <h2 class=\"user-name\" style=\"margin-bottom: 0\">\r\n        ${firstName}\r\n        ${lastName}\r\n      </h2>\r\n      <b><ul style=\"margin: 0; padding: 0; list-style: none;\">${committeeRoles}</ul></b>\r\n    </div>\r\n    <button onclick=\"event.target.closest('.contract-received').classList.toggle('reveal')\">View Details</button>\r\n  </div>\r\n  <div class=\"content \">\r\n    <div><b>Personal Email:</b> ${personalEmail ? personalEmail : 'N/A'}</div>\r\n    <div><b>Business Email:</b> ${businessEmail ? businessEmail : 'N/A'} </div>\r\n    <div><b>Phone:</b> ${phone ? phone : 'N/A'}</div>\r\n    <div><b>Mailing Address:</b> ${mailingAddress ? mailingAddress : 'N/A'}</div>\r\n    <div><b>Studio Address:</b> ${studioAddress ? studioAddress : 'N/A'}</div>\r\n    <div><b>Website:</b> ${website ? website : 'N/A'}</div>\r\n    <div><b>Facebook:</b> ${facebook ? facebook : 'N/A'}</div>\r\n    <div><b>Instagram:</b> ${instagram ? instagram : 'N/A'}</div>\r\n    <div><b>Medium:</b> ${medium ? medium : 'N/A'}</div>\r\n    <div><b>WA State UBI:</b> ${waStateUbi ? waStateUbi : 'N/A'}</div>\r\n\r\n\r\n    <div><b>Scholarship Applied:</b> ${scholarshipApplied ? 'True' : 'False'}</div>\r\n    <div><b>Studio Sharing Answer:</b>\r\n      <div class=\"level-1\">${studioSharingAnswer ? studioSharingAnswer : 'N/A'}</div>\r\n    </div>\r\n    <div><b>Artistic Demonstration:</b> ${artisticDemonstration ? artisticDemonstration : 'N/A'}</div>\r\n    <div><b>Artist Statement:</b> \r\n    <div class=\"level-1\" style=\"translate: 0px -10px\">${artistStatement ? artistStatement : 'N/A' }</div></div>\r\n    <div><b>Artist Tagline:</b> ${artistTagline ? artistTagline : 'N/A'}</div>\r\n  \r\n    <div style=\"display: flex; justify-content: center; flex-wrap: wrap; align-items: end;\">\r\n      <style>\r\n        img {\r\n          width: 200px;\r\n          height: 200px;\r\n          object-fit: cover;\r\n          margin: 10px;\r\n        }\r\n      </style>\r\n      <div><b>Digital Image 1:</b>\r\n        <img src=\"${digitalImage1}\"></img>\r\n      </div>\r\n      <div><b>Digital Image 2:</b>\r\n        <img src=\"${digitalImage2}\"></img>\r\n      </div>\r\n      <div><b>Digital Image 3:</b>\r\n        <img src=\"${digitalImage3}\"></img>\r\n      </div>\r\n    </div>\r\n\r\n\r\n\r\n    <div style=\"display: flex; justify-content: center; flex-wrap: wrap;\">\r\n      <div><b>Brochure Image:</b>\r\n        <img src=\"${brochureImage}\"></img>\r\n      </div>\r\n    </div>\r\n    <div style=\"display: flex; justify-content: center; flex-wrap: wrap;\">\r\n      <div><b>Artist in Studio Image:</b>\r\n        <img src=\"${artistInStudioImage}\"></img>\r\n      </div>\r\n    </div>\r\n\r\n  </div>\r\n\r\n</div>");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<div class=\"contract-received \">\n  <div class=\"preview\">\n\n    <div>\n\n      <h2 class=\"user-name\" style=\"margin-bottom: 0\">\n        ${firstName}\n        ${lastName}\n      </h2>\n      <b><ul style=\"margin: 0; padding: 0; list-style: none;\">${committeeRoles}</ul></b>\n    </div>\n    <button onclick=\"event.target.closest('.contract-received').classList.toggle('reveal')\">View Details</button>\n  </div>\n  <div class=\"content \">\n    <div><b>Personal Email:</b> ${personalEmail ? personalEmail : 'N/A'}</div>\n    <div><b>Business Email:</b> ${businessEmail ? businessEmail : 'N/A'} </div>\n    <div><b>Phone:</b> ${phone ? phone : 'N/A'}</div>\n    <div><b>Mailing Address:</b> ${mailingAddress ? mailingAddress : 'N/A'}</div>\n    <div><b>Studio Address:</b> ${studioAddress ? studioAddress : 'N/A'}</div>\n    <div><b>Website:</b> ${website ? website : 'N/A'}</div>\n    <div><b>Facebook:</b> ${facebook ? facebook : 'N/A'}</div>\n    <div><b>Instagram:</b> ${instagram ? instagram : 'N/A'}</div>\n    <div><b>Medium:</b> ${medium ? medium : 'N/A'}</div>\n    <div><b>WA State UBI:</b> ${waStateUbi ? waStateUbi : 'N/A'}</div>\n\n\n    <div><b>Scholarship Applied:</b> ${scholarshipApplied ? 'True' : 'False'}</div>\n    <div><b>Studio Sharing Answer:</b>\n      <div class=\"level-1\">${studioSharingAnswer ? studioSharingAnswer : 'N/A'}</div>\n    </div>\n    <div><b>Artistic Demonstration:</b> ${artisticDemonstration ? artisticDemonstration : 'N/A'}</div>\n    <div><b>Artist Statement:</b> \n    <div class=\"level-1\" style=\"translate: 0px -10px\">${artistStatement ? artistStatement : 'N/A' }</div></div>\n    <div><b>Artist Tagline:</b> ${artistTagline ? artistTagline : 'N/A'}</div>\n  \n    <div style=\"display: flex; justify-content: center; flex-wrap: wrap; align-items: end;\">\n      <style>\n        img {\n          width: 200px;\n          height: 200px;\n          object-fit: cover;\n          margin: 10px;\n        }\n      </style>\n      <div><b>Digital Image 1:</b>\n        <img src=\"${digitalImage1}\"></img>\n      </div>\n      <div><b>Digital Image 2:</b>\n        <img src=\"${digitalImage2}\"></img>\n      </div>\n      <div><b>Digital Image 3:</b>\n        <img src=\"${digitalImage3}\"></img>\n      </div>\n    </div>\n\n\n\n    <div style=\"display: flex; justify-content: center; flex-wrap: wrap;\">\n      <div><b>Brochure Image:</b>\n        <img src=\"${brochureImage}\"></img>\n      </div>\n    </div>\n    <div style=\"display: flex; justify-content: center; flex-wrap: wrap;\">\n      <div><b>Artist in Studio Image:</b>\n        <img src=\"${artistInStudioImage}\"></img>\n      </div>\n    </div>\n\n  </div>\n\n</div>");
 
 /***/ }),
 
@@ -3184,7 +3230,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<script\r\n  src=\"https://kit.fontawesome.com/4550fec5ff.js\"\r\n  crossorigin=\"anonymous\"\r\n></script>\r\n\r\n<!-- I don't remember what data-primary meant -->\r\n<div class=\"os-dual-form\" data-primary=\"login\" auth-mode=\"login\">\r\n  <form id=\"signup\" class=\"left\" autocomplete=\"off\">\r\n    <h1>Sign up</h1>\r\n    <os-form-feedback feedbackName=\"success\"></os-form-feedback>\r\n\r\n    <small style=\"margin-inline: 30px; font-weight: bold;\">\r\n      Sign-up here if you need to set up your personal account. Otherwise, click on the \"Go To Log In\" button on the right.\r\n    </small>\r\n\r\n\r\n    <div class=\"row\">\r\n      <input-component\r\n        required=\"true\"\r\n        fieldName=\"firstName\"\r\n        alias=\"First Name\"\r\n      ></input-component>\r\n\r\n      <input-component\r\n        required=\"true\"\r\n        fieldName=\"lastName\"\r\n        alias=\"Last Name\"\r\n      ></input-component>\r\n    </div>\r\n    <div class=\"\" style=\"margin-right: auto; margin-left: 10px\">\r\n      <!-- <input-component\r\n        required=\"true\"\r\n        fieldName=\"username\"\r\n        alias=\"Username\"\r\n      ></input-component> -->\r\n      <input-component required=\"true\" fieldName=\"email\" alias=\"Email\">\r\n      </input-component>\r\n    </div>\r\n    <div class=\"row\">\r\n      <input-component\r\n        required=\"true\"\r\n        fieldName=\"password\"\r\n        type=\"password\"\r\n        alias=\"Password\"\r\n      ></input-component>\r\n      <input-component\r\n        required=\"true\"\r\n        fieldName=\"confirm-password\"\r\n        type=\"password\"\r\n        alias=\"Confirm Password\"\r\n      ></input-component>\r\n    </div>\r\n    <!-- <div id=\"reCAPTCHA\"></div>\r\n      <os-form-feedback feedbackName=\"reCAPTCHA\"></os-form-feedback> -->\r\n\r\n    <div class=\"column submitBtnsContainer\">\r\n      <button type=\"submit\">Submit</button>\r\n\r\n      <button type=\"button\" class=\"mobile-view toggleAuthType\">\r\n        Go to Log in\r\n      </button>\r\n    </div>\r\n    <os-form-feedback feedbackName=\"submit\"></os-form-feedback>\r\n  </form>\r\n  <form id=\"login\" class=\"right\" autocomplete=\"off\">\r\n    <h1>Login</h1>\r\n    <small style=\"margin-inline: 30px; font-weight: bold;\">Log In here if you have already set up your personal account. Otherwise, click on the \"Register New Account\" button on the left.</small>\r\n    <input-component\r\n      required=\"true\"\r\n      fieldName=\"email-login\"\r\n      alias=\"Email\"\r\n      type=\"email\"\r\n    ></input-component>\r\n    <input-component\r\n      required=\"true\"\r\n      fieldName=\"password-login\"\r\n      type=\"password\"\r\n      alias=\"Password\"\r\n    ></input-component>\r\n    <div class=\"column submitBtnsContainer\">\r\n      <button type=\"submit\">Submit</button>\r\n      <style>\r\n        .reset-password {\r\n          color: #007bff;\r\n          text-decoration: none;\r\n          cursor: pointer;\r\n          margin-top: 10px;\r\n          /* position: absolute; */\r\n          /* bottom: 0; */\r\n        }\r\n        .reset-password:hover {\r\n          text-decoration: underline;\r\n        }\r\n      </style>\r\n      <a type=\"button\" class=\"reset-password\">Forgot Password?</a>\r\n      <button type=\"button\" class=\"mobile-view toggleAuthType\">\r\n        Register new account\r\n      </button>\r\n    </div>\r\n    <os-form-feedback feedbackName=\"submit\"></os-form-feedback>\r\n  </form>\r\n\r\n  <div class=\"cover left login\" style=\"background-image: url(${loginImage})\">\r\n    <button type=\"button\" class=\"toggleAuthType secondary\" style=\"background-color: #ff0084;\">\r\n      Register new account\r\n    </button>\r\n  </div>\r\n  <div class=\"cover right signup\" style=\"background-image: url(${signupImage})\">\r\n    <button type=\"button\" class=\"toggleAuthType\" style=\"background-color: #ff0084;\">Go to Log in</button>\r\n  </div>\r\n</div>\r\n\r\n<style>\r\n  #reset-password-modal form {\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n  }\r\n\r\n  #reset-password-modal .modal-content {\r\n    width: fit-content;\r\n  }\r\n\r\n  .close-modal {\r\n    cursor: pointer;\r\n    font-size: 30px;\r\n    color: #007bff;\r\n    padding: 10px;\r\n    cursor: pointer;\r\n    position: absolute;\r\n    top: 0;\r\n    right: 0;\r\n  }\r\n</style>\r\n\r\n<div id=\"reset-password-modal\" class=\"modal\">\r\n  <div class=\"modal-content\" style=\"position: relative\">\r\n    <span class=\"close-modal\" style=\"\">&times;</span>\r\n    <h2>Reset Password</h2>\r\n    <form onsubmit=\"event.preventDefault()\" style=\"\">\r\n      <input-component\r\n        moveLabel=\"true\"\r\n        type=\"email\"\r\n        alias=\"Email\"\r\n        placeholder=\"Enter your email\"\r\n        fieldName=\"resetEmail\"\r\n      >\r\n      </input-component>\r\n      <button id=\"resetSubmit\" class=\"btn small\">Submit</button>\r\n      <div id=\"reset-password-modal-feedback\"></div>\r\n    </form>\r\n  </div>\r\n</div>\r\n");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<script\n  src=\"https://kit.fontawesome.com/4550fec5ff.js\"\n  crossorigin=\"anonymous\"\n></script>\n\n<!-- I don't remember what data-primary meant -->\n<div class=\"os-dual-form\" data-primary=\"login\" auth-mode=\"login\">\n  <form id=\"signup\" class=\"left\" autocomplete=\"off\">\n    <h1>Sign up</h1>\n    <os-form-feedback feedbackName=\"success\"></os-form-feedback>\n\n    <small style=\"margin-inline: 30px; font-weight: bold;\">\n      Sign-up here if you need to set up your personal account. Otherwise, click on the \"Go To Log In\" button on the right.\n    </small>\n\n\n    <div class=\"row\">\n      <input-component\n        required=\"true\"\n        fieldName=\"firstName\"\n        alias=\"First Name\"\n      ></input-component>\n\n      <input-component\n        required=\"true\"\n        fieldName=\"lastName\"\n        alias=\"Last Name\"\n      ></input-component>\n    </div>\n    <div class=\"\" style=\"margin-right: auto; margin-left: 10px\">\n      <!-- <input-component\n        required=\"true\"\n        fieldName=\"username\"\n        alias=\"Username\"\n      ></input-component> -->\n      <input-component required=\"true\" fieldName=\"email\" alias=\"Email\">\n      </input-component>\n    </div>\n    <div class=\"row\">\n      <input-component\n        required=\"true\"\n        fieldName=\"password\"\n        type=\"password\"\n        alias=\"Password\"\n      ></input-component>\n      <input-component\n        required=\"true\"\n        fieldName=\"confirm-password\"\n        type=\"password\"\n        alias=\"Confirm Password\"\n      ></input-component>\n    </div>\n    <!-- <div id=\"reCAPTCHA\"></div>\n      <os-form-feedback feedbackName=\"reCAPTCHA\"></os-form-feedback> -->\n\n    <div class=\"column submitBtnsContainer\">\n      <button type=\"submit\">Submit</button>\n\n      <button type=\"button\" class=\"mobile-view toggleAuthType\">\n        Go to Log in\n      </button>\n    </div>\n    <os-form-feedback feedbackName=\"submit\"></os-form-feedback>\n  </form>\n  <form id=\"login\" class=\"right\" autocomplete=\"off\">\n    <h1>Login</h1>\n    <small style=\"margin-inline: 30px; font-weight: bold;\">Log In here if you have already set up your personal account. Otherwise, click on the \"Register New Account\" button on the left.</small>\n    <input-component\n      required=\"true\"\n      fieldName=\"email-login\"\n      alias=\"Email\"\n      type=\"email\"\n    ></input-component>\n    <input-component\n      required=\"true\"\n      fieldName=\"password-login\"\n      type=\"password\"\n      alias=\"Password\"\n    ></input-component>\n    <div class=\"column submitBtnsContainer\">\n      <button type=\"submit\">Submit</button>\n      <style>\n        .reset-password {\n          color: #007bff;\n          text-decoration: none;\n          cursor: pointer;\n          margin-top: 10px;\n          /* position: absolute; */\n          /* bottom: 0; */\n        }\n        .reset-password:hover {\n          text-decoration: underline;\n        }\n      </style>\n      <a type=\"button\" class=\"reset-password\">Forgot Password?</a>\n      <button type=\"button\" class=\"mobile-view toggleAuthType\">\n        Register new account\n      </button>\n    </div>\n    <os-form-feedback feedbackName=\"submit\"></os-form-feedback>\n  </form>\n\n  <div class=\"cover left login\" style=\"background-image: url(${loginImage})\">\n    <button type=\"button\" class=\"toggleAuthType secondary\" style=\"background-color: #ff0084;\">\n      Register new account\n    </button>\n  </div>\n  <div class=\"cover right signup\" style=\"background-image: url(${signupImage})\">\n    <button type=\"button\" class=\"toggleAuthType\" style=\"background-color: #ff0084;\">Go to Log in</button>\n  </div>\n</div>\n\n<style>\n  #reset-password-modal form {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n  }\n\n  #reset-password-modal .modal-content {\n    width: fit-content;\n  }\n\n  .close-modal {\n    cursor: pointer;\n    font-size: 30px;\n    color: #007bff;\n    padding: 10px;\n    cursor: pointer;\n    position: absolute;\n    top: 0;\n    right: 0;\n  }\n</style>\n\n<div id=\"reset-password-modal\" class=\"modal\">\n  <div class=\"modal-content\" style=\"position: relative\">\n    <span class=\"close-modal\" style=\"\">&times;</span>\n    <h2>Reset Password</h2>\n    <form onsubmit=\"event.preventDefault()\" style=\"\">\n      <input-component\n        moveLabel=\"true\"\n        type=\"email\"\n        alias=\"Email\"\n        placeholder=\"Enter your email\"\n        fieldName=\"resetEmail\"\n      >\n      </input-component>\n      <button id=\"resetSubmit\" class=\"btn small\">Submit</button>\n      <div id=\"reset-password-modal-feedback\"></div>\n    </form>\n  </div>\n</div>\n");
 
 /***/ }),
 
@@ -3199,7 +3245,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<footer>\r\n  <div id=\"footer-logo\">\r\n    <div>\r\n      <h1>Gig Harbor <br>Open Studio Tour</h1>\r\n      <small>Artist Portal</small>\r\n    </div>\r\n  </div>\r\n</footer>\r\n");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<footer>\n  <div id=\"footer-logo\">\n    <div>\n      <h1>Gig Harbor <br>Open Studio Tour</h1>\n      <small>Artist Portal</small>\n    </div>\n  </div>\n</footer>\n");
 
 /***/ }),
 
@@ -3214,7 +3260,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<header>\r\n  <div id=\"header-logo\">\r\n    <div>\r\n      <h1>Gig Harbor <br>Open Studio Tour</h1>\r\n      <small>Artist Portal</small>\r\n    </div>\r\n    <img src=\"/dist/assets/ghost-logo-pink (1).jpg\" />\r\n  </div>\r\n\r\n  <nav id=\"links\" data-slotlinks=\"${slotLinks}\">\r\n     ${slotLinks.includes('members') ? `<a href=\"/members\"  onclick=\"navigateTo('/members')\" style=\"cursor: pointer;\">Go back to Members page</a>` : ''}\r\n    <a target=\"top\" href=\"https://gigharboropenstudiotour.org/\">Go back to GHOST Website</a>\r\n  </nav>\r\n</header>\r\n");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<header>\n  <div id=\"header-logo\">\n    <div>\n      <h1>Gig Harbor <br>Open Studio Tour</h1>\n      <small>Artist Portal</small>\n    </div>\n    <img src=\"/dist/assets/ghost-logo-pink (1).jpg\" />\n  </div>\n\n  <nav id=\"links\" data-slotlinks=\"${slotLinks}\">\n     ${slotLinks.includes('members') ? `<a href=\"/members\"  onclick=\"navigateTo('/members')\" style=\"cursor: pointer;\">Go back to Members page</a>` : ''}\n    <a target=\"top\" href=\"https://gigharboropenstudiotour.org/\">Go back to GHOST Website</a>\n  </nav>\n</header>\n");
 
 /***/ }),
 
@@ -3229,7 +3275,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<div class=\"file-input-component\" style=\"position: relative;\">\r\n    <div class=\"saved-image-feedback\" ></div>\r\n    <div class=\"label-container\">\r\n        <label for=\"${fieldName}\" style=\"\">\r\n            <input style=\"opacity: 0; height: 0; width: 0; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);\" ${required ? \"required\" : \"\" } type=\"file\" id=\"${fieldName}\" name=\"${fieldName}\"\r\n            ${multiple ? \"multiple=true\" : \"\" } ${accept ? `accept=\"${accept}\" ` : \"\" } />\r\n            <div class=\"images-container file-input-display\">\r\n                <div class=\"ifEmpty\">\r\n                    <div class=\"alias\">${alias ? alias : \"\"}</div>\r\n                </div>\r\n                <div class=\"ifLoading\">\r\n                    Loading ...\r\n                </div>\r\n            </div>\r\n        </label>\r\n    </div>\r\n    <div id=\"${fieldName}-error\" class=\"error-message\"></div>\r\n</div>");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<div class=\"file-input-component\" style=\"position: relative;\">\n    <div class=\"saved-image-feedback\" ></div>\n    <div class=\"label-container\">\n        <label for=\"${fieldName}\" style=\"\">\n            <input style=\"opacity: 0; height: 0; width: 0; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);\" ${required ? \"required\" : \"\" } type=\"file\" id=\"${fieldName}\" name=\"${fieldName}\"\n            ${multiple ? \"multiple=true\" : \"\" } ${accept ? `accept=\"${accept}\" ` : \"\" } />\n            <div class=\"images-container file-input-display\">\n                <div class=\"ifEmpty\">\n                    <div class=\"alias\">${alias ? alias : \"\"}</div>\n                </div>\n                <div class=\"ifLoading\">\n                    Loading ...\n                </div>\n            </div>\n        </label>\n    </div>\n    <div id=\"${fieldName}-error\" class=\"error-message\"></div>\n</div>");
 
 /***/ }),
 
@@ -3244,7 +3290,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("\r\n\r\n\r\n<span class=\"${className}\" id=\"${id}\">\r\n\r\n\r\n    <label for=\"${fieldName}\" class=\"${labelClass || \"\"} ${moveLabel ? \"moveLabel\": \"\"}  ${value ? \"moveLabel\" : \"\"}\" style=\"${width ? \"width:\"+ width + \";\" : \"\"}\">\r\n        <small class=\"text\" part=\"labelText\">${alias && required ? alias + \"*\" : alias ? alias : \"\"} </small>\r\n        <input ${regexMask ? `data-inputmask-regex=\"${regexMask}\"`: ''}  ${disabled ? \"disabled\" : \"\"} ${value ? `value=\"${value}\"` : \"\"}  placeholder=\"${placeholder}\" type=\"${type}\" id=\"${fieldName}\" name=\"${fieldName}\" class=\"${labelClass || \"\"}\" ${required ? \"required\" :\"\"} ${type === 'number' ? 'min=\"0\"' : ''} ${checked ? 'checked' :''} />\r\n        <div id=\"${fieldName}-error\" class=\"error-message\"></div>\r\n    ${type == 'password' ? `\r\n    <i class=\"password-toggle show-password fa fa-solid fa-eye-slash\"></i>\r\n    <i class=\"password-toggle hide-password fa fa-solid fa-eye\"></i>\r\n    ` : ''}\r\n</label>\r\n<small>${subcaption}</small>\r\n</span>\r\n\r\n</span>\r\n\r\n\r\n");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("\n\n\n<span class=\"${className}\" id=\"${id}\">\n\n\n    <label for=\"${fieldName}\" class=\"${labelClass || \"\"} ${moveLabel ? \"moveLabel\": \"\"}  ${value ? \"moveLabel\" : \"\"}\" style=\"${width ? \"width:\"+ width + \";\" : \"\"}\">\n        <small class=\"text\" part=\"labelText\">${alias && required ? alias + \"*\" : alias ? alias : \"\"} </small>\n        <input ${regexMask ? `data-inputmask-regex=\"${regexMask}\"`: ''}  ${disabled ? \"disabled\" : \"\"} ${value ? `value=\"${value}\"` : \"\"}  placeholder=\"${placeholder}\" type=\"${type}\" id=\"${fieldName}\" name=\"${fieldName}\" class=\"${labelClass || \"\"}\" ${required ? \"required\" :\"\"} ${type === 'number' ? 'min=\"0\"' : ''} ${checked ? 'checked' :''} />\n        <div id=\"${fieldName}-error\" class=\"error-message\"></div>\n    ${type == 'password' ? `\n    <i class=\"password-toggle show-password fa fa-solid fa-eye-slash\"></i>\n    <i class=\"password-toggle hide-password fa fa-solid fa-eye\"></i>\n    ` : ''}\n</label>\n<small>${subcaption}</small>\n</span>\n\n</span>\n\n\n");
 
 /***/ }),
 
@@ -3259,7 +3305,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<div>${description}</div>\r\n<label for=\"${fieldName}\" style=\"width: 100%; box-sizing: border-box; margin-top: 20px;\" class=\"${value ? \" moveLabel\"\r\n    : \"\" }\">\r\n    <small class=\"text\" part=\"labelText\">${alias && required ? alias + \"*\" : alias ? alias : \"\"} </small>\r\n    <textarea placeholder=\"${placeholder}\" id=\"${fieldName}\" name=\"${fieldName}\"\r\n        ${required ? \"required\" : \"\" }  ${disabled ? \"disabled\" : \"\"} >${value ? value : \"\"}</textarea>\r\n    <div id=\"${fieldName}-error\" class=\"error-message\"></div>\r\n</label>");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<div>${description}</div>\n<label for=\"${fieldName}\" style=\"width: 100%; box-sizing: border-box; margin-top: 20px;\" class=\"${value ? \" moveLabel\"\n    : \"\" }\">\n    <small class=\"text\" part=\"labelText\">${alias && required ? alias + \"*\" : alias ? alias : \"\"} </small>\n    <textarea placeholder=\"${placeholder}\" id=\"${fieldName}\" name=\"${fieldName}\"\n        ${required ? \"required\" : \"\" }  ${disabled ? \"disabled\" : \"\"} >${value ? value : \"\"}</textarea>\n    <div id=\"${fieldName}-error\" class=\"error-message\"></div>\n</label>");
 
 /***/ }),
 
@@ -3289,7 +3335,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<div class=\"artist-application-review\">\r\n\r\n    <div class=\"app-preview\">\r\n        <div>\r\n\r\n            <h3>${name}</h3>\r\n\r\n            <p>Submitted on: ${createdAt}</p>\r\n        </div>\r\n        <div>\r\n            <h4>Status: </h4>\r\n            <span class=\"status\">\r\n                <span>${scholarshipGranted=='true' ? \"Scholarship Granted\" : \"\"}</span>\r\n                <span>${hasBeenReviewed=='true' ? \"\" : \"Application needs review\"}</span>\r\n                <span>${(hasBeenReviewed && scholarshipGranted==\"false\") ? \"Not approved for scholarship\" : \"\"}</span>\r\n            </span>\r\n            <!-- <span>${approved  ? \"Approved\" :  hasBeenReviewed ?  \"Not Approved\": \"Has not been reviewed\" }</span> -->\r\n        </div>\r\n        <button class=\"expandApplication show\"\r\n            onclick=\"event.target.closest('.artist-application-review').classList.toggle('expanded')\">${hasBeenReviewed\r\n            =='true' ? \"Review Old Application\" : \"Review\"}</button>\r\n        <button class=\"expandApplication hide\"\r\n            onclick=\"event.target.closest('.artist-application-review').classList.toggle('expanded')\">Minimize\r\n            Application</button>\r\n\r\n    </div>\r\n    <div class=\"app-contents\">\r\n\r\n\r\n        <h3>Artist Name</h3>\r\n        <div class=\"row\">\r\n            <input-component value=\"${name}\" disabled=\"true\" style=\"width: 48%\" required=\"true\" fieldName=\"name\"\r\n                alias=\"Name\"></input-component>\r\n\r\n        </div>\r\n        <div class=\"row\">\r\n            <input-component value=\"${email}\" disabled=\"true\" style=\"width: 48%\" required=\"true\" type=\"email\"\r\n                fieldName=\"email\" alias=\"Email\"></input-component>\r\n        </div>\r\n\r\n\r\n        <label for=\"hasNotReceivedScholarshipPreviously\">\r\n            <input disabled ${hasNotReceivedScholarshipPreviously==\"true\" ? \"checked\" : \"\" } required type=\"checkbox\"\r\n                name=\"hasNotReceivedScholarshipPreviously\" value=\"true\"\r\n                id=\"hasNotReceivedScholarshipPreviously\"></input>\r\n            Click here to verify that you have not received a GHOST artist scholarship previously\r\n        </label>\r\n\r\n        <textarea-component disabled=\"disabled\" fieldName=\"needForScholarship-${randomId}\" required\r\n            alias=\" Please explain your need for a scholarship\" value=\"${needForScholarship}\"></textarea-component>\r\n\r\n        <div style=\"text-align: center;\">\r\n            <button data-fb-id=\"${fbId}\" onclick=\"window.updateScholarship(event,true)\">Approve Scholarship</button>\r\n            <button data-fb-id=\"${fbId}\" onclick=\"window.updateScholarship(event,false)\">Disapprove</button>\r\n\r\n        </div>\r\n    </div>\r\n\r\n</div>");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<div class=\"artist-application-review\">\n\n    <div class=\"app-preview\">\n        <div>\n\n            <h3>${name}</h3>\n\n            <p>Submitted on: ${createdAt}</p>\n        </div>\n        <div>\n            <h4>Status: </h4>\n            <span class=\"status\">\n                <span>${scholarshipGranted=='true' ? \"Scholarship Granted\" : \"\"}</span>\n                <span>${hasBeenReviewed=='true' ? \"\" : \"Application needs review\"}</span>\n                <span>${(hasBeenReviewed && scholarshipGranted==\"false\") ? \"Not approved for scholarship\" : \"\"}</span>\n            </span>\n            <!-- <span>${approved  ? \"Approved\" :  hasBeenReviewed ?  \"Not Approved\": \"Has not been reviewed\" }</span> -->\n        </div>\n        <button class=\"expandApplication show\"\n            onclick=\"event.target.closest('.artist-application-review').classList.toggle('expanded')\">${hasBeenReviewed\n            =='true' ? \"Review Old Application\" : \"Review\"}</button>\n        <button class=\"expandApplication hide\"\n            onclick=\"event.target.closest('.artist-application-review').classList.toggle('expanded')\">Minimize\n            Application</button>\n\n    </div>\n    <div class=\"app-contents\">\n\n\n        <h3>Artist Name</h3>\n        <div class=\"row\">\n            <input-component value=\"${name}\" disabled=\"true\" style=\"width: 48%\" required=\"true\" fieldName=\"name\"\n                alias=\"Name\"></input-component>\n\n        </div>\n        <div class=\"row\">\n            <input-component value=\"${email}\" disabled=\"true\" style=\"width: 48%\" required=\"true\" type=\"email\"\n                fieldName=\"email\" alias=\"Email\"></input-component>\n        </div>\n\n\n        <label for=\"hasNotReceivedScholarshipPreviously\">\n            <input disabled ${hasNotReceivedScholarshipPreviously==\"true\" ? \"checked\" : \"\" } required type=\"checkbox\"\n                name=\"hasNotReceivedScholarshipPreviously\" value=\"true\"\n                id=\"hasNotReceivedScholarshipPreviously\"></input>\n            Click here to verify that you have not received a GHOST artist scholarship previously\n        </label>\n\n        <textarea-component disabled=\"disabled\" fieldName=\"needForScholarship-${randomId}\" required\n            alias=\" Please explain your need for a scholarship\" value=\"${needForScholarship}\"></textarea-component>\n\n        <div style=\"text-align: center;\">\n            <button data-fb-id=\"${fbId}\" onclick=\"window.updateScholarship(event,true)\">Approve Scholarship</button>\n            <button data-fb-id=\"${fbId}\" onclick=\"window.updateScholarship(event,false)\">Disapprove</button>\n\n        </div>\n    </div>\n\n</div>");
 
 /***/ }),
 
@@ -6676,6 +6722,157 @@ const lexer = _Lexer.lex;
 
 
 //# sourceMappingURL=marked.esm.js.map
+
+
+/***/ }),
+
+/***/ "./utils/application-mediums.mjs":
+/*!***************************************!*\
+  !*** ./utils/application-mediums.mjs ***!
+  \***************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addMediumGroup: () => (/* binding */ addMediumGroup),
+/* harmony export */   collectMediums: () => (/* binding */ collectMediums),
+/* harmony export */   getApplicationMediums: () => (/* binding */ getApplicationMediums),
+/* harmony export */   renderApplicationMediums: () => (/* binding */ renderApplicationMediums),
+/* harmony export */   uploadMediums: () => (/* binding */ uploadMediums)
+/* harmony export */ });
+// Application schema v2 keeps each medium's description, images and captions together.
+// Legacy records remain readable without rewriting existing Firestore documents.
+function getApplicationMediums(application) {
+    if (Array.isArray(application.mediums) && application.mediums.length) return application.mediums;
+    return [{
+        medium: application.medium || '',
+        description: application['art-demo'] || '',
+        images: [1, 2, 3].map(index => ({
+            url: application[`digitalImage${index}`] || '',
+            description: application[`digitalImage${index}Info`] || ''
+        }))
+    }];
+}
+
+function collectMediums(container) {
+    return [...container.querySelectorAll('[data-medium-group]')].map(group => ({
+        medium: group.querySelector('[data-medium-name]').value,
+        description: group.querySelector('[data-medium-description]').value,
+        images: [...group.querySelectorAll('[data-medium-image]')].map(image => ({
+            file: image.querySelector('input[type="file"]').files[0],
+            description: image.querySelector('textarea').value
+        }))
+    }));
+}
+
+async function uploadMediums(mediums, upload) {
+    return Promise.all(mediums.map(async (medium, mediumIndex) => ({
+        medium: medium.medium,
+        description: medium.description,
+        images: await Promise.all(medium.images.map(async (image, imageIndex) => {
+            if (!image.file) throw new Error('Please select all three images for each medium.');
+            const file = new File([image.file], `${crypto.randomUUID()}-medium-${mediumIndex + 1}-image-${imageIndex + 1}`, { type: image.file.type });
+            return { url: await upload(file, 'new-applications'), description: image.description };
+        }))
+    })));
+}
+
+function addMediumGroup(container) {
+    const index = container.querySelectorAll('[data-medium-group]').length;
+    const id = container.dataset.nextMediumId || '0';
+    container.dataset.nextMediumId = String(Number(id) + 1);
+    const group = document.createElement('fieldset');
+    group.dataset.mediumGroup = '';
+    group.style.cssText = 'margin: 24px 0; padding: 16px; min-width: 0; border: 1px solid #ccc;';
+    group.innerHTML = `
+        <legend>${index === 0 ? 'First Medium' : `Medium ${index + 1}`}</legend>
+        <label for="medium-${id}">Medium *</label>
+        <input id="medium-${id}" data-medium-name required style="width:100%;box-sizing:border-box;" />
+        <label for="medium-description-${id}" style="display:block;margin-top:16px;">Describe how you will be demonstrating or educating the public about how your artwork was created *</label>
+        <textarea id="medium-description-${id}" data-medium-description required style="width:100%;box-sizing:border-box;"></textarea>
+        <h3>Three (3) digital images of your medium *</h3>
+        <p>Make sure that your images look professional and are jpgs that are a minimum of 150 KB (No thumbnails). 2D art should only be of your art image (no background or frame.) 3D art and jewelry should have a plain background (ex, black or white) and have enough lighting to show good detail. Crop the image so that your art fills most of the image and make sure the image is crisp and does justice to your art.</p>
+        <p>If you are having trouble figuring out how to submit your digital images, contact GHOpenStudioTour@gmail.com</p>
+        <div style="display:flex;flex-wrap:wrap;gap:20px;">
+        ${[1, 2, 3].map(image => `
+            <div data-medium-image style="flex:1 1 200px;min-width:0;">
+                <label for="medium-${id}-image-${image}">Digital Image ${image} *</label>
+                <input id="medium-${id}-image-${image}" type="file" accept=".jpg,.jpeg,.png" required style="width:100%;box-sizing:border-box;" />
+                <img hidden alt="Preview of digital image ${image}" style="max-width:100%;max-height:200px;object-fit:contain;" />
+                <label for="medium-${id}-caption-${image}" style="display:block;">Describe medium and size of this artwork *</label>
+                <textarea id="medium-${id}-caption-${image}" required style="width:100%;box-sizing:border-box;"></textarea>
+            </div>`).join('')}
+        </div>`;
+    group.querySelectorAll('input[type="file"]').forEach(input => {
+        let previewUrl;
+        input.addEventListener('change', () => {
+            const preview = input.parentElement.querySelector('img');
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+            const file = input.files[0];
+            preview.hidden = !file;
+            if (file) {
+                previewUrl = URL.createObjectURL(file);
+                preview.src = previewUrl;
+            } else preview.removeAttribute('src');
+        });
+    });
+    if (index > 0) {
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.textContent = 'Remove this medium';
+        remove.addEventListener('click', () => {
+            group.querySelectorAll('img[src]').forEach(img => URL.revokeObjectURL(img.src));
+            group.remove();
+            container.querySelectorAll('legend').forEach((legend, i) => {
+                legend.textContent = i === 0 ? 'First Medium' : `Medium ${i + 1}`;
+            });
+        });
+        group.append(remove);
+    }
+    container.append(group);
+    return group;
+}
+
+// Populate read-only form controls from Firestore; use DOM properties for user text.
+function renderApplicationMediums(container, application) {
+    container.replaceChildren();
+    getApplicationMediums(application).forEach((medium, index) => {
+        const group = document.createElement('fieldset');
+        const legend = document.createElement('legend');
+        legend.textContent = index === 0 ? 'First Medium' : `Medium ${index + 1}`;
+        group.append(legend);
+        for (const [labelText, value] of [['Medium', medium.medium], ['Demonstration / education description', medium.description]]) {
+            const label = document.createElement('label');
+            label.textContent = labelText;
+            const input = document.createElement('textarea');
+            input.disabled = true;
+            input.value = value || '';
+            input.style.cssText = 'display:block;width:100%;box-sizing:border-box;';
+            label.append(input);
+            group.append(label);
+        }
+        const heading = document.createElement('h3');
+        heading.textContent = 'Three (3) digital images of your medium';
+        group.append(heading);
+        const images = document.createElement('div');
+        images.style.cssText = 'display:flex;flex-wrap:wrap;gap:20px;';
+        (medium.images || []).forEach((image, imageIndex) => {
+            const figure = document.createElement('figure');
+            const img = document.createElement('img');
+            img.alt = `${medium.medium || 'Medium'} — artwork ${imageIndex + 1}`;
+            // Only load web URLs returned by Storage (or existing records).
+            if (/^https?:\/\//i.test(image.url || '')) img.src = image.url;
+            img.style.cssText = 'width:200px;max-width:100%;height:200px;object-fit:contain;';
+            const caption = document.createElement('figcaption');
+            caption.textContent = image.description || '';
+            figure.append(img, caption);
+            images.append(figure);
+        });
+        group.append(images);
+        container.append(group);
+    });
+}
 
 
 /***/ })

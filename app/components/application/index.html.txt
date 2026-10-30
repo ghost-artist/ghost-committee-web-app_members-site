@@ -44,10 +44,6 @@
             alias="Mailing Address"></textarea-component>
 
 
-        <h3>Medium(s)</h3>
-        <input-component value="${medium}" disabled="true" required="true" fieldName="medium"
-            placeholder="Comma separated list of mediums"></input-component>
-
         <h3>WA State Business License (UBI) Number *</h3>
         <p>A Washington State Business License (UBI) Number is required to be in the tour. If you don't have one, apply:
             https://bls.dor.wa.gov/. </p>
@@ -86,39 +82,7 @@ ${studioSharingResponse}
 ${howDidYouHearAboutUs}
         </textarea>
 
-        <h3>Three (3) digital images of your art</h3>
-        <p>Make sure that your images look professional and are jpgs that are a minimum of 150 KB (No thumbnails). 2D
-            art should only
-            be of your art image (no background or frame.) 3D art and jewelry should have a plain background (ex, black
-            or white) and have enough lighting to show good detail. Crop the image so that your art fills most of the
-            image and make sure the image is crisp and does justice to your art.</p>
-        <div style="display: flex; justify-content: center; flex-wrap: wrap;">
-            <style>
-                file-input-component {
-                    margin: 10px;
-                }
-                img {
-                    width: 200px;
-                    height: 200px;
-                    object-fit: cover;
-                    margin: 10px;
-                }
-            </style>
-            <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 20px;">
-                <div style="text-align: center;">
-                    <img src="${digitalImage1}"></img>
-                    <p>${digitalImage1Info}</p>
-                </div>
-                <div style="text-align: center;">
-                    <img src="${digitalImage2}"></img>
-                    <p>${digitalImage2Info}</p>
-                </div>
-                <div style="text-align: center;">
-                    <img src="${digitalImage3}"></img>
-                    <p>${digitalImage3Info}</p>
-                </div>
-            </div>
-        </div>
+        <div class="application-mediums"></div>
 
         <h3>One (1) digital image of your studio (if it is within the studio tour boundaries and you will be showing
             there) or your booth (if you will be showing at another artist's studio)</h3>
@@ -127,7 +91,7 @@ ${howDidYouHearAboutUs}
             and is represented well in your photo.</p>
 
         <div style="display: flex; justify-content: center; flex-wrap: wrap;">
-            <img src="${digitalImage4}"></img>
+            <img src="${digitalImage4}" alt="Artist studio or booth" style="max-width: 100%; width: 400px; height: auto; object-fit: contain;"></img>
         </div>
 
         <h3>Artist Statement</h3>
