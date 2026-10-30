@@ -98,3 +98,28 @@ Your Glitch app should be deployed within a Google Iframe, and now able to commu
 
 > See app/outbound-emails for GMail examples
 > See app/exports for Other examples.
+
+### New artist application mediums
+
+New submissions use `schemaVersion: 2` and store a `mediums` array in each
+`new-applications` document. Each entry has `medium`, `description` (the
+public demonstration/education response), and three `images` entries with
+`url` and `description` (the artwork caption). Files are uploaded to
+`new-applications/` in Firebase Storage before their URLs are saved to Firestore.
+The studio/booth photo remains the application-wide `digitalImage4` field.
+
+The committee review page reads this nested data. Older records without
+`mediums` are displayed as a single group using `medium`, `art-demo`, and
+`digitalImage1`–`digitalImage3` plus their `Info` captions. No migration is
+required. Review approval updates merge into the document and preserve the
+medium groups. The existing deletion behavior removes the Firestore document;
+it does not delete uploaded Storage files. The new-artist application has no
+applicant edit/reopen flow; this change preserves its submit-and-review workflow.
+
+Run `npm ci` then `npm run test:mediums` to rebuild the checked-in browser bundle
+and run the DOM integration tests with an in-memory Firebase stand-in. These
+cover repeatable groups, validation, upload/save errors, nested save/read-back,
+legacy records, approval, and deletion. They do not exercise live Firebase rules
+or visual browser layout. After deploying, submit an application with two
+mediums and a studio image, verify all captions/photos in committee review, and
+check approval and deletion with your development Firebase project.

@@ -9,6 +9,7 @@
     "babel-loader": "^9.2.1",
     "concurrently": "^9.1.0",
     "css-loader": "^7.1.2",
+    "jsdom": "^30.1.3",
     "raw-loader": "^4.0.2",
     "sass": "^1.81.0",
     "sass-loader": "^16.0.3",
@@ -17,7 +18,7 @@
     "webpack-cli": "^5.1.4"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test tests/*.cjs",
     "start": "node server.js",
     "start:w": "nodemon server.js",
     "build:w": "webpack --config webpack.components.config.js --watch",
@@ -26,8 +27,8 @@
     "watch:scss": "sass --watch app/styles.scss dist/styles.css",
     "deploy:gcf:googleapis": "cd app\\cloudFunctions\\google && gcloud functions deploy googleapis --runtime nodejs20 --trigger-http --allow-unauthenticated --service-account 13428009497-compute@developer.gserviceaccount.com && cd ..\\..\\..",
     "logs:gcf:googleapis": "gcloud functions logs read googleapis",
-    "dev": "concurrently -k -n \"SERVER,WEBPACK,SCSS\" -c \"bgBlue.bold,bgGreen.bold,bgMagenta.bold\" \"npm run start:w\" \"npm run build:w\" \"npm run watch:scss\""
-
+    "dev": "concurrently -k -n \"SERVER,WEBPACK,SCSS\" -c \"bgBlue.bold,bgGreen.bold,bgMagenta.bold\" \"npm run start:w\" \"npm run build:w\" \"npm run watch:scss\"",
+    "test:mediums": "webpack --config webpack.components.config.js && node --test tests/application-mediums.cjs"
   },
   "author": "William Owen <william.owen.dev@gmail.com>",
   "license": "ISC",

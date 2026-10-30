@@ -1,3 +1,10 @@
+import { getApplicationMediums, renderApplicationMediums } from '../../../utils/application-mediums.mjs';
+
+// Called after the review component has been connected and its template rendered.
+window.populateApplicationMediums = function(component, application) {
+    renderApplicationMediums(component.querySelector('.application-mediums'), application);
+    component.querySelector('.app-preview h3').textContent = `${application.firstName || ''} ${application.lastName || ''}: ${getApplicationMediums(application).map(item => item.medium).join(', ')}`;
+};
 import applicationTemplate from './index.html.txt';
 import { createCustomElement, evaluateTemplate } from '../../../utils/custom-element';
 import './style.scss';
