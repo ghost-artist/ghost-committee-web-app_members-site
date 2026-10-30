@@ -350,8 +350,8 @@ __webpack_require__.r(__webpack_exports__);
 window.populateApplicationMediums = function (component, application) {
   (0,_utils_application_mediums_mjs__WEBPACK_IMPORTED_MODULE_0__.renderApplicationMediums)(component.querySelector('.application-mediums'), application);
   component.querySelector('.app-preview h3').textContent = "".concat(application.firstName || '', " ").concat(application.lastName || '', ": ").concat((0,_utils_application_mediums_mjs__WEBPACK_IMPORTED_MODULE_0__.getApplicationMediums)(application).map(function (item) {
-    return item.medium;
-  }).join(', '));
+    return (item.medium || '').trim();
+  }).filter(Boolean).join(', '));
 };
 
 
@@ -6738,6 +6738,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   addMediumGroup: () => (/* binding */ addMediumGroup),
 /* harmony export */   collectMediums: () => (/* binding */ collectMediums),
 /* harmony export */   getApplicationMediums: () => (/* binding */ getApplicationMediums),
+/* harmony export */   legacyApplicationPatch: () => (/* binding */ legacyApplicationPatch),
 /* harmony export */   renderApplicationMediums: () => (/* binding */ renderApplicationMediums),
 /* harmony export */   uploadMediums: () => (/* binding */ uploadMediums)
 /* harmony export */ });
@@ -6872,6 +6873,17 @@ function renderApplicationMediums(container, application) {
         group.append(images);
         container.append(group);
     });
+}
+
+// An old comma-separated label cannot tell us which artwork belongs to each
+// medium. Preserve its shared description/images together in one legacy group.
+function legacyApplicationPatch(application) {
+    if (application.schemaVersion >= 2 ||
+        (Array.isArray(application.mediums) && application.mediums.length)) return null;
+    if (application.mediums != null && !Array.isArray(application.mediums)) {
+        throw new Error('Unexpected mediums field; review this record manually.');
+    }
+    return { schemaVersion: 2, mediums: getApplicationMediums(application) };
 }
 
 

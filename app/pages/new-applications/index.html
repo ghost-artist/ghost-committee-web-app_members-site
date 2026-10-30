@@ -56,36 +56,27 @@
                     const divId = reviewed ? 'reviewed' : 'under-review';
                     
                     const randomId = "app" + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-                    // Create component element
-                    document.querySelector(`#applications #${divId}`).insertAdjacentHTML('beforeend', `
-                    <application-component id="${randomId}"
-                    mailingAddress="${application["mailing-address"]}"
-                    waStateBusinessLicenseUbiNumber="${application["wa-state-business-license-ubi-number"]}"
-                    medium="${application["medium"]}"
-                    email="${application["email"]}"
-                    artistMentor="${application["artistMentor"]}"
-                    digitalImage1="${application["digitalImage1"]}"
-                    digitalImage1Info="${application["digitalImage1Info"]}"
-                    digitalImage2="${application["digitalImage2"]}"
-                    digitalImage2Info="${application["digitalImage2Info"]}"
-                    digitalImage3="${application["digitalImage3"]}"
-                    digitalImage3Info="${application["digitalImage3Info"]}"
-                    digitalImage4="${application["digitalImage4"]}"
-                    hasBeenReviewed="${application["hasBeenReviewed"]}"
-                    phone="${application["phone"]}"
-                    firstName="${application["firstName"]}"
-                    studioAddress="${application["studio-address"]}"
-                    lastName="${application["lastName"]}"
-                    artistStatement="${application["artistStatement"]}"
-                    isWithinBoundaries="${application["isWithinBoundaries"]}"
-                    createdAt="${application["createdAt"]}"
-                    howDidYouHearAboutUs="${application["howDidYouHearAboutUs"]}"
-                    studioSharingResponse="${application["studioSharingResponse"]}"
-                    fbId="${application["fbId"]}"
-                    approved="${application["approved"]}"
-                    websiteSocialMedia="${application["website-social-media"]}"
-                    status="${application.approved == true ? "Approved" : application.hasBeenReviewed == true ? "Not Approved" : "Has not been reviewed"}"
-                    ></application-component> <hr>`);
+                    // Set attributes through DOM properties so quotes/newlines in responses
+                    // cannot break the review component's markup.
+                    const component = document.createElement('application-component');
+                    component.id = randomId;
+                    const fieldMap = {
+                        mailingAddress: 'mailing-address',
+                        studioAddress: 'studio-address',
+                        waStateBusinessLicenseUbiNumber: 'wa-state-business-license-ubi-number',
+                        websiteSocialMedia: 'website-social-media'
+                    };
+                    for (const field of [
+                        'email', 'phone', 'firstName', 'lastName', 'digitalImage4',
+                        'hasBeenReviewed', 'artistStatement', 'isWithinBoundaries',
+                        'createdAt', 'howDidYouHearAboutUs', 'studioSharingResponse',
+                        'fbId', 'approved', ...Object.keys(fieldMap)
+                    ]) {
+                        component.setAttribute(field, application[fieldMap[field] || field] ?? '');
+                    }
+                    component.setAttribute('status', application.approved === true ? 'Approved'
+                        : application.hasBeenReviewed === true ? 'Not Approved' : 'Has not been reviewed');
+                    document.querySelector(`#applications #${divId}`).append(component, document.createElement('hr'));
                     window.populateApplicationMediums(document.getElementById(randomId), application);
 
                 });
