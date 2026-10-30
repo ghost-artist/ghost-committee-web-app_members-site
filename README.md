@@ -123,3 +123,24 @@ legacy records, approval, and deletion. They do not exercise live Firebase rules
 or visual browser layout. After deploying, submit an application with two
 mediums and a studio image, verify all captions/photos in committee review, and
 check approval and deletion with your development Firebase project.
+
+### Local application testing without email
+
+On your local site, open the browser developer console (F12 → Console) and run:
+
+```js
+localStorage.setItem('ghost.suppressApplicationEmails', 'true');
+```
+
+This skips application confirmation, new-application notification, approval,
+and rejection emails on localhost/127.0.0.1 only. Database and image saves,
+committee review, and deletion continue normally. Use the same browser and
+local site address/port for the application and review pages. The switch
+persists across reloads. To restore emails:
+
+```js
+localStorage.removeItem('ghost.suppressApplicationEmails');
+```
+
+The existing `TESTING.newApplication` flag redirects email to the developer;
+it does **not** suppress sending. Use the local switch above for no-email tests.

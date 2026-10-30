@@ -161,3 +161,37 @@ test('missing image and upload failures reject before Firestore persistence', as
         await assert.rejects(w.uploadMediums([medium], async () => { throw new Error('Upload failed'); }), /Upload failed/);
     } finally { dom.window.close(); }
 });
+
+
+test('local switch suppresses every application email without changing deployed behavior', async () => {
+    for (const host of ['localhost', '127.0.0.1', 'members.example.com']) {
+        const dom = new JSDOM('', {url: `http://${host}`, runScripts:'dangerously'});
+        const w = dom.window;
+        try {
+            w.TESTING = {};
+            w.console.log = () => {};
+            let sends = 0;
+            w.sendMessageToParent = () => sends++;
+            w.CRUD = {read: async () => ({date:'2026-10-30'})};
+            w.getEmailAddresses = async () => ['board@example.com'];
+            w.eval(read('app/outbound-emails/local-email-settings.js').replace(/export /g, ''));
+            const names = ['newApplicationClientConfirmation', 'newApplicationReceived', 'approvedNewArtist', 'notApprovedNewArtist'];
+            for (const name of names) {
+                w.eval(read(`app/outbound-emails/${name}.js`).replace(/^import .*;?\n/gm, '').replace(/export /g, ''));
+            }
+            const sendAll = async () => {
+                await w.sendNewApplicationClientConfirmationEmail({email:'test@example.com'});
+                await w.sendNewApplicationEmail({email:'test@example.com',firstName:'Test',lastName:'Artist'});
+                w.sendApprovedNewArtistEmail('test@example.com');
+                w.sendNotApprovedNewArtistEmail('test@example.com');
+            };
+            w.localStorage.setItem('ghost.suppressApplicationEmails', 'true');
+            await sendAll();
+            assert.equal(sends, host === 'members.example.com' ? 4 : 0);
+            sends = 0;
+            w.localStorage.removeItem('ghost.suppressApplicationEmails');
+            await sendAll();
+            assert.equal(sends, 4);
+        } finally { w.close(); }
+    }
+});
