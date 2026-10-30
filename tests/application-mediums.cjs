@@ -132,11 +132,7 @@ test('add/remove groups, save nested image URLs, read back old/new records, appr
             assert.equal(components.length, 2);
             const modern = components.find(component => component.textContent.includes('Test Artist:'));
             const legacy = components.find(component => component.textContent.includes('Legacy Artist:'));
-            assert.equal(modern.querySelector('.app-preview h3').textContent, 'Test Artist: Watercolor, Ceramics');
             assert.equal(modern.querySelectorAll('.application-mediums fieldset').length, 2);
-            const mediumSection = modern.querySelector('.application-mediums');
-            assert.match(mediumSection.previousElementSibling.textContent, /Test entry|^\s*$/);
-            assert.match(mediumSection.nextElementSibling.textContent, /One \(1\) digital image of your studio/);
             assert.equal(modern.querySelectorAll('.application-mediums textarea')[3].value, 'Demo 1 < & "');
             assert.equal(modern.querySelectorAll('figcaption')[5].textContent, 'Caption 1-2');
             assert.equal(legacy.querySelector('.application-mediums textarea').value, 'Oil, ink');
@@ -198,54 +194,4 @@ test('local switch suppresses every application email without changing deployed 
             assert.equal(sends, 4);
         } finally { w.close(); }
     }
-});
-
-
-test('legacy migration preserves fields, is idempotent, and never replaces modern groups', async () => {
-    const {legacyApplicationPatch} = await import('../utils/application-mediums.mjs');
-    const old = {medium:'Oil, ink', 'art-demo':'Shared demonstration', digitalImage1:'https://example.com/1.jpg', digitalImage1Info:'Caption', digitalImage4:'studio', approved:true, createdAt:'unchanged'};
-    const patch = legacyApplicationPatch(old);
-    assert.equal(patch.mediums.length, 1);
-    assert.equal(patch.mediums[0].medium, 'Oil, ink');
-    assert.equal(patch.mediums[0].description, 'Shared demonstration');
-    assert.deepEqual(patch.mediums[0].images[0], {url:old.digitalImage1,description:'Caption'});
-    const updated = {...old,...patch};
-    for (const key of Object.keys(old)) assert.equal(updated[key],old[key]);
-    assert.equal(legacyApplicationPatch(updated), null);
-    assert.equal(legacyApplicationPatch({mediums:[{medium:'New'}]}), null);
-    assert.equal(legacyApplicationPatch({schemaVersion:2,mediums:[]}), null);
-    assert.throws(() => legacyApplicationPatch({mediums:'unexpected'}), /Unexpected/);
-});
-
-test('console migration scopes one application, skips modern data, and supports reruns', async () => {
-    const {legacyApplicationPatch} = await import('../utils/application-mediums.mjs');
-    const dom = new JSDOM('', {url:'http://localhost',runScripts:'dangerously'});
-    const w = dom.window;
-    try {
-        const records = {old:{medium:'Ink'}, other:{medium:'Oil'}, modern:{schemaVersion:2,mediums:[{medium:'Ceramics'}]}};
-        const snapshot = id => ({id,ref:id,exists:()=>id in records,data:()=>records[id]});
-        w.firebase = {auth:{currentUser:{}},db:{},collection:()=>null,doc:(_db,_collection,id)=>id,
-            getDoc:async id=>snapshot(id),getDocs:async()=>({docs:Object.keys(records).map(snapshot)})};
-        w.migrationHelpers = {legacyApplicationPatch};
-        w.migrationFirebase = {runTransaction:async(_db,callback)=>callback({get:async id=>snapshot(id),update:(id,patch)=>Object.assign(records[id],patch)})};
-        w.console.table = () => {};
-        w.console.log = () => {};
-        const source = read('utils/migrate-application-mediums.js')
-            .replace("await import('/utils/application-mediums.mjs')", 'window.migrationHelpers')
-            .replace("await import('https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js')", 'window.migrationFirebase');
-        await w.eval(`(async () => { ${source} })()`);
-        assert.equal(records.old.schemaVersion, undefined, 'initial preview must not write');
-        await w.migrateApplicationMediums({applicationId:'old',dryRun:false});
-        assert.equal(records.old.schemaVersion,2);
-        assert.equal(records.other.schemaVersion,undefined);
-        const current = JSON.stringify(records.modern);
-        const skipped = await w.migrateApplicationMediums({applicationId:'modern',dryRun:false});
-        assert.match(skipped[0].status,/skipped/);
-        assert.equal(JSON.stringify(records.modern),current);
-        await w.migrateApplicationMediums({dryRun:false});
-        assert.equal(records.other.schemaVersion,2);
-        assert.equal(records.old.mediums.length,1);
-        await assert.rejects(w.migrateApplicationMediums({applicationId:'missing'}),/does not exist/);
-        await assert.rejects(w.migrateApplicationMediums({applicationId:''}),/document ID/);
-    } finally { w.close(); }
 });

@@ -91,7 +91,7 @@ ${howDidYouHearAboutUs}
             and is represented well in your photo.</p>
 
         <div style="display: flex; justify-content: center; flex-wrap: wrap;">
-            <img src="${digitalImage4}"></img>
+            <img src="${digitalImage4}" alt="Artist studio or booth" style="max-width: 100%; width: 400px; height: auto; object-fit: contain;"></img>
         </div>
 
         <h3>Artist Statement</h3>

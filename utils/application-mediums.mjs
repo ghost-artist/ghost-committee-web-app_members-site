@@ -130,14 +130,3 @@ export function renderApplicationMediums(container, application) {
         container.append(group);
     });
 }
-
-// An old comma-separated label cannot tell us which artwork belongs to each
-// medium. Preserve its shared description/images together in one legacy group.
-export function legacyApplicationPatch(application) {
-    if (application.schemaVersion >= 2 ||
-        (Array.isArray(application.mediums) && application.mediums.length)) return null;
-    if (application.mediums != null && !Array.isArray(application.mediums)) {
-        throw new Error('Unexpected mediums field; review this record manually.');
-    }
-    return { schemaVersion: 2, mediums: getApplicationMediums(application) };
-}
