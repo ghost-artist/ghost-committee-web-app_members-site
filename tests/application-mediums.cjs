@@ -14,7 +14,8 @@ async function setup(page, records) {
     const dom = new JSDOM(html, { url: 'http://localhost/', runScripts: 'dangerously' });
     const w = dom.window;
     w.console = { ...console, log() {}, error() {} };
-    w.sendMessageToParent = () => {};
+    w.messages = [];
+    w.sendMessageToParent = message => w.messages.push(message);
     w.confirm = () => true;
     w.URL.createObjectURL = () => 'blob:test';
     w.URL.revokeObjectURL = () => {};
@@ -33,6 +34,7 @@ async function setup(page, records) {
             return {id: 'saved'};
         },
         setDoc: async ({collection, id}, data) => {
+            if (w.failSave) throw new Error("Simulated review write failure");
             records[collection][id] = {...records[collection][id], ...data};
         },
         deleteDoc: async ({collection, id}) => { delete records[collection][id]; },
@@ -138,6 +140,7 @@ test('add/remove groups, save nested image URLs, read back old/new records, appr
             assert.equal(legacy.querySelector('.application-mediums textarea').value, 'Oil, ink');
             assert.equal(legacy.querySelectorAll('.application-mediums textarea')[1].value, 'Legacy demo');
             assert.equal(legacy.querySelector('.application-mediums img').src, 'https://storage.example/legacy.jpg');
+            modern.querySelector('[data-medium-index="0"]').checked = true;
             modern.querySelector('.approve-btn').click();
             await tick();
             assert.equal(records['new-applications'].saved.approved, true);
@@ -194,4 +197,73 @@ test('local switch suppresses every application email without changing deployed 
             assert.equal(sends, 4);
         } finally { w.close(); }
     }
+});
+
+
+// Exercise the compiled review handler with multiple applications and the real
+// email formatter. The parent bridge is captured locally, so nothing is sent.
+test('medium decisions persist, reload, and match approval emails; failed saves send nothing', async () => {
+    const records = {'new-applications': {
+        first: {firstName:'First', email:'first@example.com', mediums:[
+            {medium:'Ink < & "', images:[]}, {medium:'Ceramics', images:[]}
+        ]},
+        second: {firstName:'Second', email:'second@example.com', mediums:[{medium:'Oil', images:[]}]},
+        legacy: {firstName:'Legacy', medium:'Oil, ink', approved:true, hasBeenReviewed:true}
+    }};
+    const dom = await setup('app/pages/new-applications/index.html', records);
+    const w = dom.window;
+    try {
+        const first = w.document.querySelector('application-component[email="first@example.com"]');
+        const second = w.document.querySelector('application-component[email="second@example.com"]');
+        const boxes = first.querySelectorAll('[data-medium-index]');
+        assert.equal(boxes.length, 2);
+        assert.equal(boxes[0].checked, false);
+        assert.equal(first.querySelector('.medium-approval-options label:last-child').textContent.includes('Ceramics'), true);
+        first.querySelector('.approve-btn').click();
+        await tick();
+        assert.match(first.querySelector('.review-error').textContent, /at least one/);
+        assert.equal(records['new-applications'].first.approved, undefined);
+        assert.equal(w.messages.length, 0);
+
+        // A failed Firestore write must preserve selections and allow retry.
+        boxes[0].checked = true;
+        w.failSave = true;
+        first.querySelector('.approve-btn').click();
+        await tick();
+        assert.match(first.querySelector('.review-error').textContent, /could not be saved/);
+        assert.equal(boxes[0].checked, true);
+        assert.equal(first.querySelector('.approve-btn').disabled, false);
+        assert.equal(w.messages.length, 0);
+        w.failSave = false;
+        first.querySelector('.approve-btn').click();
+        await tick();
+        const decisions = records['new-applications'].first.mediumDecisions;
+        assert.deepEqual(Array.from(decisions, item => item.approved), [true, false]);
+        assert.equal(decisions[0].mediumIndex, 0);
+        assert.equal(decisions[0].medium, 'Ink < & "');
+        assert.equal(w.messages.length, 1);
+        assert.match(w.messages[0].body, /Accepted mediums:<\/strong> Ink &lt; &amp; &quot;/);
+        assert.match(w.messages[0].body, /Mediums not accepted:<\/strong> Ceramics/);
+        assert.equal(second.querySelector('[data-medium-index]').checked, false);
+
+        // Reload from stored data, then reject the application. All previous
+        // medium approvals must be cleared along with the application approval.
+        w.populateApplicationMediums(first, records['new-applications'].first);
+        assert.equal(first.querySelector('[data-medium-index="0"]').checked, true);
+        assert.equal(first.querySelector('[data-medium-index="1"]').checked, false);
+        first.querySelector('.reject-btn').click();
+        await tick();
+        assert.equal(records['new-applications'].first.approved, false);
+        assert.ok(records['new-applications'].first.mediumDecisions.every(item => !item.approved));
+        assert.equal(w.messages.length, 2);
+        assert.match(w.messages[1].subject, /not approved/i);
+
+        second.querySelector('[data-medium-index]').checked = true;
+        second.querySelector('.approve-btn').click();
+        await tick();
+        assert.match(w.messages[2].body, /Mediums not accepted:<\/strong> None/);
+        const legacy = [...w.document.querySelectorAll('application-component')].find(c => c.textContent.includes('Legacy :'));
+        assert.equal(legacy.querySelectorAll('[data-medium-index]').length, 1);
+        assert.equal(legacy.querySelector('[data-medium-index]').checked, true);
+    } finally { w.close(); }
 });

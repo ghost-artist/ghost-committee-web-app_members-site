@@ -2,6 +2,21 @@ import { getApplicationMediums, renderApplicationMediums } from '../../../utils/
 
 // Called after the review component has been connected and its template rendered.
 window.populateApplicationMediums = function(component, application) {
+    component.applicationMediums = getApplicationMediums(application);
+    const options = component.querySelector('.medium-approval-options');
+    options.replaceChildren();
+    component.applicationMediums.forEach((medium, index) => {
+        const label = document.createElement('label');
+        label.style.cssText = 'display:block;margin:10px 0;';
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.dataset.mediumIndex = String(index);
+        // Older approved records have no per-medium decisions; keep their prior approval.
+        const decision = application.mediumDecisions?.find(item => item.mediumIndex === index);
+        checkbox.checked = decision ? decision.approved === true : application.approved === true;
+        label.append(checkbox, document.createTextNode(` ${medium.medium || `Medium ${index + 1}`}`));
+        options.append(label);
+    });
     renderApplicationMediums(component.querySelector('.application-mediums'), application);
     component.querySelector('.app-preview h3').textContent = `${application.firstName || ''} ${application.lastName || ''}: ${getApplicationMediums(application).map(item => item.medium).join(', ')}`;
 };
@@ -79,54 +94,56 @@ window.deleteApplication = function (event){
 
 }
 
-window.updateReview = function (event, reviewAnswer) {
-  // logIf.crud && console.log("updateReview", event)
-   console.log("updateReview", event)
-    // update button to loading
-    const button = event.target;
-    const btnText = button.innerHTML
-    button.setAttribute('disabled', 'disabled')
-    button.innerHTML = 'Loading...'
-
-    // get the fbId
-    const fbId = button.getAttribute('data-fb-id');
-
-
-    CRUD.update('new-applications', fbId, 
-    {hasBeenReviewed: true, approved: reviewAnswer} )
-  .then(() =>{
-    // update the button text
-    button.innerHTML = 'Review Submitted'
-    setTimeout(() => {
-      button.removeAttribute('disabled')
-      button.innerHTML = btnText
-    
-      // collapse the application
-        const application = button.closest('.artist-application-review')
-        application.classList.toggle('expanded');
-        
-        // update status text
-        application.querySelector('.status').innerHTML = reviewAnswer ? 'Approved' : 'Not Approved'
-        
-          
-        const applicationComponent = button.closest('application-component')
-        const newArtistEmail = applicationComponent.getAttribute("email")
-        if(reviewAnswer == true){
-          sendApprovedNewArtistEmail(newArtistEmail);
-        } else {
-          sendNotApprovedNewArtistEmail(newArtistEmail);
-
-        }
-      
-    }, 3000)
-
-    // move and collapse the application
-  }).catch((err) => {
-    console.error(err)
-    button.innerHTML = btnText
-    button.removeAttribute('disabled')
-  })
+// Save the exact decisions used for the email before sending any notification.
+window.updateReview = async function (event, reviewAnswer) {
+    const button = event.currentTarget || event.target;
+    const component = button.closest('application-component');
+    if (component.reviewPending) return;
+    const error = component.querySelector('.review-error');
+    error.textContent = '';
+    const mediumDecisions = component.applicationMediums.map((medium, index) => ({
+        mediumIndex: index,
+        medium: medium.medium,
+        approved: reviewAnswer === true && component.querySelector(`[data-medium-index="${index}"]`).checked
+    }));
+    if (reviewAnswer && !mediumDecisions.some(item => item.approved)) {
+        error.textContent = 'Select at least one medium to approve this application, or use Disapprove.';
+        return;
+    }
+    const controls = [...component.querySelectorAll('.approve-btn, .reject-btn, .delete-btn, [data-medium-index]')];
+    const btnText = button.innerHTML;
+    component.reviewPending = true;
+    controls.forEach(control => control.disabled = true);
+    button.textContent = 'Loading...';
+    try {
+        await CRUD.update('new-applications', button.getAttribute('data-fb-id'), {
+            hasBeenReviewed: true, approved: reviewAnswer, mediumDecisions
+        });
+    } catch (err) {
+        console.error(err);
+        error.textContent = 'The review could not be saved. Please try again. No email was sent.';
+        button.innerHTML = btnText;
+        controls.forEach(control => control.disabled = false);
+        component.reviewPending = false;
+        return;
+    }
+    component.querySelector('.status').textContent = reviewAnswer ? 'Approved' : 'Not Approved';
+    component.querySelectorAll('[data-medium-index]').forEach((checkbox, index) => {
+        checkbox.checked = mediumDecisions[index].approved;
+    });
+    try {
+        const email = component.getAttribute('email');
+        if (reviewAnswer) sendApprovedNewArtistEmail(email, mediumDecisions);
+        else sendNotApprovedNewArtistEmail(email);
+        component.querySelector('.artist-application-review').classList.remove('expanded');
+    } catch (err) {
+        console.error(err);
+        error.textContent = 'The review was saved, but the email could not be requested. Please contact the applicant.';
+    } finally {
+        button.innerHTML = btnText;
+        controls.forEach(control => control.disabled = false);
+        component.reviewPending = false;
+    }
 }
 
 })
-

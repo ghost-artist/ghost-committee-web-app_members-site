@@ -103,6 +103,12 @@ ${howDidYouHearAboutUs}
             description="If you have an art website and/or social media sites, list them here.  If you don't have any of those, type in NONE"
             value="${websiteSocialMedia}"></textarea-component>
 
+            <fieldset class="medium-approvals">
+                <legend>Approve mediums</legend>
+                <p>Select each medium accepted for the tour. Unselected mediums will be listed as not accepted in the approval email.</p>
+                <div class="medium-approval-options"></div>
+            </fieldset>
+            <p class="review-error" role="alert"></p>
             <div style="text-align: center;">
                 <button class="approve-btn" data-fb-id="${fbId}" onclick="window.updateReview(event,true)">Approve Application</button>
                 <button class="reject-btn" data-fb-id="${fbId}" onclick="window.updateReview(event,false)">Disapprove</button>

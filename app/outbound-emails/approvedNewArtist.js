@@ -2,13 +2,26 @@ import { suppressApplicationEmails } from './local-email-settings.js';
 import { getEmailAddresses } from './getEmailAddresses.js'
 import { TESTING } from './sendTestEmail.js'
 
-export function sendApprovedNewArtistEmail(newArtistEmail){
+// Escape applicant-entered medium names before inserting them into HTML email.
+function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, character => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[character]);
+}
+
+export function sendApprovedNewArtistEmail(newArtistEmail, mediumDecisions = []){
     if (suppressApplicationEmails()) return;
 
     
     // no TESTING mode needed here
 
     console.log("Sending 'ApprovedNewArtistEmail' to " + newArtistEmail)
+
+    const list = approved => mediumDecisions.filter(item => item.approved === approved)
+        .map(item => escapeHtml(item.medium)).join(', ') || 'None';
+    const mediumSummary = mediumDecisions.length ? `
+        <p><strong>Accepted mediums:</strong> ${list(true)}</p>
+        <p><strong>Mediums not accepted:</strong> ${list(false)}</p>` : '';
 
     window.sendMessageToParent({
       controller: 'gmailController',
@@ -18,6 +31,7 @@ export function sendApprovedNewArtistEmail(newArtistEmail){
          <div style="text-align:center; font-family:sans-serif;">
             <h1>Congratulations on behalf of the Gig Harbor Open Studio Tour!</h1>
             <p>Your application to join the tour has been approved!</p>
+            ${mediumSummary}
             <p>
                 <strong>The next step:</strong> Please fill out our online contract and submit your payment. You are not officially part of the tour until we receive both!
             </p>
