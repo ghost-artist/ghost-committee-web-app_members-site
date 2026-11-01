@@ -1,6 +1,6 @@
-import { suppressApplicationEmails } from './local-email-settings.js';
+import { suppressApplicationEmails, getApplicationEmailRecipientOverride } from './local-email-settings.js';
 import { getEmailAddresses } from './getEmailAddresses.js'
-import { TESTING } from './sendTestEmail.js'
+
 
 // Escape applicant-entered medium names before inserting them into HTML email.
 function escapeHtml(value) {
@@ -11,6 +11,7 @@ function escapeHtml(value) {
 
 export function sendApprovedNewArtistEmail(newArtistEmail, mediumDecisions = []){
     if (suppressApplicationEmails()) return;
+    const recipientOverride = getApplicationEmailRecipientOverride();
 
     
     // no TESTING mode needed here
@@ -25,7 +26,7 @@ export function sendApprovedNewArtistEmail(newArtistEmail, mediumDecisions = [])
 
     window.sendMessageToParent({
       controller: 'gmailController',
-      to: [TESTING.approvedNewArtistEmail ? 'william.owen.dev@gmail.com' : newArtistEmail].filter(Boolean).join(','),
+      to: recipientOverride || newArtistEmail,
       subject: 'Your application to Gig Harbor Open Studio Tour was approved!',
       body: `
          <div style="text-align:center; font-family:sans-serif;">

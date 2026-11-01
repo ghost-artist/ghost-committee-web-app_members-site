@@ -142,5 +142,28 @@ persists across reloads. To restore emails:
 localStorage.removeItem('ghost.suppressApplicationEmails');
 ```
 
-The existing `TESTING.newApplication` flag redirects email to the developer;
-it does **not** suppress sending. Use the local switch above for no-email tests.
+### Redirect application emails for manual testing
+
+In the developer console for the application/review page (select the member-site
+iframe context if embedded), set your test recipient before submitting:
+
+```js
+localStorage.removeItem('ghost.suppressApplicationEmails');
+localStorage.setItem('ghost.applicationEmailRecipient', 'william.owen.dev@gmail.com');
+```
+
+This redirects **all recipients** of the application confirmation, committee
+new-application notification, approval, and rejection emails to that one address.
+It works on local and deployed sites, only in this browser and site origin
+(scheme/host/port), and persists across reloads. Set it separately if submission
+and review use different origins. It does not affect contract or scholarship
+emails, and it does not change which database receives application/review writes.
+Suppression takes priority on local hosts. A blank or malformed override blocks
+sending instead of falling back to the committee or applicant. These application
+emails no longer use the hardcoded `TESTING` recipient flags.
+
+After testing, restore normal recipients:
+
+```js
+localStorage.removeItem('ghost.applicationEmailRecipient');
+```

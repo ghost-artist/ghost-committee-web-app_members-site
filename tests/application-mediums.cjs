@@ -267,3 +267,61 @@ test('medium decisions persist, reload, and match approval emails; failed saves 
         assert.equal(legacy.querySelector('[data-medium-index]').checked, true);
     } finally { w.close(); }
 });
+
+// Capture parent-bridge messages on local and deployed origins. Verify that
+// the override replaces the entire recipient list, not merely the applicant.
+test('browser recipient override redirects every application email and rejects malformed values', async () => {
+    for (const host of ['localhost', 'members.example.com']) {
+        const dom = new JSDOM('', {url:`https://${host}`, runScripts:'dangerously'});
+        const w = dom.window;
+        try {
+            const messages = [];
+            let lookups = 0;
+            w.console.log = () => {};
+            w.sendMessageToParent = message => messages.push(message);
+            w.CRUD = {read: async () => ({date:'2026-10-30'})};
+            w.getEmailAddresses = async () => { lookups++; return ['committee@example.com']; };
+            w.eval(read('app/outbound-emails/local-email-settings.js').replace(/export /g, ''));
+            for (const name of ['newApplicationClientConfirmation', 'newApplicationReceived', 'approvedNewArtist', 'notApprovedNewArtist']) {
+                w.eval(read(`app/outbound-emails/${name}.js`).replace(/^import .*;?\n/gm, '').replace(/export /g, ''));
+            }
+            const sendAll = async () => {
+                await w.sendNewApplicationClientConfirmationEmail({email:'applicant@example.com'});
+                await w.sendNewApplicationEmail({email:'applicant@example.com',firstName:'Test',lastName:'Artist'});
+                w.sendApprovedNewArtistEmail('applicant@example.com', [{medium:'Ink',approved:true}]);
+                w.sendNotApprovedNewArtistEmail('applicant@example.com');
+            };
+            w.localStorage.setItem('ghost.applicationEmailRecipient', ' tester@example.com ');
+            await sendAll();
+            assert.equal(messages.length, 4);
+            assert.ok(messages.every(message => message.to === 'tester@example.com'));
+            assert.equal(lookups, 0);
+            assert.match(messages[2].body, /Accepted mediums:<\/strong> Ink/);
+
+            messages.length = 0;
+            for (const invalid of ['', 'not-an-email', 'test@example.com,committee@example.com', 'test@example.com\r\nBcc: committee@example.com']) {
+                w.localStorage.setItem('ghost.applicationEmailRecipient', invalid);
+                await assert.rejects(w.sendNewApplicationClientConfirmationEmail({email:'applicant@example.com'}), /one valid email/);
+                await assert.rejects(w.sendNewApplicationEmail({email:'applicant@example.com'}), /one valid email/);
+                assert.throws(() => w.sendApprovedNewArtistEmail('applicant@example.com'), /one valid email/);
+                assert.throws(() => w.sendNotApprovedNewArtistEmail('applicant@example.com'), /one valid email/);
+            }
+            assert.equal(messages.length, 0);
+            assert.equal(lookups, 0);
+
+            w.localStorage.setItem('ghost.applicationEmailRecipient', 'tester@example.com');
+            w.localStorage.setItem('ghost.suppressApplicationEmails', 'true');
+            await sendAll();
+            assert.equal(messages.length, host === 'localhost' ? 0 : 4);
+            w.localStorage.removeItem('ghost.suppressApplicationEmails');
+            w.localStorage.removeItem('ghost.applicationEmailRecipient');
+            messages.length = 0;
+            await sendAll();
+            assert.deepEqual(messages.map(message => message.to), [
+                'applicant@example.com', 'committee@example.com,applicant@example.com',
+                'applicant@example.com', 'applicant@example.com'
+            ]);
+            assert.equal(lookups, 1);
+        } finally { w.close(); }
+    }
+});

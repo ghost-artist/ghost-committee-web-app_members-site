@@ -1,9 +1,10 @@
-import { suppressApplicationEmails } from './local-email-settings.js';
+import { suppressApplicationEmails, getApplicationEmailRecipientOverride } from './local-email-settings.js';
 import { getEmailAddresses } from './getEmailAddresses.js';
-import { TESTING } from './sendTestEmail.js'
+
 
 export async function sendNewApplicationEmail(newArtist){
     if (suppressApplicationEmails()) return;
+    const recipientOverride = getApplicationEmailRecipientOverride();
 
 
     // get all board members
@@ -22,17 +23,16 @@ export async function sendNewApplicationEmail(newArtist){
         date = specialTimelineEvent.date.toDate().toLocaleDateString('en-us', {month: 'long', day: 'numeric'})
     }
 
-    const emailAddresses = await getEmailAddresses({
+    const emailAddresses = recipientOverride || await getEmailAddresses({
         roles: ["17", "15"], // artist applications chair, new artist recruitment chair
         committees: ['Board'],
     }).then(emails => emails.join(',') + ',' + newArtist.email)
 
-    if(TESTING.newApplication) console.log("Would send email to", emailAddresses)
 
     window.sendMessageToParent({
         controller: 'gmailController',
         // every one on board, new artist applications chair, new artist recruitment chair and the person who applied
-        to: TESTING.newApplication ? 'william.owen.dev@gmail.com' : emailAddresses,
+        to: recipientOverride || emailAddresses,
         subject: `GHOST New Artist Application sent from ${newArtist.firstName} ${newArtist.lastName}`,
         body: `
          <div style="text-align:center">

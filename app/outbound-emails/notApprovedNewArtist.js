@@ -1,9 +1,10 @@
-import { suppressApplicationEmails } from './local-email-settings.js';
+import { suppressApplicationEmails, getApplicationEmailRecipientOverride } from './local-email-settings.js';
 import { getEmailAddresses } from './getEmailAddresses.js'
-import { TESTING } from './sendTestEmail.js'
+
 
 export function sendNotApprovedNewArtistEmail(newArtistEmail){
     if (suppressApplicationEmails()) return;
+    const recipientOverride = getApplicationEmailRecipientOverride();
 
     
     // no TESTING mode needed here
@@ -12,7 +13,7 @@ export function sendNotApprovedNewArtistEmail(newArtistEmail){
 
     window.sendMessageToParent({
       controller: 'gmailController',
-      to: [TESTING.notApprovedNewArtistEmail ? 'william.owen.dev@gmail.com' : newArtistEmail].filter(Boolean).join(','),
+      to: recipientOverride || newArtistEmail,
       subject: 'Sorry, your application to Gig Harbor Open Studio Tour was not approved',
       body: `
           <div style="text-align:center; font-family:sans-serif;">

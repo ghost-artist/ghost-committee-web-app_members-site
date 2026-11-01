@@ -1,18 +1,18 @@
-import { suppressApplicationEmails } from './local-email-settings.js';
-import { TESTING } from './sendTestEmail.js'
+import { suppressApplicationEmails, getApplicationEmailRecipientOverride } from './local-email-settings.js';
+
 
 export async function sendNewApplicationClientConfirmationEmail(newArtist){
     if (suppressApplicationEmails()) return;
+    const recipientOverride = getApplicationEmailRecipientOverride();
 
 
     const emailAddresses = newArtist.email
 
-    if(TESTING.newApplication) console.log("Would send email to", emailAddresses)
 
     window.sendMessageToParent({
         controller: 'gmailController',
         // every one on board, new artist applications chair, new artist recruitment chair and the person who applied
-        to: TESTING.newApplication ? 'william.owen.dev@gmail.com' : emailAddresses,
+        to: recipientOverride || emailAddresses,
         subject: `GHOST New Artist Application Confirmation`,
         body: `
          <div style="text-align:center">
