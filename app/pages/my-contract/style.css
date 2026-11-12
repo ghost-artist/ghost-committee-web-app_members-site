@@ -49,6 +49,29 @@
   translate: none;
 }
 
+#questionnaire #additionalStudioInfo > input-component[type="checkbox"] label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 12px;
+}
+
+#questionnaire #additionalStudioInfo > input-component[type="checkbox"] label > input {
+  grid-area: 1 / 1;
+  margin: 0;
+  translate: none;
+}
+
+#questionnaire #additionalStudioInfo > input-component[type="checkbox"] label > .text {
+  grid-area: 1 / 2;
+  position: static;
+  transform: none;
+}
+
+#questionnaire #additionalStudioInfo > input-component[type="checkbox"] label > .error-message {
+  grid-column: 2;
+}
+
 .studioSignsQuestion {
   display: block;
   border: 1px solid black;
