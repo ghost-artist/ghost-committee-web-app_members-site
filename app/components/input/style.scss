@@ -187,6 +187,10 @@ label {
     }
 }
 
+input-component[type="checkbox"] > span > label > p.text {
+    margin: 0;
+}
+
 input-component > span > label:not(:has(input[type=radio], input[type=checkbox])),
 textarea-component > label {
     display: block;
