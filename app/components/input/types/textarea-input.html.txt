@@ -1,8 +1,9 @@
-<div>${description}</div>
-<label for="${fieldName}" style="width: 100%; box-sizing: border-box; margin-top: 20px;" class="${value ? " moveLabel"
-    : "" }">
-    <small class="text" part="labelText">${alias && required ? alias + "*" : alias ? alias : ""} </small>
+<label for="${fieldName}" class="${value ? "moveLabel" : ""}">
+    <small class="text" part="labelText" id="${fieldName}-label-${randomId}">${alias && required ? alias + "*" : alias ? alias : ""}</small>
+    ${description ? `<span class="field-description" id="${fieldName}-description-${randomId}">${description}</span>` : ""}
     <textarea placeholder="${placeholder}" id="${fieldName}" name="${fieldName}"
-        ${required ? "required" : "" }  ${disabled ? "disabled" : ""} >${value ? value : ""}</textarea>
+        ${alias && description ? `aria-labelledby="${fieldName}-label-${randomId}"` : ""}
+        ${description ? `aria-describedby="${fieldName}-description-${randomId}"` : ""}
+        ${required ? "required" : ""} ${disabled ? "disabled" : ""}>${value ? value : ""}</textarea>
     <div id="${fieldName}-error" class="error-message"></div>
 </label>

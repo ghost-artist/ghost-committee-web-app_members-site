@@ -187,6 +187,60 @@ label {
     }
 }
 
+input-component > span > label:not(:has(input[type=radio], input[type=checkbox])),
+textarea-component > label {
+    display: block;
+
+    > .text {
+        display: block;
+        position: static;
+        transform: none;
+        font-weight: bold;
+        overflow-wrap: anywhere;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    > .field-description {
+        display: block;
+        font-size: 1rem;
+        overflow-wrap: anywhere;
+    }
+
+    > input,
+    > textarea {
+        display: block;
+        margin: 0;
+    }
+
+    > .text:not(:empty),
+    > .field-description {
+        margin-bottom: 4px;
+    }
+}
+
+input-component > span > label:has(input[type=password], .password-toggle) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+
+    > input {
+        grid-area: 2 / 1;
+        padding-right: 36px;
+    }
+
+    > .password-toggle {
+        grid-area: 2 / 1;
+        align-self: center;
+        justify-self: end;
+        position: relative;
+        top: auto;
+        right: 10px;
+        translate: none;
+    }
+}
+
 .file-input-component {
     .img-container:not(:empty) {
         border: 1px solid black;
