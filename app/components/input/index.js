@@ -39,7 +39,7 @@ createCustomElement(
     logIf.component && console.log('input-component loaded')
     // set slot
 
-    if (!this.getAttribute('moveLabel')) {
+    if (this.querySelector('input:is([type=radio], [type=checkbox])') && !this.getAttribute('moveLabel')) {
       moveLabel.bind(this)()
     }
 
@@ -86,8 +86,6 @@ createCustomElement(
 createCustomElement(
   'textarea-component',
   function () {
-    moveLabel.bind(this)()
-
     // check for value
     const value = this.getAttribute('value')
     if (value) {
