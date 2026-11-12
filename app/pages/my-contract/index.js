@@ -342,6 +342,8 @@ async function handleStudioSharingForm(e) {
             studioPreference: "",
             studioAvailability: "",
             artistsAccommodated: "",
+            studioParking: "",
+            HOA_GateConfirmation: false,
             studioSharingPlans: "",
             willingnessToRelocate: "",
             canopyPreference: "",
@@ -411,6 +413,18 @@ async function handleStudioSharingForm(e) {
 
 
 
+            const studioParking = form.querySelector('input[name="studioParking"]').value.trim()
+            StudioSharingPayload.StudioSharingInfo.studioParking = studioParking
+            if (studioParking) {
+                StudioSharingPayload.StudioSharingAnswer += '\n\t\tParking: ' + studioParking
+            }
+
+            const hoaGateConfirmation = form.querySelector('input[name="HOA_GateConfirmation"]')
+            StudioSharingPayload.StudioSharingInfo.HOA_GateConfirmation = hoaGateConfirmation.checked
+            if (hoaGateConfirmation.checked) {
+                StudioSharingPayload.StudioSharingAnswer += '\n\t\t' + hoaGateConfirmation.closest('label').innerText.trim()
+            }
+
             // Studio description
             const studioDescription = form.querySelector('textarea[name="studioDescription"]')
             if (!studioDescription.value) return formAlert("Please provide information about your studio space");
@@ -430,14 +444,12 @@ async function handleStudioSharingForm(e) {
             StudioSharingPayload.StudioSharingAnswer += '\n\t\t' + isFlexible.closest("label").innerText
             StudioSharingPayload.StudioSharingInfo.isFlexible = isFlexible.checked
 
-            if(isFlexible){
+            const verificationOfCommunicationWithGuestArtists = form.querySelector('input[name="verificationOfCommunicationWithGuestArtists"]')
+            if (!verificationOfCommunicationWithGuestArtists.checked) return formAlert("Verification of communication with guests is required");
+            StudioSharingPayload.StudioSharingAnswer += '\n\t\t' + verificationOfCommunicationWithGuestArtists.closest("label").innerText
+            StudioSharingPayload.StudioSharingInfo.verificationOfCommunicationWithGuestArtists = verificationOfCommunicationWithGuestArtists.checked
 
-                // verificationOfCommunicationWithGuestArtists
-                const verificationOfCommunicationWithGuestArtists = form.querySelector('input[name=verificationOfCommunicationWithGuestArtists]')
-                if(!verificationOfCommunicationWithGuestArtists.checked) return formAlert("Verification of communication with guests is required");
-                StudioSharingPayload.StudioSharingAnswer += '\n\t\t' + verificationOfCommunicationWithGuestArtists.closest("label").innerText
-                StudioSharingPayload.StudioSharingInfo.verificationOfCommunicationWithGuestArtists = verificationOfCommunicationWithGuestArtists.checked
-                
+            if (isFlexible.checked) {
                 // Shows if is flexible
                 const outdoorOrIndoorFlexibility = form.querySelector('textarea[name=outdoorOrIndoorFlexibility]')
                 if (!outdoorOrIndoorFlexibility.value) return formAlert("Please provide info about indoor / outdoor flexibility")
@@ -896,8 +908,13 @@ function setUpStudioSharingForm(contract) {
         const studioSharingInfo = contract.StudioSharingInfo
         if (!studioSharingInfo) return;
 
+        form.elements.namedItem('studioParking').value = studioSharingInfo.studioParking ?? ''
+        form.elements.namedItem('HOA_GateConfirmation').checked = studioSharingInfo.HOA_GateConfirmation === true
+
         // set the inputs
         Object.entries(studioSharingInfo).forEach(([key, value]) => {
+            if (key === 'studioParking' || key === 'HOA_GateConfirmation') return;
+
 
             let textInput;
             try {
