@@ -301,15 +301,14 @@
 
           <div class="level-2" id="additionalStudioInfo" visible-if="studioAvailability === 'canShare'"
             style="margin-top: 10px;">
-            <input-component type="number" width="100%" fieldName="artistsAccommodated"
-              alias="How many additional artists can you share it with (not including yourself?)"></input-component>
-            <div style="margin-top: 20px;"></div>
-
-            <div style="margin-top: 20px;"></div>
-            <textarea-component style="width:100%" fieldName="studioDescription"
-              alias="Describe the space you have available (outdoors, indoors, garage, etc) "></textarea-component>
-            <textarea-component style="width:100%" fieldName="studioSharingPlans"
-              alias="If you already have plans for someone to share your studio space, list them here: (If none, type N/A)"></textarea-component>
+            <div class="shared-studio-fields">
+              <input-component type="number" fieldName="artistsAccommodated"
+                alias="How many additional artists can you share it with (not including yourself?)"></input-component>
+              <textarea-component fieldName="studioDescription"
+                alias="Describe the space you have available (outdoors, indoors, garage, etc)"></textarea-component>
+              <textarea-component fieldName="studioSharingPlans"
+                alias="If you already have plans for someone to share your studio space, list them here: (If none, type N/A)"></textarea-component>
+            </div>
               <br>
            <input-component moveLabel="true" style="width:100%" type="checkbox" fieldName="verificationOfCommunicationWithGuestArtists" alias="I verify that I have talked to all of my guests artists about any additional charges that might be associated with sharing my studio space, including event insurance and additional port-a-potty fees (If applicable)"></input-component>
               <br>
