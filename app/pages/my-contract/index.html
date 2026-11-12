@@ -294,13 +294,21 @@
 
           <label for="canShare" class="level-1">
             <input type="radio" name="studioAvailability" id="canShare" value="canShare">
-            I want to stay at my own studio and I can share my studio space with more artists and have adequate parking. 
-            <b>Each outdoor spot must be big enough for a 10x10 ft canopy and be on level ground such as grass, cement, patio or deck. No hills or uneven surfaces allowed. Each indoor spot must be at least 10ft x 10ft.</b>
+                I want to stay at my own studio and I can share my studio space with more artists and have adequate parking. 
           </label>
+
+     
+
           <div style="margin-left: 61px;">(If you live in a gated community, you can only choose this option if you have confirmed with your HOA that the gate can be left open on the days of the tour)</div>
 
           <div class="level-2" id="additionalStudioInfo" visible-if="studioAvailability === 'canShare'"
             style="margin-top: 10px;">
+
+        <div>
+            <h2>Basic Requirements for Guest Studios</h2>
+            The space for outdoor guest artists needs to be flat, on a hard level surface such as grass, cement, a patio or deck, room for at least a 10’x10’ canopy and be in a readily visible area to visitors or have clearly visible signage directing visitors to the guest artist area. Indoor guest artists should have the equivalent space.  Must have adequate parking for artists and visitors.  All guest artists must have access to either indoor restrooms or porta potties with a hand washing station.
+          </div>
+
             <div class="shared-studio-fields">
               <input-component type="number" fieldName="artistsAccommodated"
                 alias="How many additional artists can you share it with (not including yourself?)"></input-component>
@@ -313,7 +321,9 @@
             </div>
               <br>
            <input-component moveLabel="true" style="width:100%" type="checkbox" fieldName="verificationOfCommunicationWithGuestArtists" alias="I verify that I have talked to all of my guests artists about any additional charges that might be associated with sharing my studio space, including event insurance and additional port-a-potty fees (If applicable)"></input-component>
-              <br>
+           <br>
+           <input-component moveLabel="true" style="width:100%" type="checkbox" fieldName="HOA_GateConfirmation" alias="If I live in a gated community, I have confirmed with my HOA that the gates will be left open during the tour dates."></input-component>
+           <br>
            <input-component moveLabel="true" style="width:100%" type="checkbox" fieldName="isFlexible" alias="If there aren't enough extra available artists that can share my studio space, I would like to be placed at another studio so that I am with other artists"></input-component>
            <br>
            <div class="level-3" visible-if="isFlexible == true" id="artistIsFlexible">
