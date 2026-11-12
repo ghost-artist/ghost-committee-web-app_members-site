@@ -295,7 +295,7 @@
           <label for="canShare" class="level-1">
             <input type="radio" name="studioAvailability" id="canShare" value="canShare">
             I want to stay at my own studio and I can share my studio space with more artists and have adequate parking. 
-            Each outdoor spot must be big enough for a 10x10 ft canopy and be on level ground that is either grass or cement. No hills or uneven surfaces allowed.
+            <b>Each outdoor spot must be big enough for a 10x10 ft canopy and be on level ground that is either grass or cement. No hills or uneven surfaces allowed. Each indoor spot must be at least 10ft x 10ft.</b>
           </label>
           <div style="margin-left: 61px;">(If you live in a gated community, you can only choose this option if you have confirmed with your HOA that the gate can be left open on the days of the tour)</div>
 
@@ -304,8 +304,10 @@
             <div class="shared-studio-fields">
               <input-component type="number" fieldName="artistsAccommodated"
                 alias="How many additional artists can you share it with (not including yourself?)"></input-component>
+              <input-component type="number" fieldName="studioParking"
+                alias="Describe what parking is available, how many slots, if street or field parking is available."></input-component>
               <textarea-component fieldName="studioDescription"
-                alias="Describe the space you have available (outdoors, indoors, garage, etc)"></textarea-component>
+                alias="Describe the space you have available for guest artists to display (outdoors, indoors, garage, etc)"></textarea-component>
               <textarea-component fieldName="studioSharingPlans"
                 alias="If you already have plans for someone to share your studio space, list them here: (If none, type N/A)"></textarea-component>
             </div>
