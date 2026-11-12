@@ -13,7 +13,7 @@
     <i class="password-toggle hide-password fa fa-solid fa-eye"></i>
     ` : ''}
 </label>
-<small>${subcaption}</small>
+<p>${subcaption}</p>
 </span>
 
 </span>
