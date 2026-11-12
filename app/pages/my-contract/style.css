@@ -34,39 +34,19 @@
   height: fit-content;
 }
 
-.shared-studio-fields {
-  container-type: inline-size;
+#questionnaire label[for="canShare"] > input {
+  flex-shrink: 0;
 }
 
 .shared-studio-fields > input-component,
-.shared-studio-fields > textarea-component {
-  display: block;
-}
-
+.shared-studio-fields > textarea-component,
 #questionnaire .shared-studio-fields label {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-  align-items: start;
-  gap: 4px 12px;
-}
-
-#questionnaire .shared-studio-fields label > :is(input, textarea, .error-message) {
-  grid-column: 2;
+  display: block;
 }
 
 #questionnaire .shared-studio-fields label > input {
   margin-right: 0;
   translate: none;
-}
-
-@container (max-width: 420px) {
-  #questionnaire .shared-studio-fields label {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  #questionnaire .shared-studio-fields label > :is(input, textarea, .error-message) {
-    grid-column: 1;
-  }
 }
 
 .studioSignsQuestion {
