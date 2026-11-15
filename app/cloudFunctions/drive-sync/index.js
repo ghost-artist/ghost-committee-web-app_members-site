@@ -4,6 +4,7 @@ const { defineSecret, defineString } = require('firebase-functions/params');
 const { onDocumentWritten } = require('firebase-functions/v2/firestore');
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const logger = require('firebase-functions/logger');
+const { committeeAssignments, syncCommitteeRoster } = require('./committee-roster');
 
 initializeApp();
 const db = getFirestore();
@@ -30,9 +31,9 @@ function parseYear(value) {
   return Number(value);
 }
 
-async function activeYear() {
-  const setting = await db.doc('app-settings/activeYear').get();
-  return parseYear(setting.get('data'));
+function revisionOf(timestamp) {
+  return String(timestamp.seconds).padStart(11, '0') +
+    String(timestamp.nanoseconds).padStart(9, '0');
 }
 
 async function sendToAppsScript(payload) {
@@ -92,9 +93,7 @@ exports.syncPaidGhostContract = onDocumentWritten({
     return;
   }
   const year = parseYear(receipt.eventYear);
-  const timestamp = saved.updateTime;
-  const revision = String(timestamp.seconds).padStart(11, '0') +
-    String(timestamp.nanoseconds).padStart(9, '0');
+  const revision = revisionOf(saved.updateTime);
   try {
     const row = await artistRow(contract, contractId);
     await sendToAppsScript({ action: 'upsert', year, contractId, revision, row });
@@ -105,6 +104,35 @@ exports.syncPaidGhostContract = onDocumentWritten({
   }
 });
 
+async function refreshCommitteeRoster() {
+  try {
+    return await syncCommitteeRoster(db, sendToAppsScript, parseYear, revisionOf);
+  } catch (error) {
+    logger.error('Ghost committee roster sync failed', { reason: error.message });
+    throw error;
+  }
+}
+
+function onCommitteeRosterChange(document, handler = refreshCommitteeRoster) {
+  return onDocumentWritten({ document, retry: true, secrets: [appsScriptSecret] }, handler);
+}
+
+exports.syncGhostCommitteeAssignments = onCommitteeRosterChange('ghost-contracts/{contractId}', async event => {
+  const before = event.data?.before?.data();
+  const after = event.data?.after?.data();
+  // Compare visible assignments and the year marker before fetching the roster.
+  const rosterFields = contract => [
+    committeeAssignments(contract, contract?.artistDetails?.membershipReceipt?.eventYear),
+    contract?.artistDetails?.membershipReceipt?.eventYear ?? null,
+  ];
+  if (JSON.stringify(rosterFields(before)) !== JSON.stringify(rosterFields(after))) {
+    await refreshCommitteeRoster();
+  }
+});
+exports.syncGhostCommitteeRoles = onCommitteeRosterChange('committee-roles/{roleId}');
+exports.syncGhostCommitteeCatalog = onCommitteeRosterChange('app-settings/committees');
+exports.syncGhostCommitteeYear = onCommitteeRosterChange('app-settings/activeYear');
+
 exports.scaffoldGhostDrive = onCall({ secrets: [appsScriptSecret] }, async request => {
   // Member-site role documents are client writable. Authorize this operation with
   // a Firebase custom claim issued by an administrator.
@@ -112,9 +140,9 @@ exports.scaffoldGhostDrive = onCall({ secrets: [appsScriptSecret] }, async reque
     throw new HttpsError('permission-denied', 'Google Drive scaffolding requires developer access.');
   }
   try {
-    const year = await activeYear();
-    const result = await sendToAppsScript({ action: 'scaffold', year });
-    return { year, sheetUrl: result.sheetUrl };
+    const committee = await refreshCommitteeRoster();
+    const result = await sendToAppsScript({ action: 'scaffold', year: committee.year });
+    return { year: committee.year, sheetUrl: result.sheetUrl, committeeSheetUrl: committee.sheetUrl };
   } catch (error) {
     logger.error('Ghost Drive scaffold failed', { reason: error.message });
     throw new HttpsError('internal', 'Could not scaffold Google Drive. Check the sync logs.');

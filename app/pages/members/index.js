@@ -27,7 +27,10 @@ async function attachDriveScaffold(user, panel) {
       link.textContent = `Open Master Artist Information Sheet ${data.year}`;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
-      status.replaceChildren(link);
+      const committeeLink = link.cloneNode();
+      committeeLink.href = data.committeeSheetUrl;
+      committeeLink.textContent = `Open Committee Sign-Ups ${data.year}`;
+      status.replaceChildren(link, document.createElement('br'), committeeLink);
     } catch (error) {
       status.textContent = error.message;
     } finally {
