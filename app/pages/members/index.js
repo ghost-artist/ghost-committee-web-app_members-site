@@ -30,7 +30,10 @@ async function attachDriveScaffold(user, panel) {
       const committeeLink = link.cloneNode();
       committeeLink.href = data.committeeSheetUrl;
       committeeLink.textContent = `Open Committee Sign-Ups ${data.year}`;
-      status.replaceChildren(link, document.createElement('br'), committeeLink);
+      const imagesLink = link.cloneNode();
+      imagesLink.href = data.imagesFolderUrl;
+      imagesLink.textContent = `Open ${data.year} Ghost Artist Images`;
+      status.replaceChildren(link, document.createElement('br'), committeeLink, document.createElement('br'), imagesLink);
     } catch (error) {
       status.textContent = error.message;
     } finally {

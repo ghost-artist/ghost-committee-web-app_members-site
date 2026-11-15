@@ -5,6 +5,7 @@ const { onDocumentWritten } = require('firebase-functions/v2/firestore');
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const logger = require('firebase-functions/logger');
 const { committeeAssignments, syncCommitteeRoster } = require('./committee-roster');
+const { syncArtistImages } = require('./artist-images');
 
 initializeApp();
 const db = getFirestore();
@@ -41,7 +42,7 @@ async function sendToAppsScript(payload) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ ...payload, headers, secret: appsScriptSecret.value() }),
-    signal: AbortSignal.timeout(45000),
+    signal: AbortSignal.timeout(payload.action === 'syncArtistImages' ? 150000 : 45000),
   });
   if (!response.ok) throw new Error('Apps Script HTTP status ' + response.status);
   const result = await response.json();
@@ -104,6 +105,20 @@ exports.syncPaidGhostContract = onDocumentWritten({
   }
 });
 
+exports.syncGhostArtistImages = onDocumentWritten({
+  document: 'ghost-contracts/{contractId}',
+  retry: true,
+  timeoutSeconds: 180,
+  secrets: [appsScriptSecret],
+}, async event => {
+  try {
+    await syncArtistImages(event, sendToAppsScript, parseYear, revisionOf);
+  } catch (error) {
+    logger.error('Ghost artist image sync failed', { contractId: event.params.contractId, reason: error.message });
+    throw error;
+  }
+});
+
 async function refreshCommitteeRoster() {
   try {
     return await syncCommitteeRoster(db, sendToAppsScript, parseYear, revisionOf);
@@ -142,7 +157,13 @@ exports.scaffoldGhostDrive = onCall({ secrets: [appsScriptSecret] }, async reque
   try {
     const committee = await refreshCommitteeRoster();
     const result = await sendToAppsScript({ action: 'scaffold', year: committee.year });
-    return { year: committee.year, sheetUrl: result.sheetUrl, committeeSheetUrl: committee.sheetUrl };
+    const images = await sendToAppsScript({ action: 'scaffoldImages', year: committee.year });
+    return {
+      year: committee.year,
+      sheetUrl: result.sheetUrl,
+      committeeSheetUrl: committee.sheetUrl,
+      imagesFolderUrl: images.folderUrl,
+    };
   } catch (error) {
     logger.error('Ghost Drive scaffold failed', { reason: error.message });
     throw new HttpsError('internal', 'Could not scaffold Google Drive. Check the sync logs.');
