@@ -1,0 +1,19 @@
+# Ghost annual Drive sync
+
+1. In the `ghost-server-configuration` checkout, push the Apps Script code with clasp and publish an updated web app version using the Google account that can write to the annual Drive root. Set the script property `GHOST_DRIVE_SYNC_SECRET` to a randomly generated shared secret.
+2. In this repository, set the Firebase secret of the same name with `firebase functions:secrets:set GHOST_DRIVE_SYNC_SECRET --project <project-id>`. Configure `GHOST_DRIVE_SYNC_URL` with the Apps Script web app's `/exec` URL when prompted during deploy.
+3. Run `firebase deploy --only functions:ghost-drive-sync --project <project-id>`. The codebase contains the paid-contract and committee roster Firestore triggers and the callable scaffold function.
+4. For each developer who should see the scaffold button, use the Firebase Admin SDK to add the custom claim `ghostDriveAdmin: true`, preserving their existing claims. They can sign in again to refresh the token.
+5. Use the members sidebar to scaffold the active year and confirm both spreadsheets and the artist images folder open. Verify with a completed PayPal contract and a later edit. Inspect Cloud Functions logs using the Firebase contract ID if Google writes fail.
+
+The trigger reacts to writes after deployment. It uses the recorded completed capture receipt and does not query PayPal. On the first qualifying write for a receipt without an event year, the trigger records the active year on the receipt. Later edits use that year. Before enabling the trigger, confirm that untagged completed receipts that may still be edited belong to the active year. The current app stores payment markers in the contract itself, so the trigger does not independently establish the authenticity of that marker. Scaffolding creates the annual folder, both spreadsheets, and the shared artist-image folders. It builds the committee roster immediately. The master spreadsheet does not backfill existing contracts. The script stops on ambiguous duplicate names within the selected parent.
+
+## Committee sign-ups
+
+The active-year roster rebuilds when an assigned member's signup or contact information changes, a committee or role is edited, or the active year changes. Membership follows the committee page: paid members and committee pre-assignments are eligible. Contracts tagged for a different year are excluded; untagged assignments follow the active year. Each committee highlights one chair. An explicit `isChair: true` takes precedence over a primary chair title. Co-chair, vice-chair, assistant chair, deputy chair, and acting chair titles stay in the member list unless explicitly designated. If multiple assignments share the highest priority, the first by member name then role title is highlighted and the others remain listed with their roles. Chair contact information uses personal email with business email as a fallback. Each committee gets a block, including committees with no sign-ups. The spreadsheet is generated from Firestore, so use the member site to edit assignments.
+
+## Artist images
+
+The image automation uses the five file URLs in the paid contract's `images` map. The annual images folder contains `1 Brochure Photos`, `2 Studio Photos`, and one folder per artist with an image to sync. Artist folders use the artist name for display and the contract ID for identity. Brochure and studio shortcuts point to the originals in the artist folder. Give Drive users access to the original files via the annual folder.
+
+The scaffold creates the annual images folder and the two shared subfolders. Image files and individual artist folders are synced on qualifying contract changes, starting after the year is set on the completed receipt. A change to the artist name or a photo refreshes the generated items. Clearing a photo field trashes only the generated copy and shortcut. Existing Drive images added by hand are preserved. The scaffold does not backfill existing image uploads.

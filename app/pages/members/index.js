@@ -4,6 +4,44 @@ import { enableTimelinePrivileges } from './timelinePriviledge.js';
 import { sendTestEmail } from '../../outbound-emails/sendTestEmail.js';
 import { processContractsToSheets } from '../../exports/google-sheets/processContractsToSheets.js';
 
+import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-functions.js';
+
+async function attachDriveScaffold(user, panel) {
+  const token = await user.getIdTokenResult();
+  if (token.claims.ghostDriveAdmin !== true) return;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.textContent = 'Scaffold Google Drive for active year';
+  const status = document.createElement('p');
+  status.setAttribute('role', 'status');
+  panel.append(button, status);
+
+  button.addEventListener('click', async () => {
+    button.disabled = true;
+    status.textContent = 'Preparing the annual Google Drive folder…';
+    try {
+      const scaffold = httpsCallable(getFunctions(firebase.app), 'scaffoldGhostDrive');
+      const { data } = await scaffold();
+      const link = document.createElement('a');
+      link.href = data.sheetUrl;
+      link.textContent = `Open Master Artist Information Sheet ${data.year}`;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      const committeeLink = link.cloneNode();
+      committeeLink.href = data.committeeSheetUrl;
+      committeeLink.textContent = `Open Committee Sign-Ups ${data.year}`;
+      const imagesLink = link.cloneNode();
+      imagesLink.href = data.imagesFolderUrl;
+      imagesLink.textContent = `Open ${data.year} Ghost Artist Images`;
+      status.replaceChildren(link, document.createElement('br'), committeeLink, document.createElement('br'), imagesLink);
+    } catch (error) {
+      status.textContent = error.message;
+    } finally {
+      button.disabled = false;
+    }
+  });
+}
+
 const timeline = {}
 const userRoles = {}
 let configDocument;
@@ -77,6 +115,9 @@ document.addEventListener('DOMContentLoaded', async function () {
           applyPrivileges(userRoles)
 
           document.querySelector('#user-role').innerHTML = `<h3>My Committee Role${contract.committeeRoleId.length > 1 ? 's' : ''}:</h3>${sidePanel.trim() ? sidePanel : 'No role assigned'}`
+          attachDriveScaffold(user, document.querySelector('#user-role')).catch(error => {
+            console.warn('Could not load Google Drive scaffold control', error.code);
+          });
         })
 
 

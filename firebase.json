@@ -1,0 +1,8 @@
+{
+  "functions": [
+    {
+      "source": "app/cloudFunctions/drive-sync",
+      "codebase": "ghost-drive-sync"
+    }
+  ]
+}
