@@ -149,10 +149,23 @@ exports.syncGhostCommitteeCatalog = onCommitteeRosterChange('app-settings/commit
 exports.syncGhostCommitteeYear = onCommitteeRosterChange('app-settings/activeYear');
 
 exports.scaffoldGhostDrive = onCall({ secrets: [appsScriptSecret] }, async request => {
-  // Member-site role documents are client writable. Authorize this operation with
-  // a Firebase custom claim issued by an administrator.
-  if (request.auth?.token.ghostDriveAdmin !== true) {
-    throw new HttpsError('permission-denied', 'Google Drive scaffolding requires developer access.');
+  if (!request.auth) throw new HttpsError('unauthenticated', 'Sign in to scaffold Google Drive.');
+
+  // Follow the committee workflow: payment or an administrative pre-assignment
+  // confirms roles. Read permissions from current role documents on every call.
+  const contract = (await db.collection('ghost-contracts').doc(request.auth.uid).get()).data();
+  const artist = contract?.artistDetails;
+  const roleIds = contract?.committeeRoleId;
+  const confirmed = artist?.membershipPaid === true || artist?.committeePreAssignment === true;
+  const roles = confirmed && Array.isArray(roleIds) ? await Promise.all(
+    [...new Set(roleIds.map(String))].map(id => db.collection('committee-roles').doc(id).get()),
+  ) : [];
+  const permitted = roles.some(role => {
+    const privileges = role.get('privileges');
+    return Array.isArray(privileges) && privileges.includes('scaffoldGoogleDrive');
+  });
+  if (!permitted) {
+    throw new HttpsError('permission-denied', 'Your committee role does not grant Google Drive scaffolding.');
   }
   try {
     const committee = await refreshCommitteeRoster();
