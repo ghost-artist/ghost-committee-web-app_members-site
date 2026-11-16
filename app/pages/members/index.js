@@ -6,9 +6,7 @@ import { processContractsToSheets } from '../../exports/google-sheets/processCon
 
 import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-functions.js';
 
-async function attachDriveScaffold(user, panel) {
-  const token = await user.getIdTokenResult();
-  if (token.claims.ghostDriveAdmin !== true) return;
+function attachDriveScaffold(panel) {
   const button = document.createElement('button');
   button.type = 'button';
   button.textContent = 'Scaffold Google Drive for active year';
@@ -110,14 +108,15 @@ document.addEventListener('DOMContentLoaded', async function () {
           contract.committeeRoleId = contract.committeeRoleId || []
 
           // Also assigns userRoles object
-          const sidePanel = getGhostSidePanel(contract.committeeRoleId)
+          const hasConfirmedRoles = contract.artistDetails?.membershipPaid === true ||
+            contract.artistDetails?.committeePreAssignment === true
+          const sidePanel = getGhostSidePanel(contract.committeeRoleId, hasConfirmedRoles)
 
           applyPrivileges(userRoles)
 
           document.querySelector('#user-role').innerHTML = `<h3>My Committee Role${contract.committeeRoleId.length > 1 ? 's' : ''}:</h3>${sidePanel.trim() ? sidePanel : 'No role assigned'}`
-          attachDriveScaffold(user, document.querySelector('#user-role')).catch(error => {
-            console.warn('Could not load Google Drive scaffold control', error.code);
-          });
+          const scaffoldPanel = document.querySelector('#user-role [data-drive-scaffold]');
+          if (scaffoldPanel) attachDriveScaffold(scaffoldPanel);
         })
 
 
@@ -143,10 +142,12 @@ document.addEventListener('DOMContentLoaded', async function () {
          * 
          * @param {Array int} roleId
          */
-        function getGhostSidePanel(roleIds) {
+        function getGhostSidePanel(roleIds, hasConfirmedRoles) {
           if (!roleIds) return ''
+          let hasScaffoldButton = false;
           return roleIds.map(roleId => {
             const role = roles[roleId]
+            if (!role) return ''
             const roleTitle = role.title
             const roleButtons = role.sideBarButtons
             const responsibility = role.responsibility
@@ -183,6 +184,11 @@ document.addEventListener('DOMContentLoaded', async function () {
               }
               if (roleButtons.includes('createDocument')) {
                 buttons.insertAdjacentHTML('beforeend', testCreateDocumentButton(role))
+              }
+              if (!hasScaffoldButton && hasConfirmedRoles && roleButtons.includes('scaffoldGoogleDrive') &&
+                  Array.isArray(role.privileges) && role.privileges.includes('scaffoldGoogleDrive')) {
+                buttons.insertAdjacentHTML('beforeend', '<div data-drive-scaffold></div>')
+                hasScaffoldButton = true
               }
 
             }
